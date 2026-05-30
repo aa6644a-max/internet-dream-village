@@ -37,6 +37,7 @@ PRD 1~4 전체 설계 완료. 랜딩페이지 완성. GitHub 이슈 4개 등록.
 | DB/Auth | Supabase (PostgreSQL + RLS + Storage) |
 | 배포 | Vercel |
 | AI | Gemini API (감정 분석, 이미지 생성, 위기신호 감지) |
+| PDF 저장 | html2canvas + jsPDF (`usePDFExport` 공통 훅) |
 | 이메일 알림 | Resend (위기신호, 7일 미접속, 구독 만료) |
 | SMS/OTP | Twilio (Phase 4 부모 계정) |
 | 학생 로그인 | username 기반 → `{username}@drm.internal` 변환 |
@@ -147,6 +148,8 @@ PRD 1~4 전체 설계 완료. 랜딩페이지 완성. GitHub 이슈 4개 등록.
 - [ ] 관리자 대시보드 (학생 목록 + 개별 상세)
 - [ ] 수퍼바이저 대시보드 기초
 - [ ] 첫 커밋 & Vercel 연동
+- [ ] `usePDFExport` 공통 훅 구현 (html2canvas + jsPDF, 스마트 페이지 분할)
+- [ ] PDF 저장 — 학생 자가진단 결과 (결과 화면 하단 버튼)
 
 ### Phase 2 개발
 
@@ -158,6 +161,7 @@ PRD 1~4 전체 설계 완료. 랜딩페이지 완성. GitHub 이슈 4개 등록.
 - [ ] 슬라이드쇼 갤러리
 - [ ] 세션 횟수 관리 (월 초기화)
 - [ ] 관리자 대시보드 Phase 2 항목 추가
+- [ ] PDF 저장 — 학생 CIREF 결과 (이미지 + 리플렉션 노트, CORS 처리)
 
 ### Phase 3 개발
 
@@ -170,6 +174,9 @@ PRD 1~4 전체 설계 완료. 랜딩페이지 완성. GitHub 이슈 4개 등록.
 - [ ] 스마트폰 사용량 수집 (슬라이더)
 - [ ] 상관관계 이중 선 그래프
 - [ ] 수퍼바이저 구독 관리 완성 + 관리자 비밀번호 초기화
+- [ ] PDF 저장 — 관리자 학생 개별 리포트 (풀스펙)
+- [ ] PDF 저장 — 관리자 전체 학생 요약 리포트
+- [ ] PDF 저장 — 관리자 위기신호 이력 리포트
 
 ### Phase 4 개발
 

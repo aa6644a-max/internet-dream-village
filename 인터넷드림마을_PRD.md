@@ -186,6 +186,7 @@
 - **UI Components:** shadcn/ui
 - **차트:** Recharts
 - **상태관리:** Zustand 또는 React Context
+- **PDF 저장:** html2canvas + jsPDF
 
 ### 4.2 백엔드 / DB
 - **BaaS:** Supabase (PostgreSQL + Auth + Storage + Realtime)
@@ -256,17 +257,22 @@ maze_sessions
 - [ ] 자가진단 (중독 척도)
 - [ ] 관리자 기본 대시보드 (학생 목록 + 개별 열람)
 - [ ] 위기 신호 감지 + 알림
+- [ ] **PDF 저장 — 학생 자가진단 결과** (`usePDFExport` 훅 기반)
 
 ### Phase 2 — 핵심 EFT
 - [ ] 미래의 나 AI 자화상 생성 (4단계 대화 + 이미지 API)
 - [ ] 이미지 갤러리 (변천사)
 - [ ] 재공고화 리플렉션 노트
+- [ ] **PDF 저장 — 학생 CIREF 결과 (이미지 + 리플렉션 노트)**
 
 ### Phase 3 — 게임 & 고도화
 - [ ] 미로 풀기 게임
 - [ ] 꽃 감정 SVG 고도화 (AI 생성)
 - [ ] 스마트폰 사용량 × 정서 상관관계 그래프
 - [ ] 수퍼바이저 구독 관리 대시보드
+- [ ] **PDF 저장 — 관리자 학생 개별 리포트 (풀스펙)**
+- [ ] **PDF 저장 — 관리자 전체 학생 요약 리포트**
+- [ ] **PDF 저장 — 관리자 위기신호 이력 리포트**
 
 ### Phase 4 — 추후 고도화
 - [ ] 개인 맞춤형 아바타 고정 기술 (Consistent Character Generation)
@@ -275,7 +281,66 @@ maze_sessions
 
 ---
 
-## 8. 비기능 요건
+## 8. PDF 저장 기능 설계
+
+### 8.1 개요
+
+html2canvas + jsPDF 기반. 화면 캡처 → A4 PDF 변환. PDF TEST 프로젝트의 검증된 스마트 페이지 분할 알고리즘 이식.
+
+### 8.2 사용자별 저장 대상
+
+| 사용자 | 저장 대상 | 구현 Phase |
+|---|---|---|
+| 학생 | 자가진단 결과 (점수/수준/추이) | Phase 1 |
+| 학생 | CIREF 결과 (미래 이미지 + 리플렉션 노트) | Phase 2 |
+| 관리자 | 학생 개별 리포트 (풀스펙) | Phase 3 |
+| 관리자 | 전체 학생 요약 리포트 | Phase 3 |
+| 관리자 | 위기신호 이력 리포트 | Phase 3 |
+
+### 8.3 관리자 학생 개별 리포트 포함 내용
+
+- 기본정보 (이름, 관리자, 기간)
+- 자가진단 점수 추이 그래프
+- 마음일기 감정 키워드 요약
+- CIREF 세션 요약 (생성 이미지 포함)
+- 위기신호 이력 (감지 일시, 키워드, 처리 여부)
+- 스마트폰 사용량 × 정서 상관관계 그래프
+- 미로 참여도 (클리어 횟수, 뱃지)
+
+### 8.4 PDF 스타일 규칙
+
+- 강제 라이트모드 (흰 배경) — 인쇄 친화적
+- 헤더: "인터넷 드림마을" 로고 + 기관명
+- 푸터: 생성 날짜 + 페이지 번호
+- 스마트 페이지 분할: 픽셀 스캔으로 텍스트/이미지 잘림 방지
+
+### 8.5 파일명 규칙
+
+| 대상 | 파일명 |
+|---|---|
+| 학생 자가진단 | `자가진단_{YYYY-MM-DD}.pdf` |
+| 학생 CIREF | `미래의나_{YYYY-MM-DD}.pdf` |
+| 관리자 개별 리포트 | `{기관명}_{학생명}_리포트_{YYYY-MM-DD}.pdf` |
+| 관리자 전체 요약 | `{기관명}_전체요약_{YYYY-MM-DD}.pdf` |
+| 관리자 위기이력 | `{기관명}_위기신호이력_{YYYY-MM-DD}.pdf` |
+
+### 8.6 공통 훅 구조
+
+```typescript
+// hooks/usePDFExport.ts
+usePDFExport(printRef: RefObject<HTMLDivElement>, options: {
+  filename: string;
+  institutionName?: string;
+  includeHeader?: boolean;  // default: true
+  includeFooter?: boolean;  // default: true
+})
+```
+
+**Phase 4 (Expo 전환) 시:** 앱 PDF 처리 방식 추후 결정 (서버사이드 Edge Function 유력)
+
+---
+
+## 9. 비기능 요건
 
 | 항목 | 요건 |
 |---|---|
