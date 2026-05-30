@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>인터넷 드림마을 — 발표 대본</title>
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+/* ─── 기본 리셋 ────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green-dark:  #2C3E35;
+  --green:       #4A9E75;
+  --green-light: #E8F5EE;
+  --text:        #1A2332;
+  --text-mid:    #4A5568;
+  --text-light:  #8A9BB0;
+  --border:      #E4E9F0;
+  --stage:       #7C6BC0;
+  --stage-bg:    #F0ECFA;
+  --warn:        #C07820;
+  --warn-bg:     #FFF8EE;
+  --red:         #B03030;
+  --red-bg:      #FFF0F0;
+}
+
+/* ─── 화면 공통 ────────────── */
+body {
+  font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  background: #F5F5F5;
+  color: var(--text);
+  line-height: 1.75;
+}
+
+.page-wrap {
+  max-width: 794px;
+  margin: 0 auto;
+  padding: 20px 0 40px;
+}
+
+/* ─── 페이지 (A4 시뮬레이션) ──── */
+.page {
+  background: white;
+  margin: 0 auto 24px;
+  padding: 48px 56px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  position: relative;
+  min-height: 1123px;
+}
+
+/* ─── 표지 ─────────────────── */
+.cover {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 1027px; /* 1123 - 2×48 */
+}
+.cover-top { width: 100%; }
+.cover-band {
+  width: 100%;
+  height: 8px;
+  background: var(--green);
+  border-radius: 4px;
+  margin-bottom: 56px;
+}
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--green-light);
+  border: 1px solid rgba(74,158,117,0.3);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+.cover-badge-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+}
+.cover-main-title {
+  font-size: 38px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.cover-main-title span { color: var(--green); }
+.cover-sub-title {
+  font-size: 18px;
+  color: var(--text-mid);
+  font-weight: 500;
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+.cover-divider {
+  width: 60px; height: 3px;
+  background: var(--green);
+  border-radius: 2px;
+  margin-bottom: 36px;
+}
+.cover-meta { display: flex; flex-direction: column; gap: 10px; }
+.cover-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-mid);
+}
+.cover-meta-label {
+  font-weight: 700;
+  color: var(--text-light);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  width: 72px;
+}
+.cover-bottom { width: 100%; }
+.cover-toc {
+  background: var(--green-light);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 32px;
+}
+.cover-toc-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.toc-list { display: flex; flex-direction: column; gap: 0; }
+.toc-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(74,158,117,0.15);
+}
+.toc-item:last-child { border-bottom: none; }
+.toc-num {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--green);
+  background: white;
+  border-radius: 4px;
+  padding: 2px 7px;
+  flex-shrink: 0;
+}
+.toc-title { font-size: 13px; color: var(--text-mid); flex: 1; }
+.toc-time {
+  font-size: 11px;
+  color: var(--text-light);
+  flex-shrink: 0;
+}
+.cover-footer {
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cover-footer-left { font-size: 12px; color: var(--text-light); }
+.cover-footer-right {
+  font-size: 11px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─── 페이지 헤더/푸터 ─────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--green);
+}
+.page-header-logo {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.page-header-num {
+  font-size: 11px;
+  color: var(--text-light);
+}
+.page-footer {
+  position: absolute;
+  bottom: 28px;
+  left: 56px;
+  right: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 10px;
+  color: var(--text-light);
+}
+
+/* ─── 슬라이드 섹션 ─────────── */
+.slide-section { margin-bottom: 36px; }
+.slide-section:last-of-type { margin-bottom: 0; }
+
+.slide-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--green-dark);
+  border-radius: 10px 10px 0 0;
+  padding: 12px 18px;
+  margin-bottom: 0;
+}
+.slide-num-badge {
+  background: var(--green);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+.slide-title-text {
+  font-size: 14px;
+  font-weight: 800;
+  color: white;
+  flex: 1;
+}
+.slide-time-badge {
+  font-size: 10px;
+  color: rgba(255,255,255,0.55);
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.slide-body {
+  border: 1.5px solid var(--green-dark);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 20px 22px;
+  background: white;
+}
+
+/* ─── 스크립트 단락 ─────────── */
+.script-p {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.85;
+  margin-bottom: 10px;
+}
+.script-p:last-child { margin-bottom: 0; }
+.script-p + .script-p { margin-top: 0; }
+
+/* ─── 스테이지 디렉션 ──────── */
+.stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--stage-bg);
+  color: var(--stage);
+  border: 1px solid rgba(124,107,192,0.25);
+  border-radius: 5px;
+  padding: 3px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  font-style: italic;
+  margin: 4px 0;
+}
+.stage-block {
+  display: block;
+  margin: 8px 0;
+}
+
+/* ─── 포인터 ───────────────── */
+.pointer {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--warn-bg);
+  color: var(--warn);
+  border: 1px solid rgba(192,120,32,0.25);
+  border-radius: 5px;
+  padding: 3px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  margin: 4px 0;
+}
+.pointer-block { display: block; margin: 8px 0; }
+
+/* ─── 강조 텍스트 ───────────── */
+.em { font-weight: 800; color: var(--text); }
+.em-green { font-weight: 800; color: var(--green); }
+
+/* ─── 힌트 박스 ─────────────── */
+.hint-box {
+  background: var(--green-light);
+  border-left: 3px solid var(--green);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  font-size: 12.5px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  margin: 12px 0;
+}
+
+/* ─── Q&A 카드 ──────────────── */
+.qa-card {
+  background: var(--green-light);
+  border: 1.5px solid rgba(74,158,117,0.2);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.qa-q {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--green);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.qa-q-badge {
+  background: var(--green);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.qa-a {
+  font-size: 12.5px;
+  color: var(--text-mid);
+  line-height: 1.75;
+  padding-left: 34px;
+}
+
+/* ─── 시연 박스 ─────────────── */
+.demo-box {
+  border: 2px dashed rgba(74,158,117,0.4);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin: 14px 0;
+}
+.demo-box-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--green);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.demo-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 12.5px;
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+.demo-step:last-child { margin-bottom: 0; }
+.demo-step-num {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--green);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ─── 구분선 ─────────────────── */
+.sep {
+  height: 1px;
+  background: var(--border);
+  margin: 20px 0;
+}
+
+/* ─── 페이지 브레이크 ─────────── */
+.page-break { display: none; }
+
+/* ─── 인쇄 스타일 ────────────── */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  body { background: white; }
+  .page-wrap { padding: 0; max-width: 100%; }
+  .page {
+    margin: 0;
+    padding: 36px 50px;
+    box-shadow: none;
+    min-height: 297mm;
+    page-break-after: always;
+  }
+  .page:last-child { page-break-after: avoid; }
+  .page-break { display: block; page-break-before: always; height: 0; }
+  .no-break { page-break-inside: avoid; }
+  .slide-section { page-break-inside: avoid; }
+  .qa-card { page-break-inside: avoid; }
+}
+
+/* ─── 인쇄 버튼 ─────────────── */
+.print-bar {
+  position: fixed;
+  top: 16px; right: 16px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.print-btn {
+  background: var(--green-dark);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  transition: all 0.18s;
+}
+.print-btn:hover { background: var(--green); transform: translateY(-1px); }
+.print-hint {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 11px;
+  color: var(--text-light);
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+@media print { .print-bar { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="print-bar">
+  <button class="print-btn" onclick="window.print()">🖨️ PDF로 저장</button>
+  <div class="print-hint">Chrome에서<br>「PDF로 저장」 선택</div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- ══════════════════════════════════
+       표지
+       ══════════════════════════════════ -->
+  <div class="page">
+    <div class="cover">
+      <div class="cover-top">
+        <div class="cover-band"></div>
+        <div class="cover-badge">
+          <div class="cover-badge-dot"></div>
+          발표 대본집
+        </div>
+        <div class="cover-main-title">
+          인터넷 <span>드림마을</span>
+        </div>
+        <div class="cover-sub-title">
+          청소년 스마트폰 과몰입 방지<br>AI 상담 플랫폼 — 발표 대본
+        </div>
+        <div class="cover-divider"></div>
+        <div class="cover-meta">
+          <div class="cover-meta-row">
+            <span class="cover-meta-label">날짜</span>
+            <span>2026년 5월</span>
+          </div>
+          <div class="cover-meta-row">
+            <span class="cover-meta-label">발표자</span>
+            <span>MK</span>
+          </div>
+          <div class="cover-meta-row">
+            <span class="cover-meta-label">총 시간</span>
+            <span>약 15~18분 (기술 시연 포함 시 20~25분)</span>
+          </div>
+          <div class="cover-meta-row">
+            <span class="cover-meta-label">슬라이드</span>
+            <span>11장 (인터넷드림마을_발표.pptx)</span>
+          </div>
+        </div>
+      </div>
+      <div class="cover-bottom">
+        <div class="cover-toc">
+          <div class="cover-toc-title">목차</div>
+          <div class="toc-list">
+            <div class="toc-item"><span class="toc-num">SL 01</span><span class="toc-title">표지</span><span class="toc-time">1분</span></div>
+            <div class="toc-item"><span class="toc-num">SL 02</span><span class="toc-title">발표 구성</span><span class="toc-time">30초</span></div>
+            <div class="toc-item"><span class="toc-num">SL 03</span><span class="toc-title">문제 현황 — 청소년 스마트폰 과몰입</span><span class="toc-time">2분</span></div>
+            <div class="toc-item"><span class="toc-num">SL 04</span><span class="toc-title">기존 방식 vs 인터넷 드림마을</span><span class="toc-time">2분</span></div>
+            <div class="toc-item"><span class="toc-num">SL 05</span><span class="toc-title">핵심 이론 배경</span><span class="toc-time">2분</span></div>
+            <div class="toc-item"><span class="toc-num">SL 06</span><span class="toc-title">CIREF 4단계 프로세스</span><span class="toc-time">2분</span></div>
+            <div class="toc-item"><span class="toc-num">SL 07</span><span class="toc-title">4개 핵심 모듈</span><span class="toc-time">2분</span></div>
+            <div class="toc-item"><span class="toc-num">SL 08</span><span class="toc-title">계정 구조 및 권한 체계</span><span class="toc-time">1분 30초</span></div>
+            <div class="toc-item"><span class="toc-num">SL 09</span><span class="toc-title">개발 로드맵</span><span class="toc-time">2분</span></div>
+            <div class="toc-item"><span class="toc-num">SL 10</span><span class="toc-title">기술 스택</span><span class="toc-time">1분 30초</span></div>
+            <div class="toc-item"><span class="toc-num">SL 11</span><span class="toc-title">마무리</span><span class="toc-time">1분</span></div>
+            <div class="toc-item"><span class="toc-num">부록</span><span class="toc-title">기술 시연 가이드 + 예상 Q&A</span><span class="toc-time">—</span></div>
+          </div>
+        </div>
+        <div class="cover-footer">
+          <div class="cover-footer-left">Internet Dream Village · PRD v1.0~4.0 반영</div>
+          <div class="cover-footer-right">Claude Code (Vibe Coding) 방식으로 개발 중</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PAGE 2 — SL 01~03
+       ══════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <span class="page-header-logo">인터넷 드림마을 — 발표 대본</span>
+      <span class="page-header-num">p. 2</span>
+    </div>
+
+    <!-- SL 01 -->
+    <div class="slide-section no-break">
+      <div class="slide-header">
+        <span class="slide-num-badge">SL 01</span>
+        <span class="slide-title-text">표지</span>
+        <span class="slide-time-badge">約 1분</span>
+      </div>
+      <div class="slide-body">
+        <p class="script-p">안녕하세요.</p>
+        <p class="script-p">저는 오늘 <span class="em">인터넷 드림마을</span>이라는 프로젝트를 발표하겠습니다.</p>
+        <p class="script-p">인터넷 드림마을은 청소년의 스마트폰 과몰입을 방지하기 위한 <span class="em-green">AI 기반 웹 상담 플랫폼</span>입니다.</p>
+        <p class="script-p">"스마트폰을 덜 써라"는 말 대신, AI가 학생과 직접 대화하며 <span class="em">5년 후의 자신</span>을 이미지로 그려주고, 그 미래를 향한 동기를 스스로 키워나가도록 돕는 서비스입니다.</p>
+        <p class="script-p">개발은 <span class="em-green">Claude Code를 활용한 Vibe Coding</span> 방식으로 진행하고 있습니다. AI가 코드를 작성하고, 저는 방향 설정과 검증에 집중하는 방식입니다.</p>
+        <span class="stage stage-block">▷ 슬라이드 전환</span>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- SL 02 -->
+    <div class="slide-section no-break">
+      <div class="slide-header">
+        <span class="slide-num-badge">SL 02</span>
+        <span class="slide-title-text">발표 구성</span>
+        <span class="slide-time-badge">約 30초</span>
+      </div>
+      <div class="slide-body">
+        <p class="script-p">오늘 발표는 다섯 파트로 구성됩니다.</p>
+        <p class="script-p">먼저 왜 이 서비스가 필요한지 현황을 보여드리고, 저희가 어떻게 접근했는지 설명드린 뒤, 이론적 근거, 기능 명세, 그리고 기술 스택과 개발 로드맵 순으로 말씀드리겠습니다.</p>
+        <span class="stage stage-block">▷ 슬라이드 전환</span>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- SL 03 -->
+    <div class="slide-section no-break">
+      <div class="slide-header">
+        <span class="slide-num-badge">SL 03</span>
+        <span class="slide-title-text">왜 지금 해야 하는가? — 청소년 스마트폰 과몰입 현황</span>
+        <span class="slide-time-badge">約 2분</span>
+      </div>
+      <div class="slide-body">
+        <span class="pointer pointer-block">↗ 포인터 → 40.1% 카드</span>
+        <p class="script-p">청소년 스마트폰 과의존 위험군 비율이 <span class="em">40.1%</span>입니다. 열 명 중 네 명이 위험 수준이에요. 2023년 과학기술정통부 조사 결과입니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → 4.2시간 카드</span>
+        <p class="script-p">청소년의 일평균 스마트폰 사용 시간은 <span class="em">4.2시간</span>. 성인보다 1.3배 높습니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → r=0.68 카드</span>
+        <p class="script-p">그리고 스마트폰 사용 증가와 청소년 우울·불안 사이의 상관계수가 <span class="em">r = 0.68</span>로, 통계적으로 유의미한 관계가 확인됩니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → 하단 문제점 목록</span>
+        <p class="script-p">숫자 너머의 문제는 크게 네 가지입니다. 첫째, 기존 면대면 상담은 시간과 장소 제약이 크다. 둘째, "나중에 잘 살아야지"식의 추상적 미래 이야기로는 청소년의 행동 변화를 이끌기 어렵다. 셋째, 학생의 감정과 행동 변화 데이터가 체계적으로 축적되지 않는다. 넷째, 자해나 우울 같은 위기 신호를 빠르게 감지하고 연결하는 시스템이 없다.</p>
+        <p class="script-p">이 네 가지를 동시에 해결하는 게 인터넷 드림마을의 출발점이었습니다.</p>
+        <span class="stage stage-block">▷ 슬라이드 전환</span>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>인터넷 드림마을 발표 대본</span>
+      <span>2026. 05. — MK</span>
+      <span>2</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PAGE 3 — SL 04~05
+       ══════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <span class="page-header-logo">인터넷 드림마을 — 발표 대본</span>
+      <span class="page-header-num">p. 3</span>
+    </div>
+
+    <!-- SL 04 -->
+    <div class="slide-section no-break">
+      <div class="slide-header">
+        <span class="slide-num-badge">SL 04</span>
+        <span class="slide-title-text">기존 방식 vs 인터넷 드림마을</span>
+        <span class="slide-time-badge">約 2분</span>
+      </div>
+      <div class="slide-body">
+        <span class="pointer pointer-block">↗ 포인터 → 좌측 패널 (기존 방식)</span>
+        <p class="script-p">기존 상담 방식의 한계를 보겠습니다. 면대면 상담은 접근성이 낮고, 추상적인 미래 설명은 동기 부여 효과가 제한적이며, 데이터를 체계적으로 수집하기 어렵습니다. 위기 신호도 사후에 발견되는 경우가 많습니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → 우측 패널 (드림마을)</span>
+        <p class="script-p">인터넷 드림마을은 이 문제를 정반대로 접근합니다. 웹앱이기 때문에 스마트폰이든 PC든 언제 어디서나 접근할 수 있고, AI 이미지로 추상적인 미래를 지금 눈앞에 생생하게 보여줍니다. 마음일기와 자가진단 데이터가 자동으로 쌓이고, 위기 신호가 감지되면 관리자 선생님께 즉시 알림이 갑니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → 하단 핵심 차이 바</span>
+        <p class="script-p">핵심 차이 한 줄 — <span class="em">기존 방식은 사람이 직접 관리하고, 드림마을은 AI가 24시간 함께합니다.</span></p>
+        <span class="stage stage-block">▷ 슬라이드 전환</span>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- SL 05 -->
+    <div class="slide-section no-break">
+      <div class="slide-header">
+        <span class="slide-num-badge">SL 05</span>
+        <span class="slide-title-text">핵심 이론 배경 — EFT · CIREF · 지연 할인 극복</span>
+        <span class="slide-time-badge">約 2분</span>
+      </div>
+      <div class="slide-body">
+        <p class="script-p">이 서비스는 세 가지 과학적 이론에 기반합니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → EFT 카드</span>
+        <p class="script-p">첫째, <span class="em-green">EFT — Episodic Future Thinking</span>입니다. 추상적인 미래를 구체적인 에피소드로 변환하면, 뇌의 도파민 보상 회로가 건강하게 재공고화된다는 이론입니다. "나중에 잘 살아야지"가 아니라 "5년 후 나는 도서관에서 친구들과 공부하고 있다"처럼, 장소·인물·감정이 구체적일수록 행동 변화가 일어납니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → CIREF 카드</span>
+        <p class="script-p">둘째, <span class="em-green">CIREF 프레임워크</span>입니다. 단서 유발 회상과 일화적 미래 사고를 결합한 4단계 대화 구조입니다. 드림마을의 '미래의 나' 모듈이 바로 이 프레임워크를 그대로 구현합니다. Claude API가 학생과 대화하며 미래 에피소드를 수집하고, Gemini가 이미지로 만들어줍니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → 지연 할인 카드</span>
+        <p class="script-p">셋째, <span class="em-green">지연 할인 극복</span>입니다. 사람은 먼 미래의 보상을 현재 가치보다 낮게 인식하는 경향이 있습니다. 이게 바로 "내일부터 해야지"가 반복되는 심리적 이유입니다. AI가 생성한 생생한 이미지는 이 인지 편향을 극복하게 도와주고, 즉각적인 행동 변화 동기를 만들어냅니다.</p>
+        <span class="stage stage-block">▷ 슬라이드 전환</span>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>인터넷 드림마을 발표 대본</span>
+      <span>2026. 05. — MK</span>
+      <span>3</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PAGE 4 — SL 06~07
+       ══════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <span class="page-header-logo">인터넷 드림마을 — 발표 대본</span>
+      <span class="page-header-num">p. 4</span>
+    </div>
+
+    <!-- SL 06 -->
+    <div class="slide-section no-break">
+      <div class="slide-header">
+        <span class="slide-num-badge">SL 06</span>
+        <span class="slide-title-text">CIREF 4단계 프로세스</span>
+        <span class="slide-time-badge">約 2분</span>
+      </div>
+      <div class="slide-body">
+        <span class="pointer pointer-block">↗ 포인터 → 4단계 화살표</span>
+        <p class="script-p">미래의 나 모듈은 네 단계로 진행됩니다.</p>
+        <p class="script-p"><span class="em">1단계 시공간 묘사:</span> "스마트폰을 내려놓은 미래의 너는 어디서 누구와 뭘 하고 있어?" — 답변이 짧으면 Claude가 "어떤 장소인지 더 구체적으로 말해줄 수 있어?"처럼 자연스럽게 보완 질문을 합니다.</p>
+        <p class="script-p"><span class="em">2단계 감각/감정 예측:</span> "그 장면에서 기분이 어때? 몸으로 느낀다면 어떤 느낌일까?"</p>
+        <p class="script-p"><span class="em">3단계 정체성 탐색:</span> "해결된 미래의 너는 네가 꿈꾸던 어떤 어른의 모습과 닮았어?"</p>
+        <p class="script-p"><span class="em">4단계 대체 활동:</span> "스마트폰 대신 푹 빠져서 해보고 싶은 활동은 뭐야?"</p>
+        <p class="script-p">학생이 "모르겠어요"라고 짧게 답하면 소크라테스식 재질문으로 유도합니다. 2회 연속 짧은 답변이 오면 자동으로 예시 보기 버튼이 나타납니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → AI 분석 / 이미지 생성 카드</span>
+        <p class="script-p">첫 세션에서 학생은 자신의 <span class="em-green">외모 앵커</span>를 입력합니다. 키, 머리 스타일, 안경 착용 여부 같은 정보를 텍스트로 입력해두면, Gemini가 이미지를 생성할 때 동일 인물 일관성을 유지해줍니다.</p>
+        <p class="script-p">4단계 완료 후 Gemini가 5년 후 이미지를 생성하면, <span class="em">리플렉션 3문항</span>이 순차적으로 표시됩니다. "이 미래의 나를 보고 어떤 느낌이 들어?", "지금 당장 뭔가 바꾸고 싶은 게 생겼어?", "이 미래를 위해 오늘 할 수 있는 한 가지는?" — 이 세 가지 답변이 저장됩니다. 5년 후 이후에는 <span class="em-green">"10년 후의 나도 볼까요?"</span> 선택지가 나옵니다.</p>
+        <span class="stage stage-block">▷ 슬라이드 전환</span>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- SL 07 -->
+    <div class="slide-section no-break">
+      <div class="slide-header">
+        <span class="slide-num-badge">SL 07</span>
+        <span class="slide-title-text">4개 핵심 모듈</span>
+        <span class="slide-time-badge">約 2분</span>
+      </div>
+      <div class="slide-body">
+        <p class="script-p">학생 대시보드에는 네 가지 모듈이 있습니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → 마음일기 카드</span>
+        <p class="script-p"><span class="em">첫째, 마음일기 (Phase 1).</span> 매일 감정을 텍스트로 기록하면 Claude API가 감정 Valence를 추출하고 꽃 SVG로 시각화합니다. 기쁜 날은 만개한 해바라기, 슬픈 날은 고개를 숙인 꽃이 그려집니다. Phase 3에서는 Gemini가 bloom_degree, petal_count 같은 파라미터를 조절해 무한한 변형이 가능합니다. 위기 신호가 감지되면 즉시 관리자에게 알림이 발송됩니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → 미래의 나 카드</span>
+        <p class="script-p"><span class="em">둘째, 미래의 나 (Phase 2 핵심).</span> 방금 설명드린 CIREF 모듈입니다. 월 5회 기본 제공이며 관리자가 1~10회로 조정할 수 있습니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → 자가진단 카드</span>
+        <p class="script-p"><span class="em">셋째, 나의 자가진단 (Phase 1).</span> SAS 중독 척도와 PHQ-A 청소년 우울 척도로 정기 측정합니다. 여기서 주목할 기능이 있습니다. 매일 접속할 때 "오늘 스마트폰 몇 시간 썼어?"를 슬라이더로 입력받아, <span class="em-green">스마트폰 사용량과 정서 안정도의 상관관계 그래프</span>를 보여줍니다. 학생이 직접 "폰을 덜 쓴 날 기분이 좋았구나"를 데이터로 확인하는 메타인지가 핵심입니다. (Phase 3 고도화)</p>
+        <span class="pointer pointer-block">↗ 포인터 → 미로 풀기 카드</span>
+        <p class="script-p"><span class="em">넷째, 미로 풀기 (Phase 3).</span> 기존에 개발된 10단계 미로 프로젝트를 이식합니다. 레벨이 올라갈수록 그리드가 커지고, 플레이어 시야를 안개로 제한하는 난이도 시스템이 추가됩니다. 일일 15분 플레이 제한으로 2차 중독을 방지합니다.</p>
+        <span class="stage stage-block">▷ 슬라이드 전환</span>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>인터넷 드림마을 발표 대본</span>
+      <span>2026. 05. — MK</span>
+      <span>4</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PAGE 5 — SL 08~10
+       ══════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <span class="page-header-logo">인터넷 드림마을 — 발표 대본</span>
+      <span class="page-header-num">p. 5</span>
+    </div>
+
+    <!-- SL 08 -->
+    <div class="slide-section no-break">
+      <div class="slide-header">
+        <span class="slide-num-badge">SL 08</span>
+        <span class="slide-title-text">계정 구조 및 권한 체계</span>
+        <span class="slide-time-badge">約 1분 30초</span>
+      </div>
+      <div class="slide-body">
+        <p class="script-p">계정은 3계층 구조입니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → 수퍼바이저 행</span>
+        <p class="script-p">최상위 <span class="em">수퍼바이저</span>는 모든 기관 관리자 계정을 생성하고 구독 만료일을 수동으로 연장합니다. 결제 시스템 없이 구두 재계약 방식으로 운영해 초기 운영 부담을 최소화했습니다. 만료 D-30, D-7에 자동 이메일 알림이 발송됩니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → 관리자 행</span>
+        <p class="script-p">중간의 <span class="em">관리자</span> — 기관 담당 선생님 — 는 산하 학생 전체의 마음일기, 자가진단, 미래 이미지 갤러리를 열람하고, 위기 신호가 감지되면 즉시 알림을 받습니다. 학생이 7일 이상 미접속해도 알림이 갑니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → 학생 행</span>
+        <p class="script-p">하단의 <span class="em">학생</span>은 본인 데이터만 접근 가능합니다. 다른 학생의 데이터는 Supabase RLS, 즉 Row Level Security로 데이터베이스 레벨에서 완전히 차단됩니다. 미성년자 데이터를 다루는 만큼 보안이 설계의 핵심입니다.</p>
+        <span class="stage stage-block">▷ 슬라이드 전환</span>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- SL 09 -->
+    <div class="slide-section no-break">
+      <div class="slide-header">
+        <span class="slide-num-badge">SL 09</span>
+        <span class="slide-title-text">개발 로드맵</span>
+        <span class="slide-time-badge">約 2분</span>
+      </div>
+      <div class="slide-body">
+        <span class="pointer pointer-block">↗ 포인터 → Phase 1 행</span>
+        <p class="script-p"><span class="em">Phase 1 MVP</span> — 계정 시스템, 마음일기, 자가진단, 관리자 대시보드, 위기 신호 감지, PDF 저장 기능이 포함됩니다. 이것만 완성되어도 실제 학교 현장에 투입할 수 있는 수준입니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → Phase 2 행</span>
+        <p class="script-p"><span class="em">Phase 2</span> — 미래의 나 모듈 전체. 외모 앵커, CIREF 4단계 대화, Gemini 이미지 생성, 갤러리 슬라이드쇼. CIREF 답변은 미성년자 내면 데이터이므로 암호화 저장합니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → Phase 3 행</span>
+        <p class="script-p"><span class="em">Phase 3</span> — 미로 게임 이식, 꽃 SVG AI 파라미터화, 스마트폰 사용량 상관관계 그래프, 수퍼바이저 대시보드, 관리자 PDF 리포트 3종. 완성형 B2B SaaS 수준입니다.</p>
+        <p class="script-p">그리고 PRD에는 <span class="em">Phase 4</span>도 설계되어 있습니다. Next.js를 Expo로 전환해서 웹과 Android 앱을 단일 코드베이스로 지원하고, Google Play 배포를 목표로 합니다. 이때 <span class="em-green">부모 모니터링 계정</span>도 추가됩니다. 부모는 자녀의 자가진단 수준과 스마트폰 사용량만 확인할 수 있고, 마음일기 전문은 부모에게도 공개되지 않습니다. 학생이 솔직하게 기록하려면 그 공간이 보호받아야 하기 때문입니다.</p>
+        <span class="stage stage-block">▷ 슬라이드 전환</span>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- SL 10 -->
+    <div class="slide-section no-break">
+      <div class="slide-header">
+        <span class="slide-num-badge">SL 10</span>
+        <span class="slide-title-text">기술 스택</span>
+        <span class="slide-time-badge">約 1분 30초</span>
+      </div>
+      <div class="slide-body">
+        <span class="pointer pointer-block">↗ 포인터 → 표 전체</span>
+        <p class="script-p">프론트엔드는 <span class="em">Next.js 14 App Router</span> + Tailwind CSS + shadcn/ui로 Vercel에 최적화된 반응형 웹앱을 만들고, 백엔드와 데이터베이스는 <span class="em">Supabase</span>입니다. RLS 정책으로 학생 데이터를 DB 레벨에서 격리하고, Realtime으로 위기 신호 알림을 처리합니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → AI 엔진 행</span>
+        <p class="script-p">AI 엔진은 <span class="em-green">Claude API</span>입니다. 마음일기 감정 분석, CIREF 4단계 대화 엔진, 위기 신호 감지, 동기강화 상담 재질문 — 핵심 AI 기능 전부를 Claude가 담당합니다.</p>
+        <p class="script-p">이미지 생성은 <span class="em-green">Gemini API</span>입니다. 초기에는 fal.ai와 Replicate를 검토했지만, 텍스트 프롬프트 생성과 이미지 생성을 같은 API에서 처리할 수 있는 일관성 때문에 Gemini로 결정했습니다. 생성된 이미지는 WebP로 변환해 720px 리사이즈 후 Supabase Storage에 저장됩니다.</p>
+        <span class="pointer pointer-block">↗ 포인터 → 하단 Callout</span>
+        <p class="script-p">개발 방식 — <span class="em-green">Claude Code Vibe Coding</span>. AI가 코드를 작성하고 저는 방향 설정과 검증에 집중합니다.</p>
+        <span class="stage stage-block">▷ 슬라이드 전환</span>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>인터넷 드림마을 발표 대본</span>
+      <span>2026. 05. — MK</span>
+      <span>5</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PAGE 6 — SL 11 + 시연 가이드
+       ══════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <span class="page-header-logo">인터넷 드림마을 — 발표 대본</span>
+      <span class="page-header-num">p. 6</span>
+    </div>
+
+    <!-- SL 11 -->
+    <div class="slide-section no-break">
+      <div class="slide-header">
+        <span class="slide-num-badge">SL 11</span>
+        <span class="slide-title-text">마무리</span>
+        <span class="slide-time-badge">約 1분</span>
+      </div>
+      <div class="slide-body">
+        <p class="script-p">정리하겠습니다.</p>
+        <p class="script-p">인터넷 드림마을은 단순한 상담 앱이 아닙니다.</p>
+        <p class="script-p">EFT와 CIREF라는 과학적 이론을 바탕으로, Claude가 학생과 대화하고 Gemini가 그 이야기를 이미지로 그려주며, 매일 쌓이는 감정 데이터와 상관관계 그래프로 학생 스스로 변화를 확인합니다. 그리고 위기 순간에는 즉시 사람과 연결합니다.</p>
+        <p class="script-p">"스마트폰을 끊어라"는 말 대신, <span class="em-green">"네 미래가 이렇게 근사하다"</span>는 걸 직접 보여주는 서비스를 만들고 싶었습니다.</p>
+        <p class="script-p">이상입니다. 감사합니다.</p>
+        <span class="stage stage-block">▷ 기술 시연으로 전환 또는 Q&A</span>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- 시연 가이드 -->
+    <div class="slide-section no-break">
+      <div class="slide-header" style="background:#3D2E6B;">
+        <span class="slide-num-badge" style="background:#7C6BC0;">부록 A</span>
+        <span class="slide-title-text">기술 시연 가이드 — demo.html (3~5분)</span>
+        <span class="slide-time-badge">선택 사항</span>
+      </div>
+      <div class="slide-body" style="border-color:#3D2E6B;">
+        <div class="hint-box" style="background:#F0ECFA;border-color:#7C6BC0;">
+          슬라이드 발표 후, 또는 슬라이드 7 이후에 삽입 가능. demo.html을 Chrome으로 열어 전체 화면으로 전환 후 진행.
+        </div>
+        <div class="demo-box" style="margin-top:14px;">
+          <div class="demo-box-title">📖 마음일기 시연</div>
+          <div class="demo-step"><div class="demo-step-num">1</div><span>사이드바에서 마음일기 클릭</span></div>
+          <div class="demo-step"><div class="demo-step-num">2</div><span>감정 이모지 선택 → 예시 텍스트 입력</span></div>
+          <div class="demo-step"><div class="demo-step-num">3</div><span>"AI 감정 분석하기" 버튼 클릭 → 로딩 약 2초</span></div>
+          <div class="demo-step"><div class="demo-step-num">4</div><span>꽃 SVG + Valence 점수 + AI 코멘트 결과 확인</span></div>
+        </div>
+        <div class="demo-box" style="margin-top:10px;">
+          <div class="demo-box-title">🔮 미래의 나 CIREF 시연</div>
+          <div class="demo-step"><div class="demo-step-num">1</div><span>사이드바에서 미래의 나 클릭</span></div>
+          <div class="demo-step"><div class="demo-step-num">2</div><span>예시 칩 클릭 또는 직접 입력 후 전송 → 2~3단계 빠르게 진행</span></div>
+          <div class="demo-step"><div class="demo-step-num">3</div><span>4단계 완료 → Gemini 이미지 생성 로딩 약 3초</span></div>
+          <div class="demo-step"><div class="demo-step-num">4</div><span>AI 자화상 이미지 + 리플렉션 노트 작성 → 갤러리 저장</span></div>
+        </div>
+        <div class="demo-box" style="margin-top:10px;">
+          <div class="demo-box-title">📊 자가진단 시연</div>
+          <div class="demo-step"><div class="demo-step-num">1</div><span>사이드바에서 자가진단 클릭</span></div>
+          <div class="demo-step"><div class="demo-step-num">2</div><span>2~3문항 선택 후 빠르게 진행</span></div>
+          <div class="demo-step"><div class="demo-step-num">3</div><span>결과 — 수준 판정 + 영역별 차트 애니메이션 + AI 권고사항</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>인터넷 드림마을 발표 대본</span>
+      <span>2026. 05. — MK</span>
+      <span>6</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PAGE 7 — 예상 Q&A
+       ══════════════════════════════════ -->
+  <div class="page">
+    <div class="page-header">
+      <span class="page-header-logo">인터넷 드림마을 — 발표 대본</span>
+      <span class="page-header-num">p. 7</span>
+    </div>
+    <div style="margin-bottom:20px;">
+      <div style="font-size:16px;font-weight:900;color:var(--text);margin-bottom:4px;">부록 B — 예상 질문 & 답변</div>
+      <div style="font-size:12px;color:var(--text-light);">청중 질문에 대비한 핵심 답변 요약</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-q-badge">Q1</span>이미지 생성 API를 fal.ai가 아니라 Gemini로 선택한 이유가 있나요?</div>
+      <div class="qa-a">PRD1 초기에는 fal.ai·Replicate를 검토했지만, CIREF 답변 분석(텍스트)과 이미지 생성 프롬프트 생성, 실제 이미지 생성을 같은 Gemini API에서 처리하면 연동 관리가 단순해지고 일관성이 높아진다는 판단으로 PRD2 설계 시 Gemini로 변경했습니다.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-q-badge">Q2</span>이미지 일관성은 어떻게 유지하나요?</div>
+      <div class="qa-a">Phase 2에서는 첫 세션의 외모 앵커 텍스트(키, 머리 스타일, 안경 여부 등)를 매 프롬프트에 포함시켜 일관성을 유지합니다. Phase 4에서는 첫 세션 이미지를 참조 이미지로 사용하는 img2img 방식으로 고도화할 예정입니다.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-q-badge">Q3</span>부모가 자녀의 일기를 볼 수 있나요?</div>
+      <div class="qa-a">볼 수 없습니다. Phase 4에 부모 모니터링 계정이 추가되지만, 마음일기 전문과 미래 이미지 갤러리는 부모에게도 공개되지 않습니다. 학생이 솔직하게 기록하려면 그 공간이 보호받아야 한다는 원칙입니다. 부모는 자가진단 수준(관심/주의/위험)과 스마트폰 사용 시간 추이, 위기 신호 알림만 받습니다.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-q-badge">Q4</span>월 5회 세션 제한이 너무 적지 않나요?</div>
+      <div class="qa-a">관리자가 1~10회/월 범위에서 기관별로 조정할 수 있습니다. 기본값 5회는 이미지 생성 API 비용과 학생이 매 세션을 충분히 소화하는 시간을 고려한 수치입니다. 이미지 생성 실패 시에는 횟수가 차감되지 않습니다.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-q-badge">Q5</span>실제 심리 상담을 대체할 수 있나요?</div>
+      <div class="qa-a">대체가 아닌 보조 도구입니다. 위기 신호 감지는 보조 역할이고 최종 판단은 항상 관리자(상담사)가 합니다. AI는 접근성·데이터 추적·동기 부여 역할에 집중합니다.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-q-badge">Q6</span>CIREF 답변 같은 내면 데이터는 어떻게 보호하나요?</div>
+      <div class="qa-a">Supabase RLS로 본인과 담당 관리자만 접근 가능하도록 제한하고, CIREF 4단계 답변 원문은 암호화 저장을 권장 사항으로 명시했습니다. 이미지 생성 프롬프트 로그는 오남용 감사 목적으로 별도 보관합니다.</div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-q"><span class="qa-q-badge">Q7</span>Google Play 배포 계획은 언제인가요?</div>
+      <div class="qa-a">Phase 1~3 Next.js 웹 버전을 완성하고 현장 검증 후, Phase 4에서 Expo로 전환해 Android 앱으로 배포합니다. 미성년자 대상 앱이므로 Google Play 아동 정책 체크리스트(개인정보 처리방침, 행동 기반 광고 없음, 학부모 동의 메커니즘 등)를 사전에 점검 중입니다.</div>
+    </div>
+
+    <div class="page-footer">
+      <span>인터넷 드림마을 발표 대본</span>
+      <span>2026. 05. — MK</span>
+      <span>7</span>
+    </div>
+  </div>
+
+</div><!-- /page-wrap -->
+</body>
+</html>

@@ -1,23 +1,39 @@
 # Handoff: 인터넷 드림마을 웹앱 개발
 
-**날짜:** 2026-05-25  
-**상태:** PRD 전체 완료 (PRD1~4), 개발 미착수
+**최초 작성:** 2026-05-25  
+**최종 업데이트:** 2026-05-31  
+**상태:** PRD 전체 완료 (PRD1~4) + 발표 자료 전체 완성, 개발 미착수
 
 ---
 
 ## 현재 상태
 
-PRD 1~4 전체 설계 완료. 랜딩페이지 완성. GitHub 이슈 4개 등록. 코드 작성 미시작.
+PRD 1~4 전체 설계 완료. 발표용 PPT·시연 프로토타입·대본 전체 완성. GitHub 이슈 #1~5 등록. 코드 작성 미시작.
 
 ### 산출물 목록
 
+#### 기획 문서
 | 파일 | 설명 |
 |---|---|
 | `인터넷드림마을_PRD.md` (PRD1) | Phase 1 MVP 전체 기획 + 아키텍처 |
-| `인터넷드림마을_PRD2.md` | Phase 2 EFT 미래의 나 AI 자화상 |
-| `인터넷드림마을_PRD3.md` | Phase 3 미로 게임 + SVG 고도화 + 그래프 + 수퍼바이저 |
-| `인터넷드림마을_PRD4.md` | Phase 4 Expo 전환 + 부모 모니터링 + Android 앱 |
+| `인터넷드림마을_PRD2.md` | Phase 2 EFT 미래의 나 AI 자화상 (외모앵커·리플렉션3문항·Gemini) |
+| `인터넷드림마을_PRD3.md` | Phase 3 미로 이식·SVG 파라미터화·상관관계 그래프·수퍼바이저 |
+| `인터넷드림마을_PRD4.md` | Phase 4 Expo 전환·부모 모니터링·Android 앱·Google Play |
+
+#### 발표 자료 (2026-05-31 완성)
+| 파일 | 설명 |
+|---|---|
+| `인터넷드림마을_발표.pptx` | 11장 PT 슬라이드 (아이보리 테마, Pretendard 폰트) |
+| `demo.html` | 기술 시연용 인터랙티브 웹 프로토타입 (마음일기·CIREF·자가진단 작동) |
+| `발표대본.md` | PPT 대본 (PRD1~4 전체 반영, 슬라이드별 스크립트 + 예상Q&A) |
+| `발표대본_print.html` | PDF 대본집 (7페이지 A4, Chrome 인쇄 → PDF) |
+| `build-ppt.js` | PPTX 생성 스크립트 (pptxgenjs, 드림마을 팔레트) |
 | `landing.html` | 전체 서비스 소개 랜딩페이지 |
+
+#### PPT 슬라이드 구성 (11장)
+1. 표지 / 2. 목차 / 3. 문제 현황 (KPI 3개) / 4. 기존 vs 드림마을 비교 /
+5. 핵심 이론(EFT·CIREF·지연할인) / 6. CIREF 4단계 / 7. 4개 모듈 /
+8. 계정 구조 3-Tier / 9. 개발 로드맵 / 10. 기술 스택 / 11. 마무리
 
 ### GitHub
 
@@ -26,6 +42,7 @@ PRD 1~4 전체 설계 완료. 랜딩페이지 완성. GitHub 이슈 4개 등록.
 - **이슈 #2:** PRD2 Phase 2 EFT
 - **이슈 #3:** PRD3 Phase 3 게임&고도화
 - **이슈 #4:** PRD4 Phase 4 모바일&부모
+- **이슈 #5:** PDF 저장 기능 (usePDFExport 훅)
 
 ---
 
@@ -195,14 +212,23 @@ PRD 1~4 전체 설계 완료. 랜딩페이지 완성. GitHub 이슈 4개 등록.
 
 ## 다음 세션 시작점
 
-**Phase 1 개발 시작.** 순서:
+**Phase 1 개발 착수.** 발표 자료 완성 상태 — 코드 작성 시작 가능.
 
-1. Supabase 프로젝트 생성
-2. `npx create-next-app@latest` (App Router, TypeScript, Tailwind)
-3. `.env.local` 환경변수
-4. DB 스키마 + RLS 마이그레이션
-5. 3-Tier 인증 구현
-6. Vercel 연동
+### 즉시 실행 순서
+
+1. Supabase 프로젝트 생성 (리전: ap-northeast-1 서울)
+2. `npx create-next-app@latest internet-dream-village --typescript --tailwind --app` 실행
+3. `.env.local` 환경변수 설정 (Supabase URL/anon key, Gemini API key)
+4. Resend 계정 생성 + API 키 발급 (위기신호 이메일 알림용)
+5. DB 스키마 마이그레이션 (PRD1 5장 데이터 모델 기준)
+6. Supabase RLS 정책 설정
+7. 3-Tier 인증 구현 (username → `{username}@drm.internal` 변환)
+8. Vercel 연동 + 첫 배포
+
+### 발표 관련 참고
+- `demo.html` — 기술 시연 시 Chrome으로 열어 전체화면 사용
+- `발표대본_print.html` — Chrome에서 Ctrl+P → PDF로 저장 (배경 그래픽 체크)
+- `인터넷드림마을_발표.pptx` — Pretendard 폰트 설치 필요 (미설치 시 맑은 고딕으로 표시)
 
 ---
 
