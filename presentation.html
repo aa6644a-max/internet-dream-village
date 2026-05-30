@@ -9,235 +9,268 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #5BAD88;
-      --primary-light: #7BC8A4;
-      --primary-bg: #EBF7F1;
-      --accent: #F9A870;
-      --accent-bg: #FEF3EB;
-      --accent2: #9B85CB;
-      --accent2-bg: #F0ECFA;
-      --text: #1A2332;
-      --text-mid: #4A5568;
-      --text-light: #718096;
-      --border: #D1D9E6;
-      --bg: #F7F8FA;
-      --white: #FFFFFF;
-      --card-bg: #FFFFFF;
+      --primary: #5BAD88; --primary-light: #7BC8A4; --primary-bg: #EBF7F1;
+      --accent: #F9A870; --accent-bg: #FEF3EB;
+      --accent2: #9B85CB; --accent2-bg: #F0ECFA;
+      --text: #1A2332; --text-mid: #4A5568; --text-light: #718096;
+      --border: #D1D9E6; --bg: #F7F8FA; --white: #FFFFFF;
     }
-    html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; background: var(--bg); }
+    html, body { width:100%; height:100%; overflow:hidden; font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif; background:var(--bg); }
+    #slider { width:100%; height:100vh; position:relative; }
+    .slide { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.35s ease; }
+    .slide.active { opacity:1; pointer-events:all; }
 
-    /* SLIDE CONTAINER */
-    #slider { width: 100%; height: 100vh; position: relative; }
-    .slide {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.35s ease;
-    }
-    .slide.active { opacity: 1; pointer-events: all; }
+    /* NAV */
+    #nav { position:fixed; bottom:1.6rem; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:0.9rem; z-index:999; background:rgba(255,255,255,0.92); backdrop-filter:blur(16px); border:1px solid var(--border); border-radius:999px; padding:0.5rem 1.1rem; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
+    .nav-btn { width:32px; height:32px; border-radius:50%; border:1px solid var(--border); background:var(--white); color:var(--text-mid); cursor:pointer; font-size:0.85rem; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+    .nav-btn:hover { background:var(--primary); color:white; border-color:var(--primary); }
+    #page-indicator { color:var(--text-light); font-size:0.78rem; min-width:42px; text-align:center; }
+    .dots { display:flex; gap:0.35rem; }
+    .dot { width:5px; height:5px; border-radius:50%; background:var(--border); cursor:pointer; transition:all 0.2s; }
+    .dot.active { background:var(--primary); width:16px; border-radius:3px; }
 
-    /* BOTTOM NAV */
-    #nav {
-      position: fixed; bottom: 1.8rem; left: 50%; transform: translateX(-50%);
-      display: flex; align-items: center; gap: 1rem; z-index: 999;
-      background: rgba(255,255,255,0.9); backdrop-filter: blur(16px);
-      border: 1px solid var(--border); border-radius: 999px;
-      padding: 0.55rem 1.2rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    }
-    .nav-btn {
-      width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border);
-      background: var(--white); color: var(--text-mid); cursor: pointer;
-      font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
-    }
-    .nav-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
-    #page-indicator { color: var(--text-light); font-size: 0.8rem; min-width: 44px; text-align: center; }
-    .dots { display: flex; gap: 0.4rem; }
-    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); cursor: pointer; transition: all 0.2s; }
-    .dot.active { background: var(--primary); width: 18px; border-radius: 3px; }
+    /* COMMON */
+    .slide-inner { max-width:900px; width:90%; padding:1.8rem; }
+    .slide-label { font-size:0.7rem; font-weight:800; letter-spacing:0.14em; color:var(--primary); text-transform:uppercase; margin-bottom:0.6rem; }
+    .slide-title { font-size:clamp(1.6rem,3.5vw,2.6rem); font-weight:900; margin-bottom:0.8rem; letter-spacing:-0.02em; color:var(--text); }
+    .slide-desc { font-size:0.9rem; color:var(--text-light); line-height:1.8; max-width:600px; margin-bottom:1.5rem; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; }
+    .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:0.9rem; }
+    @media(max-width:700px) { .grid-2,.grid-3,.grid-4 { grid-template-columns:1fr 1fr; } }
+    .card { background:white; border:1.5px solid var(--border); border-radius:16px; padding:1.3rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+    .card:hover { border-color:var(--primary-light); }
+    .card-icon { font-size:1.7rem; margin-bottom:0.65rem; }
+    .card h4 { font-size:0.9rem; font-weight:800; color:var(--text); margin-bottom:0.35rem; }
+    .card p { font-size:0.79rem; color:var(--text-light); line-height:1.6; }
+    .tags { display:flex; flex-wrap:wrap; gap:0.3rem; margin-top:0.7rem; }
+    .tag { font-size:0.68rem; padding:0.13rem 0.5rem; border-radius:999px; background:var(--primary-bg); color:var(--primary); border:1px solid rgba(91,173,136,0.25); }
+    .tag-purple { background:var(--accent2-bg); color:var(--accent2); border-color:rgba(155,133,203,0.25); }
+    .tag-orange { background:var(--accent-bg); color:#C05621; border-color:rgba(249,168,112,0.35); }
 
-    /* COMMON SLIDE */
-    .slide-inner { max-width: 900px; width: 90%; padding: 2rem; }
-    .slide-label { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; color: var(--primary); text-transform: uppercase; margin-bottom: 0.7rem; }
-    .slide-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; margin-bottom: 0.8rem; letter-spacing: -0.02em; color: var(--text); }
-    .slide-desc { font-size: 0.95rem; color: var(--text-light); line-height: 1.8; max-width: 600px; }
+    /* SLIDE 1 — TITLE */
+    .s1 { background:linear-gradient(145deg,#F0FFF7 0%,#F5F0FF 50%,#FFF5EE 100%); }
+    .title-badge { display:inline-block; background:var(--primary-bg); color:var(--primary); border:1px solid rgba(91,173,136,0.3); padding:0.38rem 1.1rem; border-radius:999px; font-size:0.78rem; font-weight:700; margin-bottom:1.8rem; }
+    .title-main { font-size:clamp(2.4rem,5.5vw,4rem); font-weight:900; color:var(--text); line-height:1.1; margin-bottom:1.1rem; letter-spacing:-0.03em; }
+    .title-main span { color:var(--primary); }
+    .title-sub { font-size:1rem; color:var(--text-light); max-width:500px; margin:0 auto 2.2rem; line-height:1.8; }
+    .title-tags { display:flex; gap:0.6rem; justify-content:center; flex-wrap:wrap; }
+    .title-tag { background:white; border:1px solid var(--border); padding:0.35rem 0.85rem; border-radius:999px; color:var(--text-mid); font-size:0.78rem; box-shadow:0 2px 5px rgba(0,0,0,0.04); }
 
-    /* ── CARD 1: TITLE ── */
-    .slide-1 { background: linear-gradient(145deg, #F0FFF7 0%, #F5F0FF 50%, #FFF5EE 100%); }
-    .title-content { text-align: center; }
-    .title-badge {
-      display: inline-block; background: var(--primary-bg); color: var(--primary);
-      border: 1px solid rgba(91,173,136,0.3); padding: 0.4rem 1.2rem;
-      border-radius: 999px; font-size: 0.8rem; font-weight: 700; margin-bottom: 2rem;
-      letter-spacing: 0.04em;
-    }
-    .title-main { font-size: clamp(2.5rem, 6vw, 4.2rem); font-weight: 900; color: var(--text); line-height: 1.1; margin-bottom: 1.2rem; letter-spacing: -0.03em; }
-    .title-main span { color: var(--primary); }
-    .title-sub { font-size: 1.05rem; color: var(--text-light); max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.8; }
-    .title-tags { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; }
-    .title-tag { background: white; border: 1px solid var(--border); padding: 0.38rem 0.9rem; border-radius: 999px; color: var(--text-mid); font-size: 0.8rem; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+    /* SLIDE 2 — PROBLEM */
+    .s2 { background:linear-gradient(145deg,#FFF5F5 0%,#FFF0F8 100%); }
+    .stat-big { font-size:clamp(2.8rem,6vw,4.2rem); font-weight:900; color:#C53030; margin:0.5rem 0 0.2rem; }
+    .stat-sub { color:var(--text-light); font-size:0.86rem; margin-bottom:1.3rem; }
 
-    /* ── CARD 2: PROBLEM ── */
-    .slide-2 { background: linear-gradient(145deg, #FFF5F5 0%, #FFF0F8 100%); }
-    .stat-highlight { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; color: #E05252; margin: 0.8rem 0 0.3rem; }
-    .stat-sub { color: var(--text-light); font-size: 0.88rem; margin-bottom: 1.5rem; }
-    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .prob-card { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 1.4rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-    .prob-icon { font-size: 1.7rem; margin-bottom: 0.7rem; }
-    .prob-card h4 { font-size: 0.93rem; font-weight: 800; color: var(--text); margin-bottom: 0.35rem; }
-    .prob-card p { font-size: 0.8rem; color: var(--text-light); }
+    /* SLIDE 3 — SOLUTION */
+    .s3 { background:linear-gradient(145deg,#F0FFF7 0%,#F2F0FF 100%); }
+    .sol-steps { display:flex; flex-direction:column; gap:1.1rem; margin-top:1.5rem; max-width:680px; }
+    .sol-step { display:flex; gap:1.2rem; align-items:flex-start; }
+    .sol-num { width:36px; height:36px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:0.85rem; flex-shrink:0; }
+    .sol-text h4 { font-size:0.95rem; font-weight:800; color:var(--text); margin-bottom:0.25rem; }
+    .sol-text p { font-size:0.82rem; color:var(--text-light); line-height:1.7; }
 
-    /* ── CARD 3: SOLUTION ── */
-    .slide-3 { background: linear-gradient(145deg, #F0FFF7 0%, #F2F0FF 100%); }
-    .solution-steps { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 1.8rem; max-width: 680px; }
-    .sol-step { display: flex; gap: 1.3rem; align-items: flex-start; }
-    .sol-num { width: 38px; height: 38px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.88rem; flex-shrink: 0; }
-    .sol-text h4 { font-size: 0.98rem; font-weight: 800; color: var(--text); margin-bottom: 0.3rem; }
-    .sol-text p { font-size: 0.84rem; color: var(--text-light); line-height: 1.7; }
+    /* SLIDE 4 — 4 MODULES */
+    .s4 { background:var(--bg); }
 
-    /* ── CARD 4: MODULES ── */
-    .slide-4 { background: var(--bg); }
-    .module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; margin-top: 1.8rem; }
-    .mod-card { background: white; border: 1.5px solid var(--border); border-radius: 18px; padding: 1.5rem; transition: border-color 0.2s, box-shadow 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-    .mod-card:hover { border-color: var(--primary-light); box-shadow: 0 6px 20px rgba(91,173,136,0.12); }
-    .mod-icon { font-size: 1.9rem; margin-bottom: 0.7rem; }
-    .mod-card h4 { font-size: 0.93rem; font-weight: 800; color: var(--text); margin-bottom: 0.35rem; }
-    .mod-card p { font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.8rem; line-height: 1.6; }
-    .mod-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
-    .mod-tag { font-size: 0.7rem; padding: 0.15rem 0.55rem; border-radius: 999px; background: var(--primary-bg); color: var(--primary); border: 1px solid rgba(91,173,136,0.25); }
+    /* SLIDE 5 — CIREF */
+    .s5 { background:linear-gradient(145deg,#F5F0FF 0%,#F0F5FF 100%); }
+    .ciref-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0.85rem; margin-top:1.5rem; }
+    @media(max-width:700px){.ciref-grid{grid-template-columns:1fr 1fr;}}
+    .ciref-card { background:white; border:1px solid var(--border); border-radius:14px; padding:1.2rem; position:relative; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+    .ciref-num { position:absolute; top:-10px; left:1rem; width:24px; height:24px; background:var(--accent2); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:900; }
+    .ciref-card h4 { font-size:0.84rem; font-weight:800; color:var(--text); margin-bottom:0.3rem; margin-top:0.2rem; }
+    .ciref-card p { font-size:0.75rem; color:var(--text-light); }
+    .ciref-q { font-size:0.73rem; color:var(--accent2); font-style:italic; margin-top:0.5rem; font-weight:600; }
+    .ciref-result { margin-top:1.2rem; background:var(--accent2-bg); border:1px solid rgba(155,133,203,0.25); border-radius:12px; padding:0.85rem 1.3rem; display:flex; gap:1rem; align-items:center; }
+    .ciref-result p { font-size:0.82rem; color:var(--text-mid); }
 
-    /* ── CARD 5: CIREF ── */
-    .slide-5 { background: linear-gradient(145deg, #F5F0FF 0%, #F0F5FF 100%); }
-    .ciref-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; margin-top: 1.8rem; }
-    @media (max-width: 700px) { .ciref-grid { grid-template-columns: 1fr 1fr; } }
-    .ciref-card { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 1.3rem; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-    .ciref-num { position: absolute; top: -10px; left: 1rem; width: 26px; height: 26px; background: var(--accent2); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 900; }
-    .ciref-card h4 { font-size: 0.87rem; font-weight: 800; color: var(--text); margin-bottom: 0.35rem; margin-top: 0.3rem; }
-    .ciref-card p { font-size: 0.77rem; color: var(--text-light); }
-    .ciref-q { font-size: 0.76rem; color: var(--accent2); font-style: italic; margin-top: 0.55rem; font-weight: 600; }
-    .ciref-result { margin-top: 1.3rem; background: var(--accent2-bg); border: 1px solid rgba(155,133,203,0.25); border-radius: 12px; padding: 0.9rem 1.4rem; display: flex; gap: 1rem; align-items: center; }
-    .ciref-result p { font-size: 0.84rem; color: var(--text-mid); }
+    /* SLIDE 6 — MAZE */
+    .s6 { background:linear-gradient(145deg,#F0F4FF 0%,#F7F0FF 100%); }
+    .maze-levels { display:grid; grid-template-columns:repeat(5,1fr); gap:0.7rem; margin:1.2rem 0; }
+    @media(max-width:700px){.maze-levels{grid-template-columns:repeat(3,1fr);}}
+    .maze-lv { background:white; border:1px solid var(--border); border-radius:12px; padding:0.85rem 0.6rem; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04); }
+    .maze-lv-num { font-size:0.65rem; font-weight:800; color:var(--primary); margin-bottom:0.2rem; }
+    .maze-lv-name { font-size:0.75rem; font-weight:700; color:var(--text); margin-bottom:0.15rem; }
+    .maze-lv-size { font-size:0.65rem; color:var(--text-light); }
+    .maze-features { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.8rem; }
+    .maze-chip { background:white; border:1px solid var(--border); border-radius:999px; padding:0.35rem 0.85rem; font-size:0.76rem; color:var(--text-mid); display:flex; align-items:center; gap:0.35rem; }
 
-    /* ── CARD 6: ACCOUNTS ── */
-    .slide-6 { background: var(--bg); }
-    .acc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1.8rem; }
-    @media (max-width: 700px) { .acc-grid { grid-template-columns: 1fr 1fr; } }
-    .acc-card { border-radius: 16px; padding: 1.3rem; border: 1.5px solid var(--border); background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-    .acc-badge { display: inline-block; padding: 0.15rem 0.7rem; border-radius: 999px; font-size: 0.7rem; font-weight: 800; margin-bottom: 0.6rem; }
-    .acc-sv .acc-badge { background: #FEF9C3; color: #854D0E; }
-    .acc-ad .acc-badge { background: #EEF2FF; color: #3730A3; }
-    .acc-st .acc-badge { background: var(--primary-bg); color: #065F46; }
-    .acc-pa .acc-badge { background: #FDF2F8; color: #831843; }
-    .acc-card h4 { font-size: 0.88rem; font-weight: 800; color: var(--text); margin-bottom: 0.5rem; }
-    .acc-card ul { list-style: none; }
-    .acc-card ul li { font-size: 0.75rem; color: var(--text-light); padding: 0.13rem 0; display: flex; gap: 0.4rem; }
-    .acc-card ul li::before { content: "·"; color: var(--primary); font-weight: 900; }
+    /* SLIDE 7 — FLOWER + GRAPH */
+    .s7 { background:linear-gradient(145deg,#FFF5EE 0%,#F0FFF7 100%); }
+    .split-2 { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem; }
+    @media(max-width:700px){.split-2{grid-template-columns:1fr;}}
+    .sub-card { background:white; border:1.5px solid var(--border); border-radius:18px; padding:1.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.04); }
+    .sub-card h3 { font-size:1rem; font-weight:800; color:var(--text); margin-bottom:0.5rem; }
+    .flower-row { display:flex; flex-wrap:wrap; gap:0.5rem; margin:0.8rem 0; }
+    .flower-chip { display:flex; align-items:center; gap:0.4rem; background:var(--bg); border:1px solid var(--border); border-radius:999px; padding:0.3rem 0.7rem; font-size:0.75rem; color:var(--text-mid); }
+    .flower-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .param-list { list-style:none; }
+    .param-list li { font-size:0.78rem; color:var(--text-light); padding:0.18rem 0; display:flex; gap:0.4rem; }
+    .param-list li::before { content:"·"; color:var(--primary); font-weight:900; }
+    .graph-mock { background:var(--bg); border-radius:12px; padding:1rem; margin-top:0.8rem; }
+    .graph-line { height:32px; border-radius:8px; margin-bottom:0.4rem; display:flex; align-items:center; padding:0 0.6rem; font-size:0.72rem; font-weight:600; }
+    .graph-orange { background:linear-gradient(90deg,rgba(249,168,112,0.3) 0%,rgba(249,168,112,0.15) 100%); color:#C05621; }
+    .graph-blue { background:linear-gradient(90deg,rgba(118,196,233,0.3) 0%,rgba(118,196,233,0.15) 100%); color:#1D6FA4; }
 
-    /* ── CARD 7: SELF DIAGNOSIS DEMO ── */
-    .slide-7 { background: linear-gradient(145deg, #F0FFF7 0%, #FAFAF7 100%); }
-    .demo-container { width: 100%; max-width: 740px; }
-    .demo-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.4rem; }
-    .demo-title-text h3 { font-size: 1.25rem; font-weight: 900; color: var(--text); margin-bottom: 0.15rem; }
-    .demo-title-text p { font-size: 0.8rem; color: var(--text-light); }
-    .demo-progress-wrap { width: 190px; }
-    .demo-progress-text { font-size: 0.73rem; color: var(--text-light); margin-bottom: 0.35rem; text-align: right; }
-    .demo-progress-bar { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; }
-    .demo-progress-fill { height: 100%; background: var(--primary); border-radius: 999px; transition: width 0.4s ease; }
-    .question-area { background: white; border: 1.5px solid var(--border); border-radius: 20px; padding: 1.8rem; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
-    .q-category { font-size: 0.7rem; font-weight: 700; color: var(--primary); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.55rem; }
-    .q-text { font-size: 1.02rem; font-weight: 700; color: var(--text); margin-bottom: 1.4rem; line-height: 1.6; }
-    .q-options { display: flex; flex-direction: column; gap: 0.6rem; }
-    .q-option {
-      display: flex; align-items: center; gap: 1rem;
-      background: var(--bg); border: 1.5px solid var(--border);
-      border-radius: 12px; padding: 0.78rem 1.1rem; cursor: pointer;
-      transition: all 0.18s; color: var(--text-mid); font-size: 0.88rem;
-    }
-    .q-option:hover { border-color: var(--primary-light); background: var(--primary-bg); color: var(--text); }
-    .q-option.selected { border-color: var(--primary); background: var(--primary-bg); color: var(--text); }
-    .q-option-dot { width: 17px; height: 17px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; transition: all 0.18s; }
-    .q-option.selected .q-option-dot { background: var(--primary); border-color: var(--primary); }
-    .demo-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1.1rem; }
-    .demo-nav-btn { padding: 0.65rem 1.4rem; border-radius: 999px; border: none; cursor: pointer; font-size: 0.86rem; font-weight: 700; transition: all 0.18s; }
-    .demo-prev { background: var(--bg); color: var(--text-light); border: 1px solid var(--border); }
-    .demo-prev:hover { background: var(--border); }
-    .demo-next { background: var(--primary); color: white; }
-    .demo-next:hover { background: #4A9A76; }
-    .demo-next:disabled { background: var(--border); color: var(--text-light); cursor: not-allowed; }
-    .q-num { font-size: 0.73rem; color: var(--text-light); }
+    /* SLIDE 8 — SUPERVISOR */
+    .s8 { background:linear-gradient(145deg,#FFFBF0 0%,#F0F4FF 100%); }
+    .sv-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-top:1.5rem; }
+    .sv-card { background:white; border:1.5px solid var(--border); border-radius:16px; padding:1.4rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+    .sv-badge { display:inline-block; padding:0.18rem 0.7rem; border-radius:999px; font-size:0.68rem; font-weight:800; margin-bottom:0.6rem; background:#FEF9C3; color:#854D0E; }
+    .sv-card h4 { font-size:0.92rem; font-weight:800; color:var(--text); margin-bottom:0.5rem; }
+    .sv-list { list-style:none; }
+    .sv-list li { font-size:0.8rem; color:var(--text-light); padding:0.18rem 0; display:flex; gap:0.4rem; }
+    .sv-list li::before { content:"✓"; color:var(--primary); font-weight:700; flex-shrink:0; }
+    .alert-box { margin-top:1rem; background:#FEF3EB; border:1px solid rgba(249,168,112,0.4); border-radius:12px; padding:0.85rem 1.2rem; font-size:0.8rem; color:#7C3B00; }
 
-    /* ── CARD 8: RESULT ── */
-    .slide-8 { background: linear-gradient(145deg, #F7F8FA 0%, #F0FFF7 100%); }
-    #result-content { display: none; }
-    #result-content.show { display: block; }
-    .result-card { background: white; border: 1.5px solid var(--border); border-radius: 24px; padding: 2rem; max-width: 680px; margin: 0 auto; box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
-    .result-level { text-align: center; margin-bottom: 1.3rem; }
-    .result-badge { display: inline-block; padding: 0.38rem 1.1rem; border-radius: 999px; font-size: 0.83rem; font-weight: 800; margin-bottom: 0.7rem; }
-    .result-name-text { font-size: 1.7rem; font-weight: 900; color: var(--text); }
-    .result-score-text { font-size: 0.84rem; color: var(--text-light); margin-top: 0.25rem; }
-    .result-bars { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.3rem 0; }
-    .result-bar-item { }
-    .result-bar-label { font-size: 0.76rem; color: var(--text-light); margin-bottom: 0.35rem; display: flex; justify-content: space-between; }
-    .result-bar-track { height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; }
-    .result-bar-fill { height: 100%; border-radius: 999px; transition: width 1s ease; }
-    .result-desc-text { font-size: 0.86rem; color: var(--text-mid); line-height: 1.8; margin-bottom: 1.4rem; padding: 1rem; background: var(--bg); border-radius: 12px; }
-    .result-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
-    .result-btn { padding: 0.7rem 1.5rem; border-radius: 999px; border: none; cursor: pointer; font-size: 0.86rem; font-weight: 700; transition: all 0.2s; }
-    .btn-pdf { background: var(--primary); color: white; }
-    .btn-pdf:hover { background: #4A9A76; }
-    .btn-retry { background: var(--bg); color: var(--text-mid); border: 1px solid var(--border); }
-    .btn-retry:hover { background: var(--border); }
-    #pdf-generating { display: none; align-items: center; gap: 0.6rem; color: var(--primary); font-size: 0.83rem; }
-    #pdf-generating.show { display: flex; }
-    .spinner { width: 15px; height: 15px; border: 2px solid var(--primary-bg); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* SLIDE 9 — PHASE 4 MOBILE */
+    .s9 { background:linear-gradient(145deg,#F0F5FF 0%,#F5F0FF 100%); }
+    .mobile-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-top:1.5rem; }
+    .mobile-card { background:white; border:1.5px solid var(--border); border-radius:18px; padding:1.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.04); }
+    .mobile-card h3 { font-size:0.98rem; font-weight:800; color:var(--text); margin-bottom:0.5rem; }
+    .mobile-list { list-style:none; }
+    .mobile-list li { font-size:0.8rem; color:var(--text-light); padding:0.18rem 0; display:flex; gap:0.4rem; }
+    .mobile-list li::before { content:"·"; color:var(--primary); font-weight:900; }
+    .platform-row { display:flex; gap:0.8rem; flex-wrap:wrap; margin-top:0.8rem; }
+    .platform-chip { background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:0.6rem 1rem; font-size:0.78rem; color:var(--text-mid); text-align:center; flex:1; min-width:100px; }
+    .platform-chip strong { display:block; font-size:0.85rem; color:var(--text); font-weight:800; }
 
-    /* ── CARD 9: CTA ── */
-    .slide-9 { background: linear-gradient(145deg, #F0FFF7 0%, #F5F0FF 50%, #FFF5EE 100%); text-align: center; }
-    .cta-main { font-size: clamp(2rem, 5vw, 3.3rem); font-weight: 900; color: var(--text); margin: 0.8rem 0; letter-spacing: -0.02em; }
-    .cta-main span { color: var(--primary); }
-    .cta-sub { font-size: 0.98rem; color: var(--text-light); max-width: 480px; margin: 0 auto 2rem; line-height: 1.8; }
-    .cta-cards { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
-    .cta-card { background: white; border: 1.5px solid var(--border); border-radius: 16px; padding: 1.2rem 1.6rem; text-align: left; min-width: 175px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-    .cta-card-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
-    .cta-card h4 { font-size: 0.88rem; font-weight: 800; color: var(--text); margin-bottom: 0.25rem; }
-    .cta-card p { font-size: 0.76rem; color: var(--text-light); }
-    .cta-btn-main { background: var(--primary); color: white; padding: 0.95rem 2.4rem; border-radius: 999px; border: none; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 20px rgba(91,173,136,0.35); }
-    .cta-btn-main:hover { background: #4A9A76; transform: translateY(-2px); }
-    .cta-note-text { color: var(--text-light); font-size: 0.76rem; margin-top: 0.9rem; }
+    /* SLIDE 10 — ACCOUNTS */
+    .s10 { background:var(--bg); }
+    .acc-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0.9rem; margin-top:1.5rem; }
+    @media(max-width:700px){.acc-grid{grid-template-columns:1fr 1fr;}}
+    .acc-card { border-radius:16px; padding:1.2rem; border:1.5px solid var(--border); background:white; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+    .acc-badge { display:inline-block; padding:0.13rem 0.65rem; border-radius:999px; font-size:0.68rem; font-weight:800; margin-bottom:0.55rem; }
+    .acc-sv .acc-badge { background:#FEF9C3; color:#854D0E; }
+    .acc-ad .acc-badge { background:#EEF2FF; color:#3730A3; }
+    .acc-st .acc-badge { background:var(--primary-bg); color:#065F46; }
+    .acc-pa .acc-badge { background:#FDF2F8; color:#831843; }
+    .acc-card h4 { font-size:0.86rem; font-weight:800; color:var(--text); margin-bottom:0.45rem; }
+    .acc-list { list-style:none; }
+    .acc-list li { font-size:0.74rem; color:var(--text-light); padding:0.12rem 0; display:flex; gap:0.35rem; }
+    .acc-list li::before { content:"·"; color:var(--primary); font-weight:900; }
 
-    /* PDF PRINTABLE */
-    #pdf-print-area {
-      position: fixed; left: -9999px; top: 0;
-      width: 794px; background: white; padding: 48px;
-      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-    }
-    .pdf-hdr { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 2px solid #7BC8A4; margin-bottom: 24px; }
-    .pdf-hdr-title { font-size: 1.1rem; font-weight: 900; color: #2D3748; }
-    .pdf-hdr-sub { font-size: 0.78rem; color: #718096; margin-top: 2px; }
-    .pdf-hdr-date { font-size: 0.78rem; color: #718096; text-align: right; }
-    .pdf-section-title { font-size: 1rem; font-weight: 800; color: #2D3748; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid #E2E8F0; }
-    .pdf-result-badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 800; margin-bottom: 8px; }
-    .pdf-result-name { font-size: 1.5rem; font-weight: 900; color: #2D3748; margin-bottom: 4px; }
-    .pdf-result-score { font-size: 0.85rem; color: #718096; margin-bottom: 16px; }
-    .pdf-bar-item { margin-bottom: 10px; }
-    .pdf-bar-label { font-size: 0.8rem; color: #718096; margin-bottom: 4px; display: flex; justify-content: space-between; }
-    .pdf-bar-track { height: 10px; background: #E2E8F0; border-radius: 999px; overflow: hidden; }
-    .pdf-bar-fill { height: 100%; border-radius: 999px; }
-    .pdf-desc { font-size: 0.88rem; color: #4A5568; line-height: 1.8; margin-bottom: 20px; }
-    .pdf-footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #E2E8F0; display: flex; justify-content: space-between; font-size: 0.75rem; color: #A0AEC0; }
+    /* SLIDE 11 — PDF */
+    .s11 { background:linear-gradient(145deg,#F0F4FF 0%,#F5F0FF 100%); }
+    .pdf-split { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem; align-items:start; }
+    @media(max-width:700px){.pdf-split{grid-template-columns:1fr;}}
+    .pdf-mock { background:white; border-radius:18px; padding:1.4rem; border:1.5px solid var(--border); box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+    .pdf-mock-hdr { background:linear-gradient(135deg,var(--primary),var(--accent2)); border-radius:10px; padding:0.8rem 1.1rem; margin-bottom:1rem; }
+    .pdf-mock-hdr-title { color:white; font-size:0.82rem; font-weight:700; }
+    .pdf-mock-hdr-sub { color:rgba(255,255,255,0.75); font-size:0.7rem; }
+    .pdf-row { display:flex; align-items:center; gap:0.7rem; padding:0.5rem 0; border-bottom:1px solid var(--border); }
+    .pdf-row:last-child { border:none; }
+    .pdf-row-icon { width:28px; height:28px; background:var(--bg); border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0; }
+    .pdf-row-text { font-size:0.78rem; color:var(--text-mid); flex:1; }
+    .pdf-row-badge { font-size:0.65rem; padding:0.12rem 0.45rem; border-radius:999px; background:var(--primary-bg); color:var(--primary); font-weight:700; flex-shrink:0; }
+    .pdf-feat-list { list-style:none; }
+    .pdf-feat-list li { font-size:0.84rem; color:var(--text-mid); padding:0.5rem 0; border-bottom:1px solid var(--border); display:flex; gap:0.6rem; line-height:1.5; }
+    .pdf-feat-list li:last-child { border:none; }
+    .pdf-feat-list li::before { content:"✓"; color:var(--primary); font-weight:800; flex-shrink:0; margin-top:0.1rem; }
+
+    /* SLIDE 12 — ROADMAP */
+    .s12 { background:linear-gradient(145deg,#F0FFF7 0%,#F5F0FF 100%); }
+    .phases { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:1.5rem; }
+    @media(max-width:700px){.phases{grid-template-columns:1fr 1fr;}}
+    .phase-card { background:white; border:1.5px solid var(--border); border-radius:18px; padding:1.3rem; position:relative; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+    .phase-card.next { border-color:var(--primary); }
+    .phase-badge { position:absolute; top:-10px; right:0.9rem; background:var(--primary); color:white; font-size:0.65rem; font-weight:800; padding:0.18rem 0.6rem; border-radius:999px; }
+    .phase-label { font-size:0.68rem; font-weight:800; letter-spacing:0.08em; color:var(--text-light); text-transform:uppercase; margin-bottom:0.35rem; }
+    .phase-card.next .phase-label { color:var(--primary); }
+    .phase-card h3 { font-size:0.95rem; font-weight:800; color:var(--text); margin-bottom:0.7rem; }
+    .phase-items { list-style:none; }
+    .phase-items li { font-size:0.76rem; color:var(--text-light); padding:0.15rem 0; display:flex; gap:0.4rem; }
+    .phase-items li::before { content:"·"; color:var(--primary); font-weight:900; }
+
+    /* SLIDE 13 — DEMO */
+    .s13 { background:linear-gradient(145deg,#F0FFF7 0%,#FAFAF7 100%); }
+    .demo-container { width:100%; max-width:720px; }
+    .demo-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.2rem; }
+    .demo-title-text h3 { font-size:1.2rem; font-weight:900; color:var(--text); margin-bottom:0.1rem; }
+    .demo-title-text p { font-size:0.78rem; color:var(--text-light); }
+    .demo-progress-wrap { width:180px; }
+    .demo-progress-text { font-size:0.7rem; color:var(--text-light); margin-bottom:0.3rem; text-align:right; }
+    .demo-progress-bar { height:5px; background:var(--border); border-radius:999px; overflow:hidden; }
+    .demo-progress-fill { height:100%; background:var(--primary); border-radius:999px; transition:width 0.4s ease; }
+    .question-area { background:white; border:1.5px solid var(--border); border-radius:18px; padding:1.6rem; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+    .q-category { font-size:0.68rem; font-weight:700; color:var(--primary); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem; }
+    .q-text { font-size:0.98rem; font-weight:700; color:var(--text); margin-bottom:1.2rem; line-height:1.6; }
+    .q-options { display:flex; flex-direction:column; gap:0.55rem; }
+    .q-option { display:flex; align-items:center; gap:0.9rem; background:var(--bg); border:1.5px solid var(--border); border-radius:11px; padding:0.72rem 1rem; cursor:pointer; transition:all 0.18s; color:var(--text-mid); font-size:0.85rem; }
+    .q-option:hover { border-color:var(--primary-light); background:var(--primary-bg); color:var(--text); }
+    .q-option.selected { border-color:var(--primary); background:var(--primary-bg); color:var(--text); }
+    .q-option-dot { width:16px; height:16px; border-radius:50%; border:2px solid var(--border); flex-shrink:0; transition:all 0.18s; }
+    .q-option.selected .q-option-dot { background:var(--primary); border-color:var(--primary); }
+    .demo-nav { display:flex; justify-content:space-between; align-items:center; margin-top:1rem; }
+    .demo-nav-btn { padding:0.6rem 1.3rem; border-radius:999px; border:none; cursor:pointer; font-size:0.84rem; font-weight:700; transition:all 0.18s; }
+    .demo-prev { background:var(--bg); color:var(--text-light); border:1px solid var(--border); }
+    .demo-next { background:var(--primary); color:white; }
+    .demo-next:hover { background:#4A9A76; }
+    .demo-next:disabled { background:var(--border); color:var(--text-light); cursor:not-allowed; }
+    .q-num { font-size:0.7rem; color:var(--text-light); }
+
+    /* SLIDE 14 — RESULT */
+    .s14 { background:linear-gradient(145deg,#F7F8FA 0%,#F0FFF7 100%); }
+    #result-content { display:none; }
+    #result-content.show { display:block; }
+    .result-card { background:white; border:1.5px solid var(--border); border-radius:22px; padding:1.8rem; max-width:660px; margin:0 auto; box-shadow:0 4px 20px rgba(0,0,0,0.07); }
+    .result-level { text-align:center; margin-bottom:1.1rem; }
+    .result-badge { display:inline-block; padding:0.35rem 1rem; border-radius:999px; font-size:0.8rem; font-weight:800; margin-bottom:0.6rem; }
+    .result-name-text { font-size:1.6rem; font-weight:900; color:var(--text); }
+    .result-score-text { font-size:0.8rem; color:var(--text-light); margin-top:0.2rem; }
+    .result-bars { display:grid; grid-template-columns:1fr 1fr; gap:0.9rem; margin:1.1rem 0; }
+    .result-bar-label { font-size:0.74rem; color:var(--text-light); margin-bottom:0.3rem; display:flex; justify-content:space-between; }
+    .result-bar-track { height:7px; background:var(--border); border-radius:999px; overflow:hidden; }
+    .result-bar-fill { height:100%; border-radius:999px; transition:width 1s ease; }
+    .result-desc-text { font-size:0.83rem; color:var(--text-mid); line-height:1.8; margin-bottom:1.2rem; padding:0.9rem 1rem; background:var(--bg); border-radius:11px; }
+    .result-actions { display:flex; gap:0.7rem; flex-wrap:wrap; }
+    .result-btn { padding:0.65rem 1.4rem; border-radius:999px; border:none; cursor:pointer; font-size:0.83rem; font-weight:700; transition:all 0.2s; }
+    .btn-pdf { background:var(--primary); color:white; }
+    .btn-pdf:hover { background:#4A9A76; }
+    .btn-retry { background:var(--bg); color:var(--text-mid); border:1px solid var(--border); }
+    #pdf-generating { display:none; align-items:center; gap:0.5rem; color:var(--primary); font-size:0.8rem; margin-top:0.7rem; }
+    #pdf-generating.show { display:flex; }
+    .spinner { width:14px; height:14px; border:2px solid var(--primary-bg); border-top-color:var(--primary); border-radius:50%; animation:spin 0.7s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* SLIDE 15 — CTA */
+    .s15 { background:linear-gradient(145deg,#F0FFF7 0%,#F5F0FF 50%,#FFF5EE 100%); text-align:center; }
+    .cta-main { font-size:clamp(1.9rem,4.5vw,3.1rem); font-weight:900; color:var(--text); margin:0.8rem 0; letter-spacing:-0.02em; }
+    .cta-main span { color:var(--primary); }
+    .cta-sub { font-size:0.95rem; color:var(--text-light); max-width:460px; margin:0 auto 1.8rem; line-height:1.8; }
+    .cta-cards { display:flex; gap:0.9rem; justify-content:center; flex-wrap:wrap; margin-bottom:1.8rem; }
+    .cta-card { background:white; border:1.5px solid var(--border); border-radius:14px; padding:1.1rem 1.4rem; text-align:left; min-width:160px; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+    .cta-card-icon { font-size:1.4rem; margin-bottom:0.4rem; }
+    .cta-card h4 { font-size:0.85rem; font-weight:800; color:var(--text); margin-bottom:0.2rem; }
+    .cta-card p { font-size:0.73rem; color:var(--text-light); }
+    .cta-btn-main { background:var(--primary); color:white; padding:0.9rem 2.2rem; border-radius:999px; border:none; font-size:0.98rem; font-weight:800; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 20px rgba(91,173,136,0.35); }
+    .cta-btn-main:hover { background:#4A9A76; transform:translateY(-2px); }
+    .cta-note { color:var(--text-light); font-size:0.73rem; margin-top:0.85rem; }
+
+    /* PDF PRINT */
+    #pdf-print-area { position:fixed; left:-9999px; top:0; width:794px; background:white; padding:48px; font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif; }
+    .pdf-hdr { display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:2px solid #7BC8A4; margin-bottom:22px; }
+    .pdf-hdr-title { font-size:1.05rem; font-weight:900; color:#2D3748; }
+    .pdf-hdr-sub { font-size:0.75rem; color:#718096; margin-top:2px; }
+    .pdf-hdr-date { font-size:0.75rem; color:#718096; text-align:right; }
+    .pdf-section-title { font-size:0.95rem; font-weight:800; color:#2D3748; margin-bottom:10px; padding-bottom:5px; border-bottom:1px solid #E2E8F0; }
+    .pdf-result-badge { display:inline-block; padding:3px 10px; border-radius:999px; font-size:0.78rem; font-weight:800; margin-bottom:7px; }
+    .pdf-result-name { font-size:1.4rem; font-weight:900; color:#2D3748; margin-bottom:3px; }
+    .pdf-result-score { font-size:0.82rem; color:#718096; margin-bottom:14px; }
+    .pdf-bar-item { margin-bottom:9px; }
+    .pdf-bar-label { font-size:0.78rem; color:#718096; margin-bottom:3px; display:flex; justify-content:space-between; }
+    .pdf-bar-track { height:9px; background:#E2E8F0; border-radius:999px; overflow:hidden; }
+    .pdf-bar-fill { height:100%; border-radius:999px; }
+    .pdf-desc { font-size:0.85rem; color:#4A5568; line-height:1.8; margin-bottom:18px; }
+    .pdf-footer { margin-top:28px; padding-top:10px; border-top:1px solid #E2E8F0; display:flex; justify-content:space-between; font-size:0.72rem; color:#A0AEC0; }
   </style>
 </head>
 <body>
 
-<!-- PDF 출력 영역 (숨김) -->
 <div id="pdf-print-area">
   <div class="pdf-hdr">
-    <div>
-      <div class="pdf-hdr-title">🌱 인터넷 드림마을 — 자가진단 결과</div>
-      <div class="pdf-hdr-sub">스마트폰 과몰입 방지 AI 상담 플랫폼</div>
-    </div>
+    <div><div class="pdf-hdr-title">🌱 인터넷 드림마을 — 자가진단 결과</div><div class="pdf-hdr-sub">스마트폰 과몰입 방지 AI 상담 플랫폼</div></div>
     <div class="pdf-hdr-date" id="pdf-date"></div>
   </div>
   <div class="pdf-section-title">진단 결과</div>
@@ -245,319 +278,402 @@
   <div id="pdf-result-name" class="pdf-result-name"></div>
   <div id="pdf-result-score" class="pdf-result-score"></div>
   <div id="pdf-bars"></div>
-  <div class="pdf-section-title" style="margin-top:20px">결과 해석</div>
+  <div class="pdf-section-title" style="margin-top:18px">결과 해석</div>
   <div id="pdf-desc" class="pdf-desc"></div>
-  <div class="pdf-footer">
-    <span>인터넷 드림마을 · 스마트폰 과몰입 방지 AI 상담 플랫폼</span>
-    <span id="pdf-footer-date"></span>
-  </div>
+  <div class="pdf-footer"><span>인터넷 드림마을 · 스마트폰 과몰입 방지 AI 상담 플랫폼</span><span id="pdf-footer-date"></span></div>
 </div>
 
 <div id="slider">
 
-  <!-- CARD 1: TITLE -->
-  <div class="slide slide-1 active" id="slide-1">
-    <div class="slide-inner title-content">
-      <div class="title-badge">🌱 Pathfinder Project · 인터넷 드림마을</div>
-      <div class="title-main">청소년의 미래를<br><span>AI가 함께 그립니다</span></div>
-      <p class="title-sub">미래 상상 심리 기법 기반 AI 상담 플랫폼으로<br>청소년 스마트폰 과몰입을 근본적으로 해결합니다</p>
-      <div class="title-tags">
-        <span class="title-tag">🧠 미래 상상 심리 기법</span>
-        <span class="title-tag">🤖 Gemini AI</span>
-        <span class="title-tag">📊 자가진단 실시간 분석</span>
-        <span class="title-tag">📄 PDF 리포트</span>
-        <span class="title-tag">🔒 3-Tier 계정 체계</span>
-      </div>
+<!-- 1. TITLE -->
+<div class="slide s1 active" id="slide-1">
+  <div class="slide-inner" style="text-align:center">
+    <div class="title-badge">🌱 Pathfinder Project · 인터넷 드림마을 전체 사업 계획</div>
+    <div class="title-main">청소년의 미래를<br><span>AI가 함께 그립니다</span></div>
+    <p class="title-sub">미래 상상 심리 기법 기반 AI 상담 플랫폼으로<br>청소년 스마트폰 과몰입을 근본적으로 해결합니다</p>
+    <div class="title-tags">
+      <span class="title-tag">🧠 미래 상상 심리 기법</span>
+      <span class="title-tag">🤖 Gemini AI</span>
+      <span class="title-tag">📊 자가진단 분석</span>
+      <span class="title-tag">📄 PDF 리포트</span>
+      <span class="title-tag">📱 Android 앱 (Phase 4)</span>
+      <span class="title-tag">4단계 개발 로드맵</span>
     </div>
   </div>
+</div>
 
-  <!-- CARD 2: PROBLEM -->
-  <div class="slide slide-2" id="slide-2">
-    <div class="slide-inner">
-      <div class="slide-label">왜 만들었는가</div>
-      <div class="stat-highlight">72%</div>
-      <div class="stat-sub">청소년 스마트폰 과의존 위험군 (2023 과기정통부)</div>
-      <div class="problem-grid">
-        <div class="prob-card">
-          <div class="prob-icon">⏱️</div>
-          <h4>1:1 상담의 시간 한계</h4>
-          <p>회기 간 공백 동안 학생 상태 파악 불가</p>
-        </div>
-        <div class="prob-card">
-          <div class="prob-icon">📋</div>
-          <h4>종이 기록의 비효율</h4>
-          <p>수기 자가진단, 추이 분석에 과도한 시간</p>
-        </div>
-        <div class="prob-card">
-          <div class="prob-icon">🚨</div>
-          <h4>위기 신호 조기 감지 어려움</h4>
-          <p>학생이 말하지 않으면 우울 징후 놓침</p>
-        </div>
-        <div class="prob-card">
-          <div class="prob-icon">💭</div>
-          <h4>동기 부여 도구 부재</h4>
-          <p>왜 줄여야 하는지 청소년이 직접 체감하기 어려움</p>
-        </div>
-      </div>
+<!-- 2. PROBLEM -->
+<div class="slide s2" id="slide-2">
+  <div class="slide-inner">
+    <div class="slide-label">왜 만들었는가</div>
+    <div class="stat-big">72%</div>
+    <div class="stat-sub">청소년 스마트폰 과의존 위험군 (2023 과학기술정보통신부) · 1일 평균 4.7시간 사용</div>
+    <div class="grid-2">
+      <div class="card"><div class="card-icon">⏱️</div><h4>1:1 상담의 시간 한계</h4><p>회기 간 공백 동안 학생 상태 파악 불가. 이상 징후를 놓치기 쉬운 구조.</p></div>
+      <div class="card"><div class="card-icon">📋</div><h4>종이 기록의 비효율</h4><p>수기 자가진단, 분산된 기록. 추이 분석과 보고서 작성에 과도한 시간.</p></div>
+      <div class="card"><div class="card-icon">🚨</div><h4>위기 신호 조기 감지 어려움</h4><p>학생이 직접 말하지 않으면 우울·자해 징후를 놓치기 쉬운 구조적 문제.</p></div>
+      <div class="card"><div class="card-icon">💭</div><h4>동기 부여 도구 부재</h4><p>스마트폰을 줄여야 한다고 알면서도 왜 줄여야 하는지 청소년 스스로 체감하기 어려움.</p></div>
     </div>
   </div>
+</div>
 
-  <!-- CARD 3: SOLUTION -->
-  <div class="slide slide-3" id="slide-3">
-    <div class="slide-inner">
-      <div class="slide-label">우리의 해결책</div>
-      <div class="slide-title">미래 상상 + AI로<br>근본적 동기를 만듭니다</div>
-      <div class="solution-steps">
-        <div class="sol-step">
-          <div class="sol-num">1</div>
-          <div class="sol-text">
-            <h4>EFT — 미래를 생생하게 상상하는 심리 기법</h4>
-            <p>추상적인 미래를 구체적 장면으로 시각화 → 뇌가 건강한 미래에 반응하도록 훈련. AI 이미지로 먼 미래를 현재처럼 체감하게 합니다.</p>
-          </div>
-        </div>
-        <div class="sol-step">
-          <div class="sol-num">2</div>
-          <div class="sol-text">
-            <h4>CIREF — 4단계 미래 대화 프레임</h4>
-            <p>장소 묘사 → 감각/감정 예측 → 정체성 탐색 → 대체 활동. 각 단계마다 AI가 추가 질문으로 더 깊이 이끌어냅니다.</p>
-          </div>
-        </div>
-        <div class="sol-step">
-          <div class="sol-num">3</div>
-          <div class="sol-text">
-            <h4>지연 할인 극복 — 먼 미래를 지금처럼 느끼게</h4>
-            <p>사람은 먼 미래의 보상을 과소평가하는 경향이 있습니다. AI 자화상(5년 후·10년 후)으로 그 미래를 지금 눈앞에 보여줘 행동 변화를 이끌어냅니다.</p>
-          </div>
-        </div>
-      </div>
+<!-- 3. SOLUTION -->
+<div class="slide s3" id="slide-3">
+  <div class="slide-inner">
+    <div class="slide-label">우리의 해결책</div>
+    <div class="slide-title">미래 상상 + AI로<br>근본적 동기를 만듭니다</div>
+    <div class="sol-steps">
+      <div class="sol-step"><div class="sol-num">1</div><div class="sol-text"><h4>EFT — 미래를 생생하게 상상하는 심리 기법</h4><p>추상적인 미래를 구체적 장면으로 시각화 → 뇌가 건강한 미래에 반응하도록 훈련. AI 이미지로 먼 미래를 현재처럼 체감하게 합니다.</p></div></div>
+      <div class="sol-step"><div class="sol-num">2</div><div class="sol-text"><h4>CIREF — 4단계 미래 대화 프레임</h4><p>장소 묘사 → 감각/감정 예측 → 정체성 탐색 → 대체 활동. 각 단계마다 AI가 추가 질문으로 더 깊이 이끌어냅니다.</p></div></div>
+      <div class="sol-step"><div class="sol-num">3</div><div class="sol-text"><h4>지연 할인 극복 — 먼 미래를 지금처럼 느끼게</h4><p>사람은 먼 미래의 보상을 과소평가하는 경향이 있습니다. AI 자화상(5년 후·10년 후)으로 그 미래를 지금 눈앞에 보여줘 행동 변화를 이끌어냅니다.</p></div></div>
     </div>
   </div>
+</div>
 
-  <!-- CARD 4: MODULES -->
-  <div class="slide slide-4" id="slide-4">
-    <div class="slide-inner">
-      <div class="slide-label">핵심 기능</div>
-      <div class="slide-title">4가지 핵심 모듈</div>
-      <div class="module-grid">
-        <div class="mod-card">
-          <div class="mod-icon">🌸</div>
-          <h4>마음일기 — 감정 기록 + AI 꽃</h4>
-          <p>일기 작성 → Gemini AI 감정 분석 → SVG 꽃 시각화. 위기 키워드 자동 감지 → 관리자 즉시 알림.</p>
-          <div class="mod-tags"><span class="mod-tag">감정 분석</span><span class="mod-tag">꽃 SVG 8종</span><span class="mod-tag">위기감지</span></div>
-        </div>
-        <div class="mod-card">
-          <div class="mod-icon">🔮</div>
-          <h4>미래의 나 — AI 자화상</h4>
-          <p>4단계 미래 대화(CIREF) 후 5년/10년 후 미래 이미지 생성. 느낀 점 기록으로 행동 변화 동기 강화.</p>
-          <div class="mod-tags"><span class="mod-tag">4단계 대화</span><span class="mod-tag">이미지 생성</span><span class="mod-tag">느낀 점 기록</span></div>
-        </div>
-        <div class="mod-card">
-          <div class="mod-icon">🎮</div>
-          <h4>미로 게임 — 마음 안정 훈련</h4>
-          <p>10단계 미로. 시야 제한·타이머·힌트. 일일 15분 제한으로 2차 중독 방지. 뱃지 5종.</p>
-          <div class="mod-tags"><span class="mod-tag">10단계</span><span class="mod-tag">포인트/뱃지</span><span class="mod-tag">시간 제한</span></div>
-        </div>
-        <div class="mod-card">
-          <div class="mod-icon">📊</div>
-          <h4>자가진단 — 중독 척도</h4>
-          <p>스마트폰 의존도(SAS) + 정서 상태(PHQ-A) 기반 10문항. 사용량 × 정서 변화 상관관계 그래프. PDF 저장.</p>
-          <div class="mod-tags"><span class="mod-tag">스마트폰 의존도</span><span class="mod-tag">정서 상태 측정</span><span class="mod-tag">추이 그래프</span></div>
-        </div>
-      </div>
+<!-- 4. 4 MODULES -->
+<div class="slide s4" id="slide-4">
+  <div class="slide-inner">
+    <div class="slide-label">Phase 1 핵심 기능</div>
+    <div class="slide-title">4가지 핵심 모듈</div>
+    <div class="grid-2">
+      <div class="card"><div class="card-icon">🌸</div><h4>마음일기 — 감정 기록 + AI 꽃</h4><p>일기 작성 → Gemini AI 감정 분석 → SVG 꽃 시각화. 위기 키워드 자동 감지 → 관리자 즉시 알림.</p><div class="tags"><span class="tag">감정 분석</span><span class="tag">꽃 SVG 8종</span><span class="tag">위기감지</span></div></div>
+      <div class="card"><div class="card-icon">🔮</div><h4>미래의 나 — AI 자화상</h4><p>4단계 미래 대화(CIREF) 후 5년/10년 후 미래 이미지 생성. 느낀 점 기록으로 행동 변화 동기 강화.</p><div class="tags"><span class="tag tag-purple">4단계 대화</span><span class="tag tag-purple">이미지 생성</span><span class="tag tag-purple">느낀 점 기록</span></div></div>
+      <div class="card"><div class="card-icon">🎮</div><h4>미로 게임 — 마음 안정 훈련</h4><p>10단계 미로. 시야 제한·타이머·힌트. 일일 15분 제한으로 2차 중독 방지. 뱃지 5종.</p><div class="tags"><span class="tag tag-orange">10단계</span><span class="tag tag-orange">포인트/뱃지</span><span class="tag tag-orange">시간 제한</span></div></div>
+      <div class="card"><div class="card-icon">📊</div><h4>자가진단 — 중독 척도 측정</h4><p>스마트폰 의존도(SAS) + 정서 상태(PHQ-A) 기반 10문항. 사용량 × 정서 변화 상관관계 그래프. PDF 저장.</p><div class="tags"><span class="tag">스마트폰 의존도</span><span class="tag">정서 상태 측정</span><span class="tag">추이 그래프</span></div></div>
     </div>
   </div>
+</div>
 
-  <!-- CARD 5: CIREF -->
-  <div class="slide slide-5" id="slide-5">
-    <div class="slide-inner">
-      <div class="slide-label">미래의 나 — 4단계 미래 대화 (CIREF)</div>
-      <div class="slide-title">4단계 대화로<br>미래를 구체화합니다</div>
-      <div class="ciref-grid">
-        <div class="ciref-card">
-          <div class="ciref-num">1</div>
-          <h4>시공간 묘사</h4>
-          <p>어디서, 누구와, 무엇을 하고 있나요?</p>
-          <div class="ciref-q">"스마트폰을 내려놓은 미래의 너는 어디 있어?"</div>
-        </div>
-        <div class="ciref-card">
-          <div class="ciref-num">2</div>
-          <h4>감각/감정 예측</h4>
-          <p>그 장면에서 기분이 어때요?</p>
-          <div class="ciref-q">"그 감정을 몸으로 느낀다면 어떤 느낌일까?"</div>
-        </div>
-        <div class="ciref-card">
-          <div class="ciref-num">3</div>
-          <h4>정체성 탐색</h4>
-          <p>어떤 어른의 모습과 닮았나요?</p>
-          <div class="ciref-q">"그 어른처럼 되기 위해 지금 달라진 게 뭘까?"</div>
-        </div>
-        <div class="ciref-card">
-          <div class="ciref-num">4</div>
-          <h4>대체 활동</h4>
-          <p>스마트폰 대신 무엇을 하고 싶나요?</p>
-          <div class="ciref-q">"그 활동을 하는 미래의 네 모습이 어떻게 보여?"</div>
-        </div>
-      </div>
-      <div class="ciref-result">
-        <div style="font-size:1.8rem">🖼️</div>
-        <p>4단계 완료 → Gemini AI가 5년 후 / 10년 후 미래 자화상 이미지 생성 → 리플렉션 노트 3문항 → 갤러리 저장</p>
-      </div>
+<!-- 5. CIREF DETAIL -->
+<div class="slide s5" id="slide-5">
+  <div class="slide-inner">
+    <div class="slide-label">Phase 2 — 미래의 나 상세</div>
+    <div class="slide-title">4단계 대화로<br>미래를 구체화합니다</div>
+    <div class="ciref-grid">
+      <div class="ciref-card"><div class="ciref-num">1</div><h4>장소 · 상황 묘사</h4><p>어디서, 누구와, 무엇을 하고 있나요?</p><div class="ciref-q">"스마트폰을 내려놓은 미래의 너는 어디 있어?"</div></div>
+      <div class="ciref-card"><div class="ciref-num">2</div><h4>감각 · 감정 예측</h4><p>그 장면에서 기분이 어때요?</p><div class="ciref-q">"그 감정을 몸으로 느낀다면 어떤 느낌일까?"</div></div>
+      <div class="ciref-card"><div class="ciref-num">3</div><h4>정체성 탐색</h4><p>어떤 어른의 모습과 닮았나요?</p><div class="ciref-q">"그 어른처럼 되기 위해 지금 달라진 게 뭘까?"</div></div>
+      <div class="ciref-card"><div class="ciref-num">4</div><h4>대체 활동</h4><p>스마트폰 대신 무엇을 하고 싶나요?</p><div class="ciref-q">"그 활동을 하는 미래의 네 모습이 어떻게 보여?"</div></div>
+    </div>
+    <div class="ciref-result">
+      <div style="font-size:1.7rem">🖼️</div>
+      <p>4단계 완료 → Gemini AI가 5년 후 / 10년 후 미래 자화상 이미지 생성 → 느낀 점 3문항 기록 → 갤러리 저장. 오류 시 자동 재시도 3회, 횟수 차감 없음.</p>
     </div>
   </div>
+</div>
 
-  <!-- CARD 6: ACCOUNTS -->
-  <div class="slide slide-6" id="slide-6">
-    <div class="slide-inner">
-      <div class="slide-label">계정 구조</div>
-      <div class="slide-title">3-Tier 역할 기반<br>관리 체계</div>
-      <div class="acc-grid">
-        <div class="acc-card acc-sv">
-          <div class="acc-badge">수퍼바이저</div>
-          <h4>플랫폼 운영자</h4>
-          <ul>
-            <li>전체 기관 계정 관리</li>
-            <li>구독 만료일 연장</li>
-            <li>전체 통계 열람</li>
-          </ul>
-        </div>
-        <div class="acc-card acc-ad">
-          <div class="acc-badge">관리자</div>
-          <h4>기관 상담사</h4>
-          <ul>
-            <li>학생 계정 생성·CSV</li>
-            <li>위기 신호 즉시 알림</li>
-            <li>PDF 리포트 출력</li>
-          </ul>
-        </div>
-        <div class="acc-card acc-st">
-          <div class="acc-badge">학생</div>
-          <h4>프로그램 참여자</h4>
-          <ul>
-            <li>마음일기·미래 대화</li>
-            <li>미로 게임</li>
-            <li>자가진단 + PDF</li>
-          </ul>
-        </div>
-        <div class="acc-card acc-pa">
-          <div class="acc-badge">부모 (Phase 4)</div>
-          <h4>보호자</h4>
-          <ul>
-            <li>자가진단 수준 열람</li>
-            <li>위기 SMS 알림</li>
-            <li>연결 코드 방식</li>
-          </ul>
-        </div>
-      </div>
+<!-- 6. MAZE DETAIL -->
+<div class="slide s6" id="slide-6">
+  <div class="slide-inner">
+    <div class="slide-label">Phase 3 — 미로 게임 상세</div>
+    <div class="slide-title">10단계 미로로<br>두뇌를 훈련합니다</div>
+    <div class="maze-levels">
+      <div class="maze-lv"><div class="maze-lv-num">Lv 1</div><div class="maze-lv-name">현실 접속</div><div class="maze-lv-size">10×10</div></div>
+      <div class="maze-lv"><div class="maze-lv-num">Lv 2</div><div class="maze-lv-name">HP 회복</div><div class="maze-lv-size">12×12</div></div>
+      <div class="maze-lv"><div class="maze-lv-num">Lv 3</div><div class="maze-lv-name">시야 확보</div><div class="maze-lv-size">15×15</div></div>
+      <div class="maze-lv"><div class="maze-lv-num">Lv 4</div><div class="maze-lv-name">장비 해제</div><div class="maze-lv-size">18×18</div></div>
+      <div class="maze-lv"><div class="maze-lv-num">Lv 5~10</div><div class="maze-lv-name">파티원~엔딩</div><div class="maze-lv-size">20→35</div></div>
+    </div>
+    <div class="maze-features">
+      <div class="maze-chip">👁️ 시야 제한 (안개) — Lv별 3×3~7×7</div>
+      <div class="maze-chip">⏱️ 타이머 — 초과시 경고만, 포인트 미지급</div>
+      <div class="maze-chip">💡 힌트 3회 — 정답 경로 3초 표시</div>
+      <div class="maze-chip">📱 스와이프 + 버튼 + 키보드 입력</div>
+      <div class="maze-chip">🏅 뱃지 5종 — 첫클리어/스피드런/노힌트/전레벨/개근왕</div>
+      <div class="maze-chip">⏰ 일일 15분 제한 (관리자 조정 5~60분)</div>
     </div>
   </div>
+</div>
 
-  <!-- CARD 7: SELF DIAGNOSIS DEMO -->
-  <div class="slide slide-7" id="slide-7">
-    <div class="demo-container">
-      <div class="demo-header">
-        <div class="demo-title-text">
-          <h3>📊 자가진단 직접 체험</h3>
-          <p>스마트폰 의존도 + 정서 상태 측정 · 10문항 · 직접 답해보세요</p>
+<!-- 7. FLOWER + GRAPH -->
+<div class="slide s7" id="slide-7">
+  <div class="slide-inner">
+    <div class="slide-label">Phase 3 — 감정 꽃 + 상관관계 그래프</div>
+    <div class="slide-title">데이터로 변화를<br>눈으로 확인합니다</div>
+    <div class="split-2">
+      <div class="sub-card">
+        <h3>🌸 AI 감정 꽃 SVG 고도화</h3>
+        <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:0.6rem">Phase 1 프리셋 8종 → Phase 3 AI 파라미터 무한 변형</p>
+        <div class="flower-row">
+          <div class="flower-chip"><div class="flower-dot" style="background:#FFD700"></div>기쁨 — 만개 해바라기</div>
+          <div class="flower-chip"><div class="flower-dot" style="background:#9B85CB"></div>슬픔 — 고개 숙인 꽃</div>
+          <div class="flower-chip"><div class="flower-dot" style="background:#7BC8A4"></div>평온 — 라벤더</div>
+          <div class="flower-chip"><div class="flower-dot" style="background:#FC8181"></div>불안 — 닫힌 봉오리</div>
         </div>
-        <div class="demo-progress-wrap">
-          <div class="demo-progress-text" id="progress-text">1 / 10</div>
-          <div class="demo-progress-bar"><div class="demo-progress-fill" id="progress-fill" style="width:10%"></div></div>
-        </div>
+        <ul class="param-list">
+          <li>개화도 (0=봉오리 ~ 1=만개)</li>
+          <li>꽃잎 색상·그라데이션</li>
+          <li>줄기 기울기·고개 숙임 정도</li>
+          <li>Gemini AI가 일기 분석 후 자동 생성</li>
+        </ul>
       </div>
-      <div class="question-area">
-        <div class="q-category" id="q-category"></div>
-        <div class="q-text" id="q-text"></div>
-        <div class="q-options" id="q-options"></div>
-      </div>
-      <div class="demo-nav">
-        <div class="q-num" id="q-num-display"></div>
-        <div style="display:flex;gap:0.6rem">
-          <button class="demo-nav-btn demo-prev" id="btn-prev" onclick="prevQ()">← 이전</button>
-          <button class="demo-nav-btn demo-next" id="btn-next" onclick="nextQ()" disabled>다음 →</button>
+      <div class="sub-card">
+        <h3>📈 스마트폰 사용량 × 정서 상관관계</h3>
+        <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:0.8rem">매일 슬라이더로 스마트폰 사용 시간 자기보고 → 정서 점수와 비교</p>
+        <div class="graph-mock">
+          <div class="graph-line graph-orange">📱 스마트폰 사용 시간 (0~12시간)</div>
+          <div class="graph-line graph-blue">💚 정서 안정도 점수 (0~100점)</div>
         </div>
+        <p style="font-size:0.76rem;color:var(--text-light);margin-top:0.6rem">"폰을 덜 쓴 날, 기분이 어땠는지 보이나요? 📊"<br>날짜 축 동기화 · 최근 30일 기본 · 전체 조회 가능</p>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- CARD 8: RESULT + PDF -->
-  <div class="slide slide-8" id="slide-8">
-    <div style="max-width:680px;width:90%">
-      <div class="slide-label" style="text-align:center">자가진단 결과</div>
-      <div id="result-content">
-        <div class="result-card">
-          <div class="result-level" id="result-level-area"></div>
-          <div class="result-bars" id="result-bars-area"></div>
-          <div class="result-desc-text" id="result-desc-area"></div>
-          <div class="result-actions">
-            <button class="result-btn btn-pdf" onclick="generatePDF()">📄 PDF로 저장</button>
-            <button class="result-btn btn-retry" onclick="retryDiagnosis()">다시 진단하기</button>
-          </div>
-          <div id="pdf-generating" style="margin-top:0.8rem"><div class="spinner"></div>PDF 생성 중...</div>
-        </div>
+<!-- 8. SUPERVISOR -->
+<div class="slide s8" id="slide-8">
+  <div class="slide-inner">
+    <div class="slide-label">Phase 3 — 수퍼바이저 대시보드</div>
+    <div class="slide-title">플랫폼 전체를<br>한눈에 관리합니다</div>
+    <div class="sv-grid">
+      <div class="sv-card">
+        <div class="sv-badge">수퍼바이저 전용</div>
+        <h4>기관(관리자) 계정 목록</h4>
+        <ul class="sv-list">
+          <li>기관명 / 담당자명 / 가입일</li>
+          <li>마지막 로그인일 / 산하 학생 수</li>
+          <li>구독 만료일 — D-30 주황 · D-7 빨강 경고</li>
+          <li>상태: 활성 / 만료 / 정지 토글</li>
+        </ul>
       </div>
-      <div id="result-empty" style="text-align:center;color:var(--text-light);padding:3rem;background:white;border-radius:24px;border:1.5px solid var(--border)">
-        <div style="font-size:3rem;margin-bottom:1rem">📊</div>
-        <p style="font-size:0.95rem">7번 카드에서 자가진단을 완료하면<br>결과가 여기에 표시됩니다.</p>
+      <div class="sv-card">
+        <div class="sv-badge">수퍼바이저 전용</div>
+        <h4>기관 상세 관리</h4>
+        <ul class="sv-list">
+          <li>구독 만료일 수동 연장 (날짜 선택)</li>
+          <li>관리자 비밀번호 초기화 (임시 발급)</li>
+          <li>계정 정지 / 활성화</li>
+          <li>전체 서비스 KPI 통계 — 활성 기관 수, 학생 수 추이</li>
+        </ul>
       </div>
     </div>
+    <div class="alert-box">📧 만료 D-30: 수퍼바이저 이메일 알림 · D-7: 수퍼바이저 + 해당 관리자 동시 발송 (Resend)</div>
   </div>
+</div>
 
-  <!-- CARD 9: CTA -->
-  <div class="slide slide-9" id="slide-9">
-    <div class="slide-inner title-content">
-      <div class="slide-label">도입 안내</div>
-      <div class="cta-main">청소년의 변화를<br><span>함께 만들어요</span></div>
-      <p class="cta-sub">PRD 기반 4단계 개발 로드맵으로<br>단계적이고 안정적인 서비스를 제공합니다.</p>
-      <div class="cta-cards">
-        <div class="cta-card">
-          <div class="cta-card-icon">🏢</div>
-          <h4>Phase 1 착수 준비</h4>
-          <p>Supabase + Next.js + Vercel 기반 MVP 개발 예정</p>
+<!-- 9. PHASE 4 MOBILE -->
+<div class="slide s9" id="slide-9">
+  <div class="slide-inner">
+    <div class="slide-label">Phase 4 — 모바일 앱 + 부모 모니터링</div>
+    <div class="slide-title">Android 앱으로<br>더 가까이 다가갑니다</div>
+    <div class="mobile-grid">
+      <div class="mobile-card">
+        <h3>📱 Next.js → Expo 전환</h3>
+        <div class="platform-row">
+          <div class="platform-chip"><strong>학생</strong>Android 앱<br>(Google Play)</div>
+          <div class="platform-chip"><strong>관리자</strong>PC 웹<br>(Expo Web)</div>
+          <div class="platform-chip"><strong>부모</strong>앱 + 웹</div>
         </div>
-        <div class="cta-card">
-          <div class="cta-card-icon">🔒</div>
-          <h4>데이터 보안</h4>
-          <p>RLS 기반 완전 데이터 격리. 미성년자 개인정보 보호</p>
-        </div>
-        <div class="cta-card">
-          <div class="cta-card-icon">📱</div>
-          <h4>Phase 4: Android 앱</h4>
-          <p>Expo 기반 Google Play 배포. 부모 모니터링 포함</p>
-        </div>
+        <ul class="mobile-list" style="margin-top:0.8rem">
+          <li>EAS Build → Google Play 법인 계정 배포</li>
+          <li>OTA 업데이트 (앱 재심사 없이 즉시 적용)</li>
+          <li>아바타 일관성 — 첫 이미지 기반 img2img</li>
+        </ul>
       </div>
-      <button class="cta-btn-main" onclick="alert('현재 개발 진행 중입니다.\n도입 문의는 담당자에게 직접 연락해주세요.')">도입 문의하기</button>
-      <div class="cta-note-text">※ Phase 1 개발 착수 준비 완료 · 구독 방식: 연간 계약</div>
+      <div class="mobile-card">
+        <h3>👨‍👩‍👧 부모 모니터링 계정</h3>
+        <ul class="mobile-list">
+          <li>연결 코드(DRM-XXXX) — 학생 주도, 동의 기반</li>
+          <li>전화번호 + OTP 인증 (Twilio)</li>
+          <li>자녀 마지막 접속일 · 자가진단 수준 열람</li>
+          <li>스마트폰 사용량 추이 그래프</li>
+          <li>위기 신호: SMS + 앱 푸시 동시 발송</li>
+          <li>일기·이미지 열람 불가 (프라이버시 보호)</li>
+        </ul>
+      </div>
     </div>
   </div>
+</div>
+
+<!-- 10. ACCOUNTS -->
+<div class="slide s10" id="slide-10">
+  <div class="slide-inner">
+    <div class="slide-label">계정 구조</div>
+    <div class="slide-title">3-Tier 역할 기반<br>관리 체계</div>
+    <div class="acc-grid">
+      <div class="acc-card acc-sv"><div class="acc-badge">수퍼바이저</div><h4>플랫폼 운영자</h4><ul class="acc-list"><li>전체 기관 계정 관리</li><li>구독 만료일 연장</li><li>비밀번호 초기화</li><li>전체 통계 열람</li></ul></div>
+      <div class="acc-card acc-ad"><div class="acc-badge">관리자</div><h4>기관 상담사</h4><ul class="acc-list"><li>학생 계정 생성·CSV</li><li>위기 신호 즉시 알림</li><li>PDF 리포트 출력</li><li>7일 미접속 알림</li></ul></div>
+      <div class="acc-card acc-st"><div class="acc-badge">학생</div><h4>프로그램 참여자</h4><ul class="acc-list"><li>마음일기·미래 대화</li><li>미로 게임</li><li>자가진단 + PDF</li><li>username 기반 로그인</li></ul></div>
+      <div class="acc-card acc-pa"><div class="acc-badge">부모 (Phase 4)</div><h4>보호자</h4><ul class="acc-list"><li>자가진단 수준 열람</li><li>위기 SMS 알림</li><li>스마트폰 사용량 확인</li><li>연결 코드 방식</li></ul></div>
+    </div>
+    <p style="font-size:0.78rem;color:var(--text-light);margin-top:1rem;text-align:center">학생은 본인 데이터만 접근 가능 · Supabase RLS로 DB 레벨에서 격리 보장 · 일기 텍스트 암호화 저장</p>
+  </div>
+</div>
+
+<!-- 11. PDF -->
+<div class="slide s11" id="slide-11">
+  <div class="slide-inner">
+    <div class="slide-label">PDF 리포트 기능</div>
+    <div class="slide-title">모든 결과물을<br>문서화합니다</div>
+    <div class="pdf-split">
+      <div class="pdf-mock">
+        <div class="pdf-mock-hdr"><div class="pdf-mock-hdr-title">🌱 인터넷 드림마을</div><div class="pdf-mock-hdr-sub">○○청소년상담복지센터 · 홍길동 · 2026.05.30</div></div>
+        <div class="pdf-row"><div class="pdf-row-icon">📊</div><div class="pdf-row-text">자가진단 추이 그래프</div><div class="pdf-row-badge">포함</div></div>
+        <div class="pdf-row"><div class="pdf-row-icon">🌸</div><div class="pdf-row-text">감정 키워드 월별 요약</div><div class="pdf-row-badge">포함</div></div>
+        <div class="pdf-row"><div class="pdf-row-icon">🔮</div><div class="pdf-row-text">미래 대화 요약 + 이미지</div><div class="pdf-row-badge">포함</div></div>
+        <div class="pdf-row"><div class="pdf-row-icon">🚨</div><div class="pdf-row-text">위기신호 이력</div><div class="pdf-row-badge">포함</div></div>
+        <div class="pdf-row"><div class="pdf-row-icon">📱</div><div class="pdf-row-text">스마트폰 사용량 × 정서 그래프</div><div class="pdf-row-badge">포함</div></div>
+      </div>
+      <div>
+        <ul class="pdf-feat-list">
+          <li>학생 — 자가진단 결과 PDF 저장 (Phase 1)</li>
+          <li>학생 — 미래 대화 결과 PDF (이미지 포함, Phase 2)</li>
+          <li>관리자 — 학생 개별 리포트 (풀스펙, Phase 3)</li>
+          <li>관리자 — 전체 학생 요약 리포트 (Phase 3)</li>
+          <li>관리자 — 위기신호 이력 리포트 (Phase 3)</li>
+          <li>브랜드 헤더(기관명) + 푸터(날짜/페이지) 자동 포함</li>
+          <li>스마트 페이지 분할 — 텍스트·이미지 잘림 방지</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 12. ROADMAP -->
+<div class="slide s12" id="slide-12">
+  <div class="slide-inner">
+    <div class="slide-label">개발 로드맵</div>
+    <div class="slide-title">4단계 단계적<br>출시 계획</div>
+    <div class="phases">
+      <div class="phase-card next">
+        <div class="phase-badge">착수 준비 완료</div>
+        <div class="phase-label">Phase 1 · MVP</div>
+        <h3>핵심 기능</h3>
+        <ul class="phase-items">
+          <li>3-Tier 계정 시스템</li>
+          <li>마음일기 + AI 감정 분석</li>
+          <li>자가진단 10문항</li>
+          <li>관리자 대시보드</li>
+          <li>위기 신호 감지 + 이메일</li>
+          <li>자가진단 PDF 저장</li>
+        </ul>
+      </div>
+      <div class="phase-card">
+        <div class="phase-label">Phase 2 · EFT</div>
+        <h3>미래의 나</h3>
+        <ul class="phase-items">
+          <li>4단계 미래 대화 UI</li>
+          <li>Gemini 이미지 생성</li>
+          <li>느낀 점 기록</li>
+          <li>이미지 갤러리</li>
+          <li>미래 대화 결과 PDF</li>
+        </ul>
+      </div>
+      <div class="phase-card">
+        <div class="phase-label">Phase 3 · 게임</div>
+        <h3>고도화</h3>
+        <ul class="phase-items">
+          <li>미로 게임 10단계</li>
+          <li>꽃 SVG AI 고도화</li>
+          <li>상관관계 그래프</li>
+          <li>수퍼바이저 대시보드</li>
+          <li>관리자 PDF 리포트 3종</li>
+        </ul>
+      </div>
+      <div class="phase-card">
+        <div class="phase-label">Phase 4 · 모바일</div>
+        <h3>Android 앱</h3>
+        <ul class="phase-items">
+          <li>Expo 전환 (웹+앱)</li>
+          <li>Google Play 배포</li>
+          <li>부모 모니터링 계정</li>
+          <li>아바타 일관성</li>
+          <li>앱 푸시 알림</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 13. DEMO -->
+<div class="slide s13" id="slide-13">
+  <div class="demo-container">
+    <div class="demo-header">
+      <div class="demo-title-text"><h3>📊 자가진단 직접 체험</h3><p>스마트폰 의존도 + 정서 상태 측정 · 10문항 · 직접 답해보세요</p></div>
+      <div class="demo-progress-wrap"><div class="demo-progress-text" id="progress-text">1 / 10</div><div class="demo-progress-bar"><div class="demo-progress-fill" id="progress-fill" style="width:10%"></div></div></div>
+    </div>
+    <div class="question-area">
+      <div class="q-category" id="q-category"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-options" id="q-options"></div>
+    </div>
+    <div class="demo-nav">
+      <div class="q-num" id="q-num-display"></div>
+      <div style="display:flex;gap:0.5rem">
+        <button class="demo-nav-btn demo-prev" id="btn-prev" onclick="prevQ()">← 이전</button>
+        <button class="demo-nav-btn demo-next" id="btn-next" onclick="nextQ()" disabled>다음 →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 14. RESULT -->
+<div class="slide s14" id="slide-14">
+  <div style="max-width:660px;width:90%">
+    <div class="slide-label" style="text-align:center">자가진단 결과</div>
+    <div id="result-content">
+      <div class="result-card">
+        <div class="result-level" id="result-level-area"></div>
+        <div class="result-bars" id="result-bars-area"></div>
+        <div class="result-desc-text" id="result-desc-area"></div>
+        <div class="result-actions">
+          <button class="result-btn btn-pdf" onclick="generatePDF()">📄 PDF로 저장</button>
+          <button class="result-btn btn-retry" onclick="retryDiagnosis()">다시 진단하기</button>
+        </div>
+        <div id="pdf-generating"><div class="spinner"></div>PDF 생성 중...</div>
+      </div>
+    </div>
+    <div id="result-empty" style="text-align:center;color:var(--text-light);padding:2.5rem;background:white;border-radius:22px;border:1.5px solid var(--border)">
+      <div style="font-size:2.8rem;margin-bottom:0.9rem">📊</div>
+      <p style="font-size:0.92rem">13번 카드에서 자가진단을 완료하면<br>결과가 여기에 표시됩니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 15. CTA -->
+<div class="slide s15" id="slide-15">
+  <div class="slide-inner" style="text-align:center">
+    <div class="slide-label">도입 안내</div>
+    <div class="cta-main">청소년의 변화를<br><span>함께 만들어요</span></div>
+    <p class="cta-sub">PRD 기반 4단계 개발 로드맵으로<br>단계적이고 안정적인 서비스를 제공합니다.</p>
+    <div class="cta-cards">
+      <div class="cta-card"><div class="cta-card-icon">🏢</div><h4>Phase 1 착수 준비</h4><p>Supabase + Next.js + Vercel 기반 MVP</p></div>
+      <div class="cta-card"><div class="cta-card-icon">🔒</div><h4>데이터 보안</h4><p>RLS 격리 · 미성년자 개인정보 보호</p></div>
+      <div class="cta-card"><div class="cta-card-icon">📱</div><h4>Phase 4: Android 앱</h4><p>Google Play 배포 · 부모 모니터링</p></div>
+      <div class="cta-card"><div class="cta-card-icon">📄</div><h4>PDF 리포트</h4><p>모든 결과물 즉시 출력 · 기관 보고용</p></div>
+    </div>
+    <button class="cta-btn-main" onclick="alert('현재 개발 진행 중입니다.\n도입 문의는 담당자에게 직접 연락해주세요.')">도입 문의하기</button>
+    <div class="cta-note">※ Phase 1 개발 착수 준비 완료 · 구독 방식: 연간 계약 · 결제 시스템 없이 수동 계약</div>
+  </div>
+</div>
 
 </div><!-- /slider -->
 
-<!-- NAV -->
 <div id="nav">
   <button class="nav-btn" onclick="prevSlide()">←</button>
   <div class="dots" id="dots"></div>
-  <span id="page-indicator">1 / 9</span>
+  <span id="page-indicator">1 / 15</span>
   <button class="nav-btn" onclick="nextSlide()">→</button>
 </div>
 
 <script>
 const questions = [
-  { category: "스마트폰 의존도 (SAS)", text: "스마트폰 사용 때문에 계획한 일을 못 한 적이 있다." },
-  { category: "스마트폰 의존도 (SAS)", text: "스마트폰을 사용하다 보면 어느새 시간이 많이 지나 있다." },
-  { category: "스마트폰 의존도 (SAS)", text: "스마트폰이 없으면 불안하고 초조하다." },
-  { category: "스마트폰 의존도 (SAS)", text: "스마트폰 사용 시간을 줄이려고 했지만 잘 되지 않는다." },
-  { category: "스마트폰 의존도 (SAS)", text: "스마트폰을 사용하지 않을 때도 자꾸 생각이 난다." },
-  { category: "정서 상태 (PHQ-A)", text: "최근 2주 동안, 흥미나 즐거움을 느끼기 어려웠다." },
-  { category: "정서 상태 (PHQ-A)", text: "최근 2주 동안, 기분이 가라앉거나 우울한 느낌이 들었다." },
-  { category: "정서 상태 (PHQ-A)", text: "최근 2주 동안, 잠들기 어렵거나 너무 많이 잔 적이 있었다." },
-  { category: "정서 상태 (PHQ-A)", text: "최근 2주 동안, 피곤하거나 힘이 없다고 느꼈다." },
-  { category: "정서 상태 (PHQ-A)", text: "최근 2주 동안, 집중하기 어려웠다." },
+  { category:"스마트폰 의존도 (SAS)", text:"스마트폰 사용 때문에 계획한 일을 못 한 적이 있다." },
+  { category:"스마트폰 의존도 (SAS)", text:"스마트폰을 사용하다 보면 어느새 시간이 많이 지나 있다." },
+  { category:"스마트폰 의존도 (SAS)", text:"스마트폰이 없으면 불안하고 초조하다." },
+  { category:"스마트폰 의존도 (SAS)", text:"스마트폰 사용 시간을 줄이려고 했지만 잘 되지 않는다." },
+  { category:"스마트폰 의존도 (SAS)", text:"스마트폰을 사용하지 않을 때도 자꾸 생각이 난다." },
+  { category:"정서 상태 (PHQ-A)", text:"최근 2주 동안, 흥미나 즐거움을 느끼기 어려웠다." },
+  { category:"정서 상태 (PHQ-A)", text:"최근 2주 동안, 기분이 가라앉거나 우울한 느낌이 들었다." },
+  { category:"정서 상태 (PHQ-A)", text:"최근 2주 동안, 잠들기 어렵거나 너무 많이 잔 적이 있었다." },
+  { category:"정서 상태 (PHQ-A)", text:"최근 2주 동안, 피곤하거나 힘이 없다고 느꼈다." },
+  { category:"정서 상태 (PHQ-A)", text:"최근 2주 동안, 집중하기 어려웠다." },
 ];
 const options = [
-  { value: 1, text: "전혀 그렇지 않다" },
-  { value: 2, text: "가끔 그렇다" },
-  { value: 3, text: "자주 그렇다" },
-  { value: 4, text: "항상 그렇다" },
+  { value:1, text:"전혀 그렇지 않다" },
+  { value:2, text:"가끔 그렇다" },
+  { value:3, text:"자주 그렇다" },
+  { value:4, text:"항상 그렇다" },
 ];
 let answers = {}, currentQ = 0;
 
@@ -565,9 +681,9 @@ function renderQuestion() {
   const q = questions[currentQ];
   document.getElementById('q-category').textContent = q.category;
   document.getElementById('q-text').textContent = q.text;
-  document.getElementById('q-num-display').textContent = `문항 ${currentQ + 1} / ${questions.length}`;
-  document.getElementById('progress-text').textContent = `${currentQ + 1} / ${questions.length}`;
-  document.getElementById('progress-fill').style.width = `${((currentQ + 1) / questions.length) * 100}%`;
+  document.getElementById('q-num-display').textContent = `문항 ${currentQ+1} / ${questions.length}`;
+  document.getElementById('progress-text').textContent = `${currentQ+1} / ${questions.length}`;
+  document.getElementById('progress-fill').style.width = `${((currentQ+1)/questions.length)*100}%`;
   const optContainer = document.getElementById('q-options');
   optContainer.innerHTML = '';
   options.forEach(opt => {
@@ -580,49 +696,37 @@ function renderQuestion() {
   document.getElementById('btn-prev').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
   const btnNext = document.getElementById('btn-next');
   btnNext.disabled = answers[currentQ] === undefined;
-  btnNext.textContent = (currentQ === questions.length - 1 && answers[currentQ] !== undefined) ? '결과 보기 →' : '다음 →';
+  btnNext.textContent = (currentQ === questions.length-1 && answers[currentQ] !== undefined) ? '결과 보기 →' : '다음 →';
 }
 
 function selectAnswer(value) {
-  answers[currentQ] = value;
-  renderQuestion();
+  answers[currentQ] = value; renderQuestion();
   document.getElementById('btn-next').disabled = false;
-  if (currentQ === questions.length - 1) document.getElementById('btn-next').textContent = '결과 보기 →';
+  if (currentQ === questions.length-1) document.getElementById('btn-next').textContent = '결과 보기 →';
 }
 
 function nextQ() {
   if (answers[currentQ] === undefined) return;
-  if (currentQ === questions.length - 1) { showResult(); goToSlide(7); return; }
-  currentQ++;
-  renderQuestion();
+  if (currentQ === questions.length-1) { showResult(); goToSlide(13); return; }
+  currentQ++; renderQuestion();
 }
 
-function prevQ() {
-  if (currentQ > 0) { currentQ--; renderQuestion(); }
-}
+function prevQ() { if (currentQ > 0) { currentQ--; renderQuestion(); } }
 
 function retryDiagnosis() {
-  answers = {}; currentQ = 0; renderQuestion();
-  goToSlide(6);
+  answers = {}; currentQ = 0; renderQuestion(); goToSlide(12);
   document.getElementById('result-content').classList.remove('show');
   document.getElementById('result-empty').style.display = 'block';
 }
 
 function calculateResult() {
-  const sasScore = [0,1,2,3,4].reduce((s, i) => s + (answers[i] || 0), 0);
-  const phqScore = [5,6,7,8,9].reduce((s, i) => s + (answers[i] || 0), 0);
+  const sasScore = [0,1,2,3,4].reduce((s,i) => s+(answers[i]||0), 0);
+  const phqScore = [5,6,7,8,9].reduce((s,i) => s+(answers[i]||0), 0);
   const total = sasScore + phqScore;
   let level, name, desc, color;
-  if (total <= 19) {
-    level = 'safe'; name = '안심 수준'; color = '#5BAD88';
-    desc = '현재 스마트폰 사용과 정서 상태가 비교적 안정적입니다. 꾸준한 자기 점검을 통해 건강한 디지털 습관을 유지하세요. 정기적인 자가진단으로 변화를 추적하는 것을 권장합니다.';
-  } else if (total <= 29) {
-    level = 'caution'; name = '주의 수준'; color = '#E8870A';
-    desc = '스마트폰 사용이나 정서 상태에서 일부 어려움이 감지됩니다. 사용 시간을 의식적으로 줄이고 대체 활동을 시도해보세요. 담당 상담사와 함께 구체적인 계획을 세워보는 것이 도움이 됩니다.';
-  } else {
-    level = 'danger'; name = '위험 수준'; color = '#C53030';
-    desc = '스마트폰 과의존 또는 정서적 어려움이 높은 수준입니다. 혼자 해결하려 하지 말고 담당 상담사나 전문가의 도움을 적극적으로 요청하세요. 정신건강 위기상담전화 1577-0199를 이용하실 수 있습니다.';
-  }
+  if (total <= 19) { level='safe'; name='안심 수준'; color='#5BAD88'; desc='현재 스마트폰 사용과 정서 상태가 비교적 안정적입니다. 꾸준한 자기 점검을 통해 건강한 디지털 습관을 유지하세요. 정기적인 자가진단으로 변화를 추적하는 것을 권장합니다.'; }
+  else if (total <= 29) { level='caution'; name='주의 수준'; color='#E8870A'; desc='스마트폰 사용이나 정서 상태에서 일부 어려움이 감지됩니다. 사용 시간을 의식적으로 줄이고 대체 활동을 시도해보세요. 담당 상담사와 함께 구체적인 계획을 세워보는 것이 도움이 됩니다.'; }
+  else { level='danger'; name='위험 수준'; color='#C53030'; desc='스마트폰 과의존 또는 정서적 어려움이 높은 수준입니다. 혼자 해결하려 하지 말고 담당 상담사나 전문가의 도움을 적극적으로 요청하세요. 정신건강 위기상담전화 1577-0199를 이용하실 수 있습니다.'; }
   return { level, name, desc, color, sasScore, phqScore, total };
 }
 
@@ -630,32 +734,20 @@ function showResult() {
   const r = calculateResult();
   document.getElementById('result-empty').style.display = 'none';
   document.getElementById('result-content').classList.add('show');
-  document.getElementById('result-level-area').innerHTML = `
-    <div class="result-badge" style="background:${r.color}18;color:${r.color}">${r.name}</div>
-    <div class="result-name-text">${r.name}</div>
-    <div class="result-score-text">총점 ${r.total}점 (스마트폰 의존 ${r.sasScore}점 · 정서 상태 ${r.phqScore}점)</div>
-  `;
+  document.getElementById('result-level-area').innerHTML = `<div class="result-badge" style="background:${r.color}18;color:${r.color}">${r.name}</div><div class="result-name-text">${r.name}</div><div class="result-score-text">총점 ${r.total}점 (스마트폰 의존 ${r.sasScore}점 · 정서 상태 ${r.phqScore}점)</div>`;
   document.getElementById('result-bars-area').innerHTML = `
-    <div class="result-bar-item">
-      <div class="result-bar-label"><span>스마트폰 의존도 (SAS)</span><span style="color:${r.color};font-weight:700">${r.sasScore}/20</span></div>
-      <div class="result-bar-track"><div class="result-bar-fill" style="width:${(r.sasScore/20)*100}%;background:${r.color}"></div></div>
-    </div>
-    <div class="result-bar-item">
-      <div class="result-bar-label"><span>정서 상태 (PHQ-A)</span><span style="color:${r.color};font-weight:700">${r.phqScore}/20</span></div>
-      <div class="result-bar-track"><div class="result-bar-fill" style="width:${(r.phqScore/20)*100}%;background:${r.color}"></div></div>
-    </div>
-  `;
+    <div><div class="result-bar-label"><span>스마트폰 의존도 (SAS)</span><span style="color:${r.color};font-weight:700">${r.sasScore}/20</span></div><div class="result-bar-track"><div class="result-bar-fill" style="width:${(r.sasScore/20)*100}%;background:${r.color}"></div></div></div>
+    <div><div class="result-bar-label"><span>정서 상태 (PHQ-A)</span><span style="color:${r.color};font-weight:700">${r.phqScore}/20</span></div><div class="result-bar-track"><div class="result-bar-fill" style="width:${(r.phqScore/20)*100}%;background:${r.color}"></div></div></div>`;
   document.getElementById('result-desc-area').textContent = r.desc;
   const today = new Date().toLocaleDateString('ko-KR');
-  document.getElementById('pdf-date').textContent = today + ' 출력';
+  document.getElementById('pdf-date').textContent = today+' 출력';
   document.getElementById('pdf-footer-date').textContent = today;
   document.getElementById('pdf-badge-wrap').innerHTML = `<div class="pdf-result-badge" style="background:${r.color}18;color:${r.color}">${r.name}</div>`;
   document.getElementById('pdf-result-name').textContent = r.name;
   document.getElementById('pdf-result-score').textContent = `총점 ${r.total}점 (스마트폰 의존 ${r.sasScore}점 · 정서 상태 ${r.phqScore}점)`;
   document.getElementById('pdf-bars').innerHTML = `
     <div class="pdf-bar-item"><div class="pdf-bar-label"><span>스마트폰 의존도 (SAS)</span><span>${r.sasScore}/20</span></div><div class="pdf-bar-track"><div class="pdf-bar-fill" style="width:${(r.sasScore/20)*100}%;background:${r.color}"></div></div></div>
-    <div class="pdf-bar-item" style="margin-top:8px"><div class="pdf-bar-label"><span>정서 상태 (PHQ-A)</span><span>${r.phqScore}/20</span></div><div class="pdf-bar-track"><div class="pdf-bar-fill" style="width:${(r.phqScore/20)*100}%;background:${r.color}"></div></div></div>
-  `;
+    <div class="pdf-bar-item" style="margin-top:8px"><div class="pdf-bar-label"><span>정서 상태 (PHQ-A)</span><span>${r.phqScore}/20</span></div><div class="pdf-bar-track"><div class="pdf-bar-fill" style="width:${(r.phqScore/20)*100}%;background:${r.color}"></div></div></div>`;
   document.getElementById('pdf-desc').textContent = r.desc;
 }
 
@@ -663,58 +755,54 @@ async function generatePDF() {
   const el = document.getElementById('pdf-print-area');
   const genEl = document.getElementById('pdf-generating');
   const btnPdf = document.querySelector('.btn-pdf');
-  btnPdf.disabled = true;
-  genEl.classList.add('show');
+  btnPdf.disabled = true; genEl.classList.add('show');
   try {
-    const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: el.scrollWidth, windowHeight: el.scrollHeight });
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-    const pdfW = pdf.internal.pageSize.getWidth(), pdfH = pdf.internal.pageSize.getHeight();
-    const margin = 15, contentW = pdfW - margin * 2, contentH = pdfH - margin * 2;
-    const canvasW = canvas.width, canvasH = canvas.height;
-    const contentHpx = (contentH * canvasW) / contentW;
-    let y = 0;
-    while (y < canvasH) {
-      if (y > 0) pdf.addPage();
-      const sliceH = Math.min(contentHpx, canvasH - y);
-      const pageCanvas = document.createElement('canvas');
-      pageCanvas.width = canvasW; pageCanvas.height = sliceH;
-      pageCanvas.getContext('2d').drawImage(canvas, 0, y, canvasW, sliceH, 0, 0, canvasW, sliceH);
-      pdf.addImage(pageCanvas.toDataURL('image/png'), 'PNG', margin, margin, contentW, (sliceH * contentW) / canvasW, undefined, 'FAST');
-      y += sliceH;
+    const canvas = await html2canvas(el,{scale:2,useCORS:true,backgroundColor:'#ffffff',windowWidth:el.scrollWidth,windowHeight:el.scrollHeight});
+    const {jsPDF} = window.jspdf;
+    const pdf = new jsPDF({orientation:'p',unit:'mm',format:'a4'});
+    const pdfW=pdf.internal.pageSize.getWidth(),pdfH=pdf.internal.pageSize.getHeight();
+    const margin=15,contentW=pdfW-margin*2,contentH=pdfH-margin*2;
+    const cW=canvas.width,cH=canvas.height,cHpx=(contentH*cW)/contentW;
+    let y=0;
+    while(y<cH){
+      if(y>0)pdf.addPage();
+      const sh=Math.min(cHpx,cH-y),pc=document.createElement('canvas');
+      pc.width=cW;pc.height=sh;
+      pc.getContext('2d').drawImage(canvas,0,y,cW,sh,0,0,cW,sh);
+      pdf.addImage(pc.toDataURL('image/png'),'PNG',margin,margin,contentW,(sh*contentW)/cW,undefined,'FAST');
+      y+=sh;
     }
     pdf.save(`자가진단_${new Date().toISOString().slice(0,10)}.pdf`);
-  } catch(e) { alert('PDF 생성 중 오류가 발생했습니다.'); console.error(e); }
-  finally { genEl.classList.remove('show'); btnPdf.disabled = false; }
+  } catch(e){alert('PDF 생성 오류');console.error(e);}
+  finally{genEl.classList.remove('show');btnPdf.disabled=false;}
 }
 
-const TOTAL = 9;
-let current = 0;
+const TOTAL=15;
+let current=0;
 
-function buildDots() {
-  const dotsEl = document.getElementById('dots');
-  dotsEl.innerHTML = '';
-  for (let i = 0; i < TOTAL; i++) {
-    const d = document.createElement('div');
-    d.className = 'dot' + (i === 0 ? ' active' : '');
-    d.onclick = () => goToSlide(i);
-    dotsEl.appendChild(d);
+function buildDots(){
+  const el=document.getElementById('dots'); el.innerHTML='';
+  for(let i=0;i<TOTAL;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i===0?' active':'');
+    d.onclick=()=>goToSlide(i);
+    el.appendChild(d);
   }
 }
 
-function goToSlide(idx) {
-  document.querySelectorAll('.slide').forEach((s, i) => s.classList.toggle('active', i === idx));
-  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
-  document.getElementById('page-indicator').textContent = `${idx + 1} / ${TOTAL}`;
-  current = idx;
+function goToSlide(idx){
+  document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active',i===idx));
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  document.getElementById('page-indicator').textContent=`${idx+1} / ${TOTAL}`;
+  current=idx;
 }
 
-function nextSlide() { if (current < TOTAL - 1) goToSlide(current + 1); }
-function prevSlide() { if (current > 0) goToSlide(current - 1); }
+function nextSlide(){if(current<TOTAL-1)goToSlide(current+1);}
+function prevSlide(){if(current>0)goToSlide(current-1);}
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')nextSlide();
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')prevSlide();
 });
 
 buildDots();
