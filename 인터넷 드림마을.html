@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>인터넷 드림마을 — 스마트폰 과몰입 방지 AI 상담 플랫폼</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #7BC8A4;
+      --primary-dark: #5BAD88;
+      --accent: #F9A870;
+      --accent2: #B39DDB;
+      --bg: #FAFAF7;
+      --card: #FFFFFF;
+      --text: #2D3748;
+      --text-light: #718096;
+      --border: #E2E8F0;
+      --danger: #FC8181;
+      --warning: #F6AD55;
+      --info: #76E4F7;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(250,250,247,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      font-size: 1.2rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-dark), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--text-light); font-size: 0.9rem; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--primary-dark); }
+    .nav-cta {
+      background: var(--primary); color: white;
+      padding: 0.5rem 1.2rem; border-radius: 999px;
+      text-decoration: none; font-size: 0.9rem; font-weight: 600;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--primary-dark); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 80px 5% 60px;
+      background: radial-gradient(ellipse at 60% 20%, rgba(123,200,164,0.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(179,157,219,0.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 80%, rgba(249,168,112,0.1) 0%, transparent 60%);
+    }
+    .hero-inner { max-width: 760px; }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(123,200,164,0.15); color: var(--primary-dark);
+      border: 1px solid rgba(123,200,164,0.4);
+      padding: 0.3rem 1rem; border-radius: 999px;
+      font-size: 0.8rem; font-weight: 600; margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 900; line-height: 1.2;
+      margin-bottom: 1rem; letter-spacing: -0.02em;
+    }
+    .hero h1 span { color: var(--primary-dark); }
+    .hero-sub {
+      font-size: 1.1rem; color: var(--text-light);
+      max-width: 560px; margin: 0 auto 2.5rem;
+    }
+    .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--primary); color: white;
+      padding: 0.9rem 2rem; border-radius: 999px;
+      text-decoration: none; font-weight: 700; font-size: 1rem;
+      transition: all 0.2s; box-shadow: 0 4px 20px rgba(123,200,164,0.4);
+    }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      padding: 0.9rem 2rem; border-radius: 999px;
+      text-decoration: none; font-weight: 600; font-size: 1rem;
+      border: 2px solid var(--border); transition: all 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary-dark); }
+
+    /* FLOWERS HERO */
+    .hero-flowers {
+      display: flex; justify-content: center; gap: 1.5rem;
+      margin-top: 3rem; flex-wrap: wrap;
+    }
+    .flower-chip {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: white; border: 1px solid var(--border);
+      padding: 0.5rem 1rem; border-radius: 999px;
+      font-size: 0.85rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .flower-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    /* SECTION */
+    section { padding: 80px 5%; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em;
+      color: var(--primary-dark); text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800; margin-bottom: 0.8rem; letter-spacing: -0.01em;
+    }
+    .section-desc { color: var(--text-light); font-size: 1rem; max-width: 560px; }
+
+    /* STATS */
+    .stats { background: white; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 2rem; text-align: center; }
+    .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--primary-dark); }
+    .stat-label { font-size: 0.85rem; color: var(--text-light); margin-top: 0.2rem; }
+
+    /* PROBLEM */
+    .problem { background: linear-gradient(135deg, #FFF5F0 0%, #FFF0F8 100%); }
+    .problem-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .problem-card {
+      background: white; border-radius: 20px; padding: 2rem;
+      border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+    .problem-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+    .problem-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .problem-card p { font-size: 0.88rem; color: var(--text-light); }
+
+    /* FEATURES */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
+    .feature-card {
+      background: white; border-radius: 24px; padding: 2rem;
+      border: 1px solid var(--border); box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+    .feature-icon {
+      width: 56px; height: 56px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; margin-bottom: 1.2rem;
+    }
+    .feature-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.88rem; color: var(--text-light); margin-bottom: 1rem; }
+    .feature-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag {
+      font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 999px;
+      background: var(--bg); border: 1px solid var(--border); color: var(--text-light);
+    }
+
+    /* HOW IT WORKS */
+    .how { background: linear-gradient(135deg, #F0FFF8 0%, #F0F4FF 100%); }
+    .steps { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 3rem; max-width: 700px; }
+    .step { display: flex; gap: 1.5rem; align-items: flex-start; }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--primary); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.9rem; flex-shrink: 0;
+    }
+    .step-content h4 { font-weight: 700; margin-bottom: 0.3rem; }
+    .step-content p { font-size: 0.88rem; color: var(--text-light); }
+
+    /* CIREF */
+    .ciref-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .ciref-card {
+      background: white; border-radius: 20px; padding: 1.8rem;
+      border: 1px solid var(--border); position: relative;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+    .ciref-num {
+      position: absolute; top: -12px; left: 1.5rem;
+      background: var(--accent2); color: white;
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 800;
+    }
+    .ciref-card h4 { font-weight: 700; margin-bottom: 0.5rem; margin-top: 0.3rem; }
+    .ciref-card p { font-size: 0.85rem; color: var(--text-light); }
+    .ciref-card .ciref-q {
+      font-size: 0.82rem; color: var(--accent2);
+      font-style: italic; margin-top: 0.6rem; font-weight: 600;
+    }
+
+    /* ACCOUNTS */
+    .accounts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .account-card {
+      border-radius: 24px; padding: 2rem;
+      border: 1px solid var(--border);
+    }
+    .account-card.supervisor { background: linear-gradient(135deg, #FFF8E7, #FFF3D4); border-color: #F6D860; }
+    .account-card.admin { background: linear-gradient(135deg, #F0F4FF, #E8EFFE); border-color: #A5B4FC; }
+    .account-card.student { background: linear-gradient(135deg, #F0FFF8, #E6FCF0); border-color: #6EE7B7; }
+    .account-card.parent { background: linear-gradient(135deg, #FFF0F8, #FFE8F4); border-color: #F9A8D4; }
+    .account-badge {
+      display: inline-block; padding: 0.2rem 0.8rem;
+      border-radius: 999px; font-size: 0.75rem; font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+    .supervisor .account-badge { background: #F6D860; color: #92400E; }
+    .admin .account-badge { background: #A5B4FC; color: #3730A3; }
+    .student .account-badge { background: #6EE7B7; color: #065F46; }
+    .parent .account-badge { background: #F9A8D4; color: #831843; }
+    .account-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.6rem; }
+    .account-card ul { list-style: none; }
+    .account-card ul li {
+      font-size: 0.85rem; color: var(--text-light);
+      padding: 0.25rem 0; display: flex; align-items: flex-start; gap: 0.5rem;
+    }
+    .account-card ul li::before { content: "✓"; color: var(--primary-dark); font-weight: 700; flex-shrink: 0; }
+
+    /* MAZE */
+    .maze-section { background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%); color: white; }
+    .maze-section .section-label { color: #7BC8A4; }
+    .maze-section .section-title { color: white; }
+    .maze-section .section-desc { color: rgba(255,255,255,0.6); }
+    .maze-levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-top: 3rem; }
+    .maze-level {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px; padding: 1.2rem; text-align: center;
+      transition: background 0.2s;
+    }
+    .maze-level:hover { background: rgba(123,200,164,0.15); }
+    .maze-level-num { font-size: 0.75rem; color: var(--primary); font-weight: 700; margin-bottom: 0.3rem; }
+    .maze-level-name { font-size: 0.85rem; font-weight: 600; color: white; margin-bottom: 0.3rem; }
+    .maze-level-type { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+    .maze-features-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+    .maze-feature-chip {
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 999px; padding: 0.5rem 1rem;
+      font-size: 0.83rem; color: rgba(255,255,255,0.8);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+
+    /* FLOWERS */
+    .flowers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-top: 2.5rem; }
+    .flower-card {
+      background: white; border-radius: 20px; padding: 1.5rem;
+      text-align: center; border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: transform 0.2s;
+    }
+    .flower-card:hover { transform: translateY(-3px); }
+    .flower-emoji { font-size: 2rem; margin-bottom: 0.5rem; }
+    .flower-name { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .flower-emotion { font-size: 0.78rem; color: var(--text-light); }
+    .flower-color-bar { height: 4px; border-radius: 2px; margin-top: 0.8rem; }
+
+    /* ROADMAP */
+    .roadmap { background: white; }
+    .phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .phase-card {
+      border-radius: 20px; padding: 2rem;
+      border: 2px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .phase-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+    .phase-card.p1::before { background: var(--primary); }
+    .phase-card.p2::before { background: var(--accent2); }
+    .phase-card.p3::before { background: var(--accent); }
+    .phase-card.p4::before { background: var(--info); }
+    .phase-num { font-size: 0.75rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .p1 .phase-num { color: var(--primary-dark); }
+    .p2 .phase-num { color: var(--accent2); }
+    .p3 .phase-num { color: #D97706; }
+    .p4 .phase-num { color: #0891B2; }
+    .phase-card h3 { font-size: 1rem; font-weight: 800; margin-bottom: 1rem; }
+    .phase-card ul { list-style: none; }
+    .phase-card ul li {
+      font-size: 0.83rem; color: var(--text-light);
+      padding: 0.25rem 0; display: flex; gap: 0.5rem; align-items: flex-start;
+    }
+    .phase-card ul li::before { content: "→"; flex-shrink: 0; }
+
+    /* TECH */
+    .tech { background: var(--bg); }
+    .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .tech-card {
+      background: white; border-radius: 16px; padding: 1.5rem;
+      border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .tech-card h4 { font-size: 0.75rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.8rem; }
+    .tech-item { font-size: 0.88rem; padding: 0.3rem 0; border-bottom: 1px solid var(--bg); }
+    .tech-item:last-child { border: none; }
+
+    /* SECURITY */
+    .security { background: linear-gradient(135deg, #F8F0FF 0%, #FFF0F8 100%); }
+    .security-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .security-card {
+      background: white; border-radius: 20px; padding: 2rem;
+      border: 1px solid var(--border); display: flex; gap: 1rem;
+    }
+    .security-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .security-card h4 { font-weight: 700; margin-bottom: 0.4rem; }
+    .security-card p { font-size: 0.85rem; color: var(--text-light); }
+
+    /* CTA */
+    .cta {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent2) 100%);
+      text-align: center; color: white;
+    }
+    .cta h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; margin-bottom: 1rem; letter-spacing: -0.01em; }
+    .cta p { font-size: 1rem; opacity: 0.85; margin-bottom: 2rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-white {
+      background: white; color: var(--primary-dark);
+      padding: 0.9rem 2rem; border-radius: 999px;
+      text-decoration: none; font-weight: 700; font-size: 1rem;
+      transition: all 0.2s; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
+    .btn-ghost-white {
+      background: rgba(255,255,255,0.15); color: white;
+      padding: 0.9rem 2rem; border-radius: 999px;
+      text-decoration: none; font-weight: 600; font-size: 1rem;
+      border: 2px solid rgba(255,255,255,0.4); transition: all 0.2s;
+    }
+    .btn-ghost-white:hover { background: rgba(255,255,255,0.25); }
+
+    /* FOOTER */
+    footer {
+      background: #1A202C; color: rgba(255,255,255,0.5);
+      padding: 2.5rem 5%; text-align: center; font-size: 0.85rem;
+    }
+    footer strong { color: rgba(255,255,255,0.8); }
+
+    /* DIVIDER */
+    .divider { height: 1px; background: var(--border); max-width: 1100px; margin: 0 auto; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      section { padding: 60px 5%; }
+      .hero { padding: 100px 5% 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🌸 인터넷 드림마을</div>
+  <ul class="nav-links">
+    <li><a href="#features">기능</a></li>
+    <li><a href="#accounts">계정</a></li>
+    <li><a href="#roadmap">로드맵</a></li>
+    <li><a href="#tech">기술스택</a></li>
+    <li><a href="#security">보안</a></li>
+  </ul>
+  <a href="#cta" class="nav-cta">도입 문의</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">✨ AI 기반 청소년 스마트폰 과몰입 방지 플랫폼</div>
+    <h1>
+      미래를 그리면<br/>
+      <span>오늘이 달라집니다</span>
+    </h1>
+    <p class="hero-sub">
+      인터넷 드림마을은 EFT(Episodic Future Thinking) 이론을 기반으로<br/>
+      AI가 청소년의 스마트폰 과몰입을 줄이는 웹 상담 플랫폼입니다.
+    </p>
+    <div class="hero-buttons">
+      <a href="#features" class="btn-primary">기능 살펴보기</a>
+      <a href="#roadmap" class="btn-outline">개발 로드맵</a>
+    </div>
+    <div class="hero-flowers">
+      <div class="flower-chip"><div class="flower-dot" style="background:#FFD700"></div>기쁨 — 해바라기</div>
+      <div class="flower-chip"><div class="flower-dot" style="background:#B39DDB"></div>평온 — 라벤더</div>
+      <div class="flower-chip"><div class="flower-dot" style="background:#F48FB1"></div>설렘 — 튤립</div>
+      <div class="flower-chip"><div class="flower-dot" style="background:#90CAF9"></div>슬픔 — 수국</div>
+      <div class="flower-chip"><div class="flower-dot" style="background:#A5D6A7"></div>불안 — 장미 봉오리</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="section-inner">
+    <div class="stats-grid">
+      <div><div class="stat-num">4</div><div class="stat-label">핵심 학생 모듈</div></div>
+      <div><div class="stat-num">3-Tier</div><div class="stat-label">계정 권한 체계</div></div>
+      <div><div class="stat-num">10단계</div><div class="stat-label">미로 뇌 훈련</div></div>
+      <div><div class="stat-num">EFT</div><div class="stat-label">임상 검증 이론 기반</div></div>
+      <div><div class="stat-num">AI</div><div class="stat-label">감정 분석 + 이미지 생성</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="section-inner">
+    <div class="section-label">왜 인터넷 드림마을인가</div>
+    <h2 class="section-title">청소년 스마트폰 과몰입,<br/>해결책이 필요합니다</h2>
+    <p class="section-desc">추상적인 경고가 아니라, 뇌 과학 기반의 구체적 미래 시각화로 행동 변화를 이끌어냅니다.</p>
+    <div class="problem-cards">
+      <div class="problem-card">
+        <div class="problem-icon">🧠</div>
+        <h3>도파민 보상 회로 재공고화</h3>
+        <p>EFT 기법으로 먼 미래 보상을 현재처럼 체감하게 유도. 지연 할인(Delay Discounting)을 극복합니다.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🎯</div>
+        <h3>CIREF 프레임워크</h3>
+        <p>단서 유발 회상과 일화적 미래 사고를 결합한 4단계 대화로 진정한 행동 변화 동기를 만듭니다.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🌱</div>
+        <h3>정서 기록 + AI 시각화</h3>
+        <p>매일의 감정을 꽃으로 표현하고, 갤러리로 쌓아가며 자신의 감정 변화를 직접 목격합니다.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">👨‍⚕️</div>
+        <h3>전문가와의 협력</h3>
+        <p>AI는 보조 도구. 위기 신호 감지 시 즉시 담당 상담사에게 알림. 최종 판단은 사람이 합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <div class="section-label">학생 핵심 모듈</div>
+    <h2 class="section-title">4가지 핵심 기능으로<br/>매일 성장합니다</h2>
+    <p class="section-desc">학생 대시보드의 4개 모듈은 감정 기록부터 미래 시각화까지 유기적으로 연결됩니다.</p>
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#FFF8E7">🌸</div>
+        <h3>마음일기</h3>
+        <p>오늘의 감정을 자유롭게 쓰면 AI가 감정을 분석해 꽃 이미지로 시각화합니다. 날짜별로 쌓이는 감정 꽃 갤러리로 나의 감정 변화를 한눈에 봅니다.</p>
+        <div class="feature-tags">
+          <span class="tag">AI 감정 분석</span>
+          <span class="tag">꽃 SVG 생성</span>
+          <span class="tag">위기신호 감지</span>
+          <span class="tag">갤러리</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#F0F4FF">🔮</div>
+        <h3>미래의 나</h3>
+        <p>4단계 CIREF 대화로 5년 후, 10년 후의 나를 AI 이미지로 생성합니다. 스마트폰을 내려놓은 미래를 눈으로 보며 행동 변화 동기를 강화합니다.</p>
+        <div class="feature-tags">
+          <span class="tag">CIREF 4단계</span>
+          <span class="tag">AI 이미지 생성</span>
+          <span class="tag">리플렉션 노트</span>
+          <span class="tag">변천사 갤러리</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#F0FFF8">🎮</div>
+        <h3>미로 풀기</h3>
+        <p>10단계 뇌 훈련 미로로 스마트폰 대신 건강한 디지털 대안 활동을 제공합니다. 시야 제한 + 타이머로 중학생도 도전하는 난이도를 구현합니다.</p>
+        <div class="feature-tags">
+          <span class="tag">10단계 레벨</span>
+          <span class="tag">시야 제한</span>
+          <span class="tag">포인트/뱃지</span>
+          <span class="tag">일일 15분 제한</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:#FFF0F8">📊</div>
+        <h3>자가진단</h3>
+        <p>SAS + PHQ-A 기반 10문항 척도로 스마트폰 의존도와 정서 상태를 정기 측정합니다. 스마트폰 사용 시간과 정서 안정도의 상관관계 그래프를 제공합니다.</p>
+        <div class="feature-tags">
+          <span class="tag">10문항 척도</span>
+          <span class="tag">추이 그래프</span>
+          <span class="tag">상관관계 분석</span>
+          <span class="tag">수준별 알림</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CIREF -->
+<section class="how" id="how">
+  <div class="section-inner">
+    <div class="section-label">EFT 핵심 모듈</div>
+    <h2 class="section-title">4단계 CIREF로<br/>미래를 그립니다</h2>
+    <p class="section-desc">마법사 UI + AI 재질문으로 청소년이 자신만의 긍정적 미래를 구체적으로 상상하도록 안내합니다.</p>
+    <div class="ciref-steps">
+      <div class="ciref-card">
+        <div class="ciref-num">1</div>
+        <h4>시공간 묘사</h4>
+        <p>스마트폰을 내려놓은 미래의 장소와 상황을 구체적으로 떠올립니다.</p>
+        <div class="ciref-q">"미래의 너는 어디서 누구와 뭘 하고 있어?"</div>
+      </div>
+      <div class="ciref-card">
+        <div class="ciref-num">2</div>
+        <h4>감각/감정 예측</h4>
+        <p>그 미래 장면에서 느끼는 감정과 자신에 대한 생각을 탐색합니다.</p>
+        <div class="ciref-q">"그 장면에서 기분이 어때?"</div>
+      </div>
+      <div class="ciref-card">
+        <div class="ciref-num">3</div>
+        <h4>정체성 탐색</h4>
+        <p>해결된 미래의 자신이 꿈꾸던 어떤 어른의 모습과 닮았는지 탐색합니다.</p>
+        <div class="ciref-q">"어떤 어른의 모습과 닮았어?"</div>
+      </div>
+      <div class="ciref-card">
+        <div class="ciref-num">4</div>
+        <h4>대체 활동</h4>
+        <p>스마트폰 대신 푹 빠져서 하고 싶은 건강한 대안 활동을 찾습니다.</p>
+        <div class="ciref-q">"스마트폰 대신 뭘 해보고 싶어?"</div>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem">
+      <div class="section-label">이미지 생성 흐름</div>
+      <div class="steps" style="margin-top:1.5rem">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>4단계 완료 → 5년 후 이미지 생성</h4>
+            <p>Gemini API가 CIREF 답변을 분석해 이미지 프롬프트를 자동 생성. 수채화 스타일 1인칭 시점 이미지 출력.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>리플렉션 노트 — 3문항 순차 표시</h4>
+            <p>"이 미래의 나를 보고 어떤 느낌이 들어?" → "뭔가 바꾸고 싶어?" → "오늘 할 수 있는 한 가지는?"</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>"10년 후의 나도 볼까요?" 선택</h4>
+            <p>학생 선택에 따라 10년 후 이미지 추가 생성. 거절 시 5년 후만 저장. API 비용 절감.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>슬라이드쇼 갤러리에 누적 저장</h4>
+            <p>첫 세션부터 최근 세션까지 변천사를 슬라이드로 확인. 성장 서사를 직접 체감.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAZE -->
+<section class="maze-section">
+  <div class="section-inner">
+    <div class="section-label">미로 뇌 훈련</div>
+    <h2 class="section-title" style="color:white">10단계 미로로<br/>뇌를 깨웁니다</h2>
+    <p class="section-desc">기존 브레인리셋 프로젝트의 검증된 미로 알고리즘을 탑재. 초등 고학년~중학생 난이도에 맞게 시야 제한과 타이머를 적용합니다.</p>
+    <div class="maze-features-row">
+      <div class="maze-feature-chip">👁 레벨별 시야 제한 (7×7 → 3×3)</div>
+      <div class="maze-feature-chip">⏱ 타이머 + 스피드 보너스</div>
+      <div class="maze-feature-chip">💡 판당 힌트 3회</div>
+      <div class="maze-feature-chip">🏆 5종 뱃지 시스템</div>
+      <div class="maze-feature-chip">📱 스와이프 + 버튼 + 키보드</div>
+      <div class="maze-feature-chip">⏰ 일일 15분 제한</div>
+    </div>
+    <div class="maze-levels">
+      <div class="maze-level"><div class="maze-level-num">LV.1</div><div class="maze-level-name">현실 접속 준비</div><div class="maze-level-type">10×10 · 입문</div></div>
+      <div class="maze-level"><div class="maze-level-num">LV.2</div><div class="maze-level-name">HP 회복하기</div><div class="maze-level-type">12×12 · 입문+</div></div>
+      <div class="maze-level"><div class="maze-level-num">LV.3</div><div class="maze-level-name">시야 확보</div><div class="maze-level-type">15×15 · 초급</div></div>
+      <div class="maze-level"><div class="maze-level-num">LV.4</div><div class="maze-level-name">장비 해제</div><div class="maze-level-type">18×18 · 중급</div></div>
+      <div class="maze-level"><div class="maze-level-num">LV.5</div><div class="maze-level-name">진짜 파티원</div><div class="maze-level-type">20×20 · 중급+</div></div>
+      <div class="maze-level"><div class="maze-level-num">LV.6</div><div class="maze-level-name">일일 퀘스트</div><div class="maze-level-type">22×22 · 중급++</div></div>
+      <div class="maze-level"><div class="maze-level-num">LV.7</div><div class="maze-level-name">스킬 레벨업</div><div class="maze-level-type">25×25 · 고급</div></div>
+      <div class="maze-level"><div class="maze-level-num">LV.8</div><div class="maze-level-name">보스 레이드</div><div class="maze-level-type">28×28 · 고급+</div></div>
+      <div class="maze-level"><div class="maze-level-num">LV.9</div><div class="maze-level-name">세이브 포인트</div><div class="maze-level-type">30×30 · 최고급</div></div>
+      <div class="maze-level"><div class="maze-level-num">LV.10</div><div class="maze-level-name">엔딩 크레딧</div><div class="maze-level-type">35×35 · 마스터</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOWERS -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">감정 꽃 프리셋</div>
+    <h2 class="section-title">감정이 꽃으로<br/>피어납니다</h2>
+    <p class="section-desc">AI가 일기 텍스트를 분석해 감정에 맞는 꽃을 선택하고, Phase 3부터는 개화도·색상·기울기까지 실시간으로 조절합니다.</p>
+    <div class="flowers-grid">
+      <div class="flower-card">
+        <div class="flower-emoji">🌻</div>
+        <div class="flower-name">해바라기</div>
+        <div class="flower-emotion">기쁨</div>
+        <div class="flower-color-bar" style="background:#FFD700"></div>
+      </div>
+      <div class="flower-card">
+        <div class="flower-emoji">💜</div>
+        <div class="flower-name">라벤더</div>
+        <div class="flower-emotion">평온</div>
+        <div class="flower-color-bar" style="background:#B39DDB"></div>
+      </div>
+      <div class="flower-card">
+        <div class="flower-emoji">🌷</div>
+        <div class="flower-name">튤립</div>
+        <div class="flower-emotion">설렘</div>
+        <div class="flower-color-bar" style="background:#F48FB1"></div>
+      </div>
+      <div class="flower-card">
+        <div class="flower-emoji">💙</div>
+        <div class="flower-name">수국</div>
+        <div class="flower-emotion">슬픔</div>
+        <div class="flower-color-bar" style="background:#90CAF9"></div>
+      </div>
+      <div class="flower-card">
+        <div class="flower-emoji">🥀</div>
+        <div class="flower-name">장미 봉오리</div>
+        <div class="flower-emotion">불안</div>
+        <div class="flower-color-bar" style="background:#A5D6A7"></div>
+      </div>
+      <div class="flower-card">
+        <div class="flower-emoji">🌵</div>
+        <div class="flower-name">선인장 꽃</div>
+        <div class="flower-emotion">분노</div>
+        <div class="flower-color-bar" style="background:#FF8A65"></div>
+      </div>
+      <div class="flower-card">
+        <div class="flower-emoji">🌼</div>
+        <div class="flower-name">민들레</div>
+        <div class="flower-emotion">외로움</div>
+        <div class="flower-color-bar" style="background:#E0E0E0"></div>
+      </div>
+      <div class="flower-card">
+        <div class="flower-emoji">🍂</div>
+        <div class="flower-name">시든 꽃</div>
+        <div class="flower-emotion">무기력</div>
+        <div class="flower-color-bar" style="background:#9E9E9E"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACCOUNTS -->
+<section id="accounts" style="background:var(--bg)">
+  <div class="section-inner">
+    <div class="section-label">3-Tier 계정 체계</div>
+    <h2 class="section-title">역할에 맞는<br/>권한을 제공합니다</h2>
+    <p class="section-desc">수퍼바이저 → 관리자 → 학생 3단계 계층 구조. Supabase RLS로 DB 레벨 데이터 격리를 보장합니다.</p>
+    <div class="accounts-grid">
+      <div class="account-card supervisor">
+        <div class="account-badge">수퍼바이저</div>
+        <h3>시스템 운영자</h3>
+        <ul>
+          <li>전체 관리자 계정 CRUD</li>
+          <li>구독 만료일 수동 연장</li>
+          <li>D-30 / D-7 자동 알림</li>
+          <li>관리자 비밀번호 초기화</li>
+          <li>전체 서비스 통계 대시보드</li>
+        </ul>
+      </div>
+      <div class="account-card admin">
+        <div class="account-badge">관리자</div>
+        <h3>기관 담당자 (교사·상담사)</h3>
+        <ul>
+          <li>학생 계정 일괄 생성 / CSV 업로드</li>
+          <li>전체 학생 현황 대시보드</li>
+          <li>마음일기 · 자가진단 · 미래이미지 열람</li>
+          <li>위기신호 즉시 이메일 알림</li>
+          <li>학생별 메모 기록</li>
+          <li>게임/CIREF 세션 횟수 설정</li>
+        </ul>
+      </div>
+      <div class="account-card student">
+        <div class="account-badge">학생</div>
+        <h3>청소년 프로그램 참여자</h3>
+        <ul>
+          <li>username 기반 간편 로그인</li>
+          <li>마음일기 · 미래의 나 · 미로 · 자가진단</li>
+          <li>감정 꽃 갤러리 / 미래 이미지 갤러리</li>
+          <li>포인트 · 뱃지 시스템</li>
+          <li>타 학생 데이터 완전 차단</li>
+        </ul>
+      </div>
+      <div class="account-card parent">
+        <div class="account-badge">부모 (Phase 4)</div>
+        <h3>보호자 모니터링</h3>
+        <ul>
+          <li>전화번호 + OTP 가입</li>
+          <li>연결 코드로 자녀 연결</li>
+          <li>접속 현황 · 자가진단 수준 열람</li>
+          <li>스마트폰 사용 시간 추이</li>
+          <li>위기신호 SMS + 앱 푸시 알림</li>
+          <li>일기 전문 열람 불가 (프라이버시)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="roadmap" id="roadmap">
+  <div class="section-inner">
+    <div class="section-label">개발 로드맵</div>
+    <h2 class="section-title">4단계 개발 계획</h2>
+    <p class="section-desc">MVP부터 모바일 앱까지 단계적으로 완성합니다.</p>
+    <div class="phases">
+      <div class="phase-card p1">
+        <div class="phase-num">PHASE 1 — MVP</div>
+        <h3>핵심 기능 완성</h3>
+        <ul>
+          <li>3-Tier 계정 시스템 + RLS</li>
+          <li>마음일기 + AI 감정 분석</li>
+          <li>감정 꽃 프리셋 8종</li>
+          <li>자가진단 10문항 척도</li>
+          <li>관리자 기본 대시보드</li>
+          <li>위기신호 감지 + 이메일 알림</li>
+          <li>수퍼바이저 대시보드 기초</li>
+        </ul>
+      </div>
+      <div class="phase-card p2">
+        <div class="phase-num">PHASE 2 — EFT 핵심</div>
+        <h3>미래 자화상 모듈</h3>
+        <ul>
+          <li>CIREF 4단계 마법사 UI</li>
+          <li>AI 이미지 생성 (Gemini)</li>
+          <li>텍스트 앵커 외모 일관성</li>
+          <li>5년후 → 10년후 프로그레시브 리빌</li>
+          <li>리플렉션 노트 3문항 순차 표시</li>
+          <li>슬라이드쇼 갤러리 (변천사)</li>
+          <li>월 5회 세션 제한 (관리자 조정)</li>
+        </ul>
+      </div>
+      <div class="phase-card p3">
+        <div class="phase-num">PHASE 3 — 게임 & 고도화</div>
+        <h3>미로 · SVG · 그래프</h3>
+        <ul>
+          <li>10단계 미로 게임 이식</li>
+          <li>시야 제한 + 타이머 난이도 강화</li>
+          <li>포인트 · 뱃지 5종</li>
+          <li>꽃 SVG AI 파라미터 고도화</li>
+          <li>스마트폰 사용량 자기보고</li>
+          <li>상관관계 이중 선 그래프</li>
+          <li>수퍼바이저 구독 관리 완성</li>
+        </ul>
+      </div>
+      <div class="phase-card p4">
+        <div class="phase-num">PHASE 4 — 앱 & 부모</div>
+        <h3>모바일 앱 + 부모 모니터링</h3>
+        <ul>
+          <li>Next.js → Expo 전환</li>
+          <li>Android 앱 (Google Play 법인)</li>
+          <li>웹 + 앱 단일 코드베이스</li>
+          <li>EAS Build + OTA 업데이트</li>
+          <li>아바타 일관성 (img2img)</li>
+          <li>부모 계정 + 연결 코드</li>
+          <li>위기신호 SMS + 앱 푸시</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH -->
+<section class="tech" id="tech">
+  <div class="section-inner">
+    <div class="section-label">기술 스택</div>
+    <h2 class="section-title">검증된 기술로<br/>안정적으로 구축합니다</h2>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <h4>프론트엔드</h4>
+        <div class="tech-item">Next.js 14 (App Router)</div>
+        <div class="tech-item">Tailwind CSS</div>
+        <div class="tech-item">shadcn/ui</div>
+        <div class="tech-item">Recharts</div>
+        <div class="tech-item">Zustand</div>
+      </div>
+      <div class="tech-card">
+        <h4>백엔드 / DB</h4>
+        <div class="tech-item">Supabase (PostgreSQL)</div>
+        <div class="tech-item">Row Level Security</div>
+        <div class="tech-item">Supabase Auth</div>
+        <div class="tech-item">Supabase Storage</div>
+        <div class="tech-item">Edge Functions</div>
+      </div>
+      <div class="tech-card">
+        <h4>AI</h4>
+        <div class="tech-item">Gemini API (감정 분석)</div>
+        <div class="tech-item">Gemini API (이미지 생성)</div>
+        <div class="tech-item">위기신호 감지</div>
+        <div class="tech-item">CIREF 재질문 엔진</div>
+        <div class="tech-item">SVG 파라미터 생성</div>
+      </div>
+      <div class="tech-card">
+        <h4>인프라</h4>
+        <div class="tech-item">Vercel (배포)</div>
+        <div class="tech-item">Resend (이메일 알림)</div>
+        <div class="tech-item">Twilio (SMS OTP)</div>
+        <div class="tech-item">GitHub (aa6644a-max)</div>
+      </div>
+      <div class="tech-card">
+        <h4>Phase 4 — 모바일</h4>
+        <div class="tech-item">Expo SDK</div>
+        <div class="tech-item">Expo Router</div>
+        <div class="tech-item">NativeWind</div>
+        <div class="tech-item">EAS Build</div>
+        <div class="tech-item">Expo Push Notifications</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECURITY -->
+<section class="security" id="security">
+  <div class="section-inner">
+    <div class="section-label">보안 & 개인정보</div>
+    <h2 class="section-title">미성년자 데이터,<br/>철저하게 보호합니다</h2>
+    <div class="security-grid">
+      <div class="security-card">
+        <div class="security-icon">🔐</div>
+        <div>
+          <h4>DB 레벨 데이터 격리</h4>
+          <p>Supabase RLS 정책으로 학생은 본인 데이터만 조회 가능. 타 학생 데이터 DB 레벨 완전 차단.</p>
+        </div>
+      </div>
+      <div class="security-card">
+        <div class="security-icon">🔒</div>
+        <div>
+          <h4>민감 데이터 암호화</h4>
+          <p>일기 텍스트 등 미성년자 내면 데이터는 암호화 저장. CIREF 답변 원문 보호.</p>
+        </div>
+      </div>
+      <div class="security-card">
+        <div class="security-icon">👨‍⚕️</div>
+        <div>
+          <h4>AI는 보조 도구</h4>
+          <p>위기신호 자동 감지는 보조 역할. 최종 판단과 개입은 반드시 전문 상담사가 수행.</p>
+        </div>
+      </div>
+      <div class="security-card">
+        <div class="security-icon">👪</div>
+        <div>
+          <h4>부모 열람 제한</h4>
+          <p>부모는 수준/접속/사용시간만 열람. 일기 전문·미래 이미지는 학생 동의 없이 열람 불가.</p>
+        </div>
+      </div>
+      <div class="security-card">
+        <div class="security-icon">📋</div>
+        <div>
+          <h4>임상 타당도 보호</h4>
+          <p>SAS·PHQ-A 기반 자가진단 문항 하드코딩. 관리자 임의 수정 불가로 임상 타당도 보장.</p>
+        </div>
+      </div>
+      <div class="security-card">
+        <div class="security-icon">🖼</div>
+        <div>
+          <h4>이미지 접근 제한</h4>
+          <p>생성된 미래 이미지는 학생 본인 + 담당 관리자만 열람. Supabase Storage RLS 적용.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="cta">
+  <div class="section-inner" style="text-align:center">
+    <h2>청소년의 미래를 함께<br/>그려나갑니다</h2>
+    <p>인터넷 드림마을 도입 문의 및 파일럿 프로그램 신청</p>
+    <div class="cta-buttons">
+      <a href="mailto:aa6644a@gmail.com" class="btn-white">도입 문의하기</a>
+      <a href="https://github.com/aa6644a-max/internet-dream-village" target="_blank" class="btn-ghost-white">GitHub 보기</a>
+    </div>
+    <div style="margin-top:3rem; display:flex; justify-content:center; gap:2rem; flex-wrap:wrap; opacity:0.7; font-size:0.85rem">
+      <span>📋 PRD1 Phase 1 MVP</span>
+      <span>🔮 PRD2 Phase 2 EFT</span>
+      <span>🎮 PRD3 Phase 3 게임&고도화</span>
+      <span>📱 PRD4 Phase 4 모바일&부모</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>인터넷 드림마을 (Internet Dream Village)</strong></p>
+  <p style="margin-top:0.5rem">스마트폰 과몰입 방지 AI 상담 웹앱 · EFT + CIREF 기반 · Claude Code로 개발 중</p>
+  <p style="margin-top:0.5rem">GitHub: <a href="https://github.com/aa6644a-max/internet-dream-village" style="color:rgba(255,255,255,0.6)">aa6644a-max/internet-dream-village</a></p>
+</footer>
+
+</body>
+</html>
