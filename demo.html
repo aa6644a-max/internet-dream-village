@@ -117,6 +117,79 @@ html, body { height: 100%; font-family: 'Pretendard', 'Apple SD Gothic Neo', 'No
 .screen::-webkit-scrollbar-track { background: transparent; }
 .screen::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
+/* ─── ADMIN MODE ───────────────────────────── */
+.admin-badge { display:inline-flex;align-items:center;gap:0.35rem;font-size:0.6rem;font-weight:700;padding:0.2rem 0.55rem;background:rgba(212,79,79,0.15);color:#D94F4F;border:1px solid rgba(212,79,79,0.3);border-radius:999px;letter-spacing:0.04em; }
+.kpi-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem; }
+.kpi-card { background:white;border:1.5px solid var(--border);border-radius:16px;padding:1.2rem 1.4rem; }
+.kpi-val { font-size:2.2rem;font-weight:900;color:var(--text);line-height:1; }
+.kpi-lbl { font-size:0.72rem;color:var(--text-light);margin-top:0.3rem;font-weight:600; }
+.kpi-sub { font-size:0.65rem;margin-top:0.4rem;font-weight:700; }
+.student-table { width:100%;border-collapse:collapse; }
+.student-table th { font-size:0.68rem;font-weight:700;color:var(--text-light);text-align:left;padding:0.5rem 0.8rem;border-bottom:2px solid var(--border);background:var(--bg); }
+.student-table td { padding:0.75rem 0.8rem;border-bottom:1px solid var(--border);font-size:0.8rem;vertical-align:middle; }
+.student-table tr:last-child td { border-bottom:none; }
+.student-table tr:hover td { background:var(--green-bg);cursor:pointer; }
+.stu-name { font-weight:700;color:var(--text); }
+.stu-school { font-size:0.68rem;color:var(--text-light); }
+.risk-chip { display:inline-block;font-size:0.6rem;font-weight:700;padding:0.2rem 0.55rem;border-radius:999px; }
+.risk-safe   { background:var(--green-bg);color:var(--green); }
+.risk-caution{ background:#FFF7E0;color:#C07820; }
+.risk-danger { background:var(--red-bg);color:var(--red); }
+.crisis-card { border-radius:14px;padding:1.1rem 1.3rem;margin-bottom:0.8rem;border-left:4px solid; }
+.crisis-new  { background:var(--red-bg);border-color:var(--red); }
+.crisis-done { background:var(--bg);border-color:var(--border); }
+.crisis-title{ font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.3rem; }
+.crisis-meta { font-size:0.68rem;color:var(--text-light); }
+.crisis-body { font-size:0.75rem;color:var(--text-mid);margin-top:0.5rem;line-height:1.6; }
+.mini-bar-row { display:flex;align-items:center;gap:0.8rem;margin-bottom:0.55rem; }
+.mini-bar-lbl { font-size:0.68rem;color:var(--text-light);width:60px;flex-shrink:0;text-align:right; }
+.mini-bar-track { flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden; }
+.mini-bar-fill  { height:100%;border-radius:4px;transition:width 0.8s ease; }
+.mini-bar-val { font-size:0.68rem;font-weight:700;color:var(--text);width:32px;text-align:right; }
+.diary-row { padding:0.7rem;border-radius:10px;background:var(--bg);margin-bottom:0.5rem; }
+.diary-row-date { font-size:0.62rem;color:var(--text-light);margin-bottom:0.25rem; }
+.diary-row-text { font-size:0.75rem;color:var(--text-mid);line-height:1.6; }
+.memo-area { width:100%;border:1.5px solid var(--border);border-radius:10px;padding:0.75rem;font-family:inherit;font-size:0.8rem;resize:vertical;min-height:80px;color:var(--text);background:white; }
+.memo-area:focus { outline:none;border-color:var(--green); }
+.topbar-btn-admin { background:rgba(217,79,79,0.1);color:#D94F4F;border:1.5px solid rgba(217,79,79,0.3);padding:0.35rem 0.9rem;border-radius:8px;font-family:inherit;font-size:0.75rem;font-weight:700;cursor:pointer;transition:all 0.18s; }
+.topbar-btn-admin:hover { background:rgba(217,79,79,0.18); }
+.topbar-btn-admin.active { background:#D94F4F;color:white;border-color:#D94F4F; }
+.nav-admin { display:none; }
+.admin-mode .nav-student { display:none; }
+.admin-mode .nav-admin { display:block; }
+.admin-mode .sidebar { background:#1E2030; }
+/* ─── PHONE FRAME MODE ─────────────────────── */
+body.phone-mode { background:radial-gradient(ellipse at center, #1E2A3A 0%, #0A0F14 100%); overflow:hidden; }
+body.phone-mode .app {
+  width:393px !important; height:852px !important;
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%, -50%);
+  border-radius:54px;
+  outline:14px solid #1A1A1A;
+  box-shadow:0 0 0 1.5px rgba(255,255,255,0.12), 0 50px 120px rgba(0,0,0,0.85), inset 0 0 0 1px rgba(255,255,255,0.06);
+  overflow:hidden;
+}
+body.phone-mode .sidebar { display:none !important; }
+body.phone-mode .topbar { display:none; }
+.phone-statusbar { display:none; height:54px; background:white; flex-shrink:0; align-items:flex-end; justify-content:space-between; padding:0 28px 10px; position:relative; }
+body.phone-mode .phone-statusbar { display:flex; }
+.phone-island { position:absolute; top:0; left:50%; transform:translateX(-50%); width:120px; height:36px; background:#000; border-radius:0 0 22px 22px; z-index:5; }
+.phone-titlebar { display:none; height:44px; background:white; border-bottom:1px solid var(--border); flex-shrink:0; align-items:center; padding:0 1.2rem; gap:0.8rem; }
+body.phone-mode .phone-titlebar { display:flex; }
+.phone-titlebar-back { font-size:1.1rem; cursor:pointer; color:var(--green); background:none; border:none; padding:0; line-height:1; }
+.phone-titlebar-title { font-size:0.88rem; font-weight:800; color:var(--text); flex:1; }
+.phone-bottomnav { display:none; height:78px; background:white; border-top:1px solid var(--border); flex-shrink:0; padding-bottom:14px; }
+body.phone-mode .phone-bottomnav { display:flex; }
+.phone-bottomnav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer; color:var(--text-light); transition:color 0.18s; }
+.phone-bottomnav-item.active { color:var(--green); }
+.phone-bottomnav-item:hover { color:var(--text); }
+.phone-bottomnav-icon { font-size:1.25rem; line-height:1; }
+.phone-bottomnav-lbl { font-size:0.58rem; font-weight:700; }
+body.phone-mode .screen { padding:1rem 1rem 1rem; }
+body.phone-mode .two-col { grid-template-columns:1fr; }
+.phone-exit-btn { display:none; position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.12); color:rgba(255,255,255,0.7); border:1px solid rgba(255,255,255,0.2); backdrop-filter:blur(12px); border-radius:999px; padding:0.55rem 1.4rem; font-family:inherit; font-size:0.78rem; font-weight:700; cursor:pointer; z-index:9999; transition:all 0.18s; letter-spacing:0.03em; }
+.phone-exit-btn:hover { background:rgba(255,255,255,0.22); color:white; }
+body.phone-mode .phone-exit-btn { display:block; }
 /* ─── LOADING OVERLAY ─────────────────────── */
 .loading-overlay {
   position: absolute; inset: 0; z-index: 100;
@@ -437,7 +510,7 @@ textarea::placeholder { color: var(--text-light); }
       <span class="ob-feat">🧩 뇌훈련 워크시트</span>
     </div>
     <button class="ob-btn" onclick="obNext(1)">시작하기 →</button>
-    <button class="ob-link" onclick="goAdminPlaceholder()">관리자 로그인 →</button>
+    <button class="ob-link" onclick="completeProfile();toggleAdmin()">관리자 로그인 →</button>
   </div>
 
   <!-- STEP 1: SIGNUP -->
@@ -523,30 +596,60 @@ textarea::placeholder { color: var(--text-light); }
       <div class="logo-sub">스마트폰 과몰입 방지 AI 상담</div>
     </div>
 
-    <div class="sidebar-section">메뉴</div>
-    <div class="nav-item active" id="nav-home" onclick="goTo('home')">
-      <span class="nav-icon">🏠</span>
-      <span class="nav-label">홈 대시보드</span>
+    <!-- 학생 메뉴 -->
+    <div class="nav-student">
+      <div class="sidebar-section">학생 메뉴</div>
+      <div class="nav-item active" id="nav-home" onclick="goTo('home')">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">홈 대시보드</span>
+      </div>
+      <div class="nav-item" id="nav-diary" onclick="goTo('diary')">
+        <span class="nav-icon">📖</span>
+        <span class="nav-label">마음일기</span>
+        <span class="nav-tag tag-p1">P1</span>
+      </div>
+      <div class="nav-item" id="nav-ciref" onclick="goTo('ciref')">
+        <span class="nav-icon">🔮</span>
+        <span class="nav-label">미래의 나</span>
+        <span class="nav-tag tag-p2">P2</span>
+      </div>
+      <div class="nav-item" id="nav-diag" onclick="goTo('diag')">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">자가진단</span>
+        <span class="nav-tag tag-p1">P1</span>
+      </div>
+      <div class="nav-item" id="nav-maze" onclick="goTo('maze')">
+        <span class="nav-icon">🧩</span>
+        <span class="nav-label">미로 워크시트</span>
+        <span class="nav-tag tag-p3">P3</span>
+      </div>
+      <div class="nav-item" id="nav-usage" onclick="goTo('usage')">
+        <span class="nav-icon">📱</span>
+        <span class="nav-label">사용량 기록</span>
+        <span class="nav-tag tag-p3">P3</span>
+      </div>
     </div>
-    <div class="nav-item" id="nav-diary" onclick="goTo('diary')">
-      <span class="nav-icon">📖</span>
-      <span class="nav-label">마음일기</span>
-      <span class="nav-tag tag-p1">P1</span>
-    </div>
-    <div class="nav-item" id="nav-ciref" onclick="goTo('ciref')">
-      <span class="nav-icon">🔮</span>
-      <span class="nav-label">미래의 나</span>
-      <span class="nav-tag tag-p2">P2</span>
-    </div>
-    <div class="nav-item" id="nav-diag" onclick="goTo('diag')">
-      <span class="nav-icon">📊</span>
-      <span class="nav-label">자가진단</span>
-      <span class="nav-tag tag-p1">P1</span>
-    </div>
-    <div class="nav-item" style="opacity:0.4;cursor:not-allowed;">
-      <span class="nav-icon">🧩</span>
-      <span class="nav-label">미로 풀기</span>
-      <span class="nav-tag tag-p3">P3</span>
+
+    <!-- 관리자 메뉴 -->
+    <div class="nav-admin">
+      <div class="sidebar-section" style="color:rgba(217,79,79,0.6);">관리자 메뉴</div>
+      <div class="nav-item" id="nav-admin-dash" onclick="goTo('admin-dash')">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">학생 현황</span>
+      </div>
+      <div class="nav-item" id="nav-admin-crisis" onclick="goTo('admin-crisis')">
+        <span class="nav-icon">🚨</span>
+        <span class="nav-label">위기신호</span>
+        <span style="margin-left:auto;background:#D94F4F;color:white;font-size:0.55rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:999px;">2</span>
+      </div>
+      <div class="nav-item" id="nav-admin-student" onclick="goTo('admin-student')">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">학생 상세</span>
+      </div>
+      <div class="nav-item" id="nav-admin-material" onclick="goTo('maze')">
+        <span class="nav-icon">📚</span>
+        <span class="nav-label">학습 자료</span>
+      </div>
     </div>
 
     <div class="sidebar-divider"></div>
@@ -560,7 +663,7 @@ textarea::placeholder { color: var(--text-light); }
     </div>
 
     <div style="flex:1;"></div>
-    <div class="user-card">
+    <div class="user-card" id="sidebar-user-card">
       <div style="display:flex;align-items:center;gap:0.6rem;">
         <div class="user-avatar" id="user-display-avatar" style="font-size:1.1rem;background:transparent;">🦊</div>
         <div class="user-info">
@@ -568,13 +671,28 @@ textarea::placeholder { color: var(--text-light); }
           <div class="user-role" id="user-display-role">학생 계정 · 중2</div>
         </div>
       </div>
-      <div class="user-streak">🔥 7일 연속 접속</div>
+      <div class="user-streak" id="user-streak-badge">🔥 7일 연속 접속</div>
     </div>
   </div>
 
   <!-- ─── MAIN ──────────────────────────────── -->
   <div class="main">
 
+    <!-- PHONE STATUS BAR (phone mode only) -->
+    <div class="phone-statusbar">
+      <div class="phone-island"></div>
+      <span id="phone-clock" style="font-size:0.78rem;font-weight:800;color:var(--text);">21:07</span>
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.72rem;color:var(--text);">
+        <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2C5.4 2 3.1 3 1.3 4.7L0 3.4C2.1 1.3 4.9 0 8 0s5.9 1.3 8 3.4l-1.3 1.3C12.9 3 10.6 2 8 2z" fill="currentColor" opacity=".4"/><path d="M8 5c-1.8 0-3.4.7-4.6 1.8L2.1 5.5C3.6 4.1 5.7 3.2 8 3.2s4.4.9 5.9 2.3l-1.3 1.3C11.4 5.7 9.8 5 8 5z" fill="currentColor" opacity=".6"/><path d="M8 8c-.9 0-1.8.4-2.4 1L8 12l2.4-3C9.8 8.4 8.9 8 8 8z" fill="currentColor"/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12"><rect x="0" y="1" width="22" height="10" rx="2" stroke="currentColor" stroke-width="1.2" fill="none" opacity=".4"/><rect x="22.5" y="3.5" width="2" height="5" rx="1" fill="currentColor" opacity=".4"/><rect x="1.5" y="2.5" width="17" height="7" rx="1" fill="currentColor"/></svg>
+      </div>
+    </div>
+    <!-- PHONE TITLE BAR (phone mode only) -->
+    <div class="phone-titlebar">
+      <button class="phone-titlebar-back" onclick="goTo('home')">‹</button>
+      <div class="phone-titlebar-title" id="phone-titlebar-text">홈 대시보드</div>
+      <span style="font-size:0.65rem;font-weight:700;color:var(--text-light);">드림마을</span>
+    </div>
     <!-- TOP BAR -->
     <div class="topbar">
       <div class="topbar-breadcrumb">
@@ -584,6 +702,8 @@ textarea::placeholder { color: var(--text-light); }
       </div>
       <div class="topbar-right">
         <button class="topbar-btn" onclick="resetToOnboarding()">🔄 처음부터</button>
+        <button class="topbar-btn-admin" id="admin-toggle-btn" onclick="toggleAdmin()">🛡️ 관리자 모드</button>
+        <button class="topbar-btn" id="phone-toggle-btn" onclick="togglePhoneFrame()" style="border:1.5px solid rgba(124,107,192,0.4);color:var(--purple);background:var(--purple-bg);">📱 폰프레임</button>
         <div class="topbar-sep-line"></div>
         <span class="tech-pill pill-green">Claude API</span>
         <span class="tech-pill pill-purple">fal.ai</span>
@@ -627,11 +747,11 @@ textarea::placeholder { color: var(--text-light); }
             <div class="module-desc">스마트폰 중독 척도와 우울·불안 척도를 측정해요</div>
             <span class="phase-chip phase-1">Phase 1</span>
           </div>
-          <div class="module-card" style="opacity:0.5;cursor:not-allowed;">
+          <div class="module-card" onclick="goTo('maze')">
             <span class="module-emoji">🧩</span>
-            <div class="module-name">미로 풀기</div>
-            <div class="module-desc">두뇌 활동 게임으로 스마트폰 대안 활동을 제공해요</div>
-            <span class="phase-chip phase-3">Phase 3 예정</span>
+            <div class="module-name">미로 워크시트</div>
+            <div class="module-desc">종이+펜으로 두뇌를 활성화! PDF 출력 후 직접 풀어보세요</div>
+            <span class="phase-chip phase-3">Phase 3</span>
           </div>
         </div>
 
@@ -829,9 +949,246 @@ textarea::placeholder { color: var(--text-light); }
         </div>
       </div>
 
+      <!-- ══ 미로 워크시트 ════════════════════════ -->
+      <div class="screen" id="screen-maze">
+        <div class="page-header">
+          <div class="page-title">🧩 미로 워크시트</div>
+          <div class="page-desc">종이+펜으로 두뇌를 활성화! 레벨을 선택하고 PDF로 출력해서 풀어보세요. 스마트폰 없는 활동의 시작이에요.</div>
+        </div>
+
+        <!-- 다운로드 버튼 2종 -->
+        <div style="display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;">
+          <button onclick="downloadMazePDF('student')" style="flex:1;min-width:200px;display:flex;align-items:center;gap:1rem;padding:1.2rem 1.6rem;background:var(--green);color:white;border:none;border-radius:16px;cursor:pointer;font-family:inherit;font-size:0.9rem;font-weight:700;transition:all 0.18s;box-shadow:0 4px 16px rgba(74,158,117,0.35);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(74,158,117,0.45)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(74,158,117,0.35)'">
+            <span style="font-size:1.8rem;">📄</span>
+            <div style="text-align:left;">
+              <div>학생용 PDF 다운로드</div>
+              <div style="font-size:0.72rem;font-weight:500;opacity:0.85;margin-top:0.15rem;">정답 없음 · 레벨 선택 가능</div>
+            </div>
+          </button>
+          <button onclick="downloadMazePDF('teacher')" style="flex:1;min-width:200px;display:flex;align-items:center;gap:1rem;padding:1.2rem 1.6rem;background:white;color:var(--text);border:2px solid var(--border);border-radius:16px;cursor:pointer;font-family:inherit;font-size:0.9rem;font-weight:700;transition:all 0.18s;" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.transform='';this.style.borderColor='var(--border)';this.style.color='var(--text)'">
+            <span style="font-size:1.8rem;">🗝️</span>
+            <div style="text-align:left;">
+              <div>교사용 PDF 다운로드</div>
+              <div style="font-size:0.72rem;font-weight:500;color:var(--text-light);margin-top:0.15rem;">정답 빨간 점선 포함</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- 레벨 선택 + 프리뷰 그리드 -->
+        <div class="card" style="margin-bottom:1.5rem;">
+          <div style="font-size:0.8rem;font-weight:800;color:var(--text);margin-bottom:1rem;">레벨 선택</div>
+          <div id="maze-level-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.75rem;"></div>
+        </div>
+
+        <!-- 선택된 레벨 프리뷰 -->
+        <div class="card" id="maze-preview-card" style="display:none;">
+          <div style="font-size:0.8rem;font-weight:800;color:var(--text);margin-bottom:1rem;" id="maze-preview-label">레벨 1 프리뷰</div>
+          <div style="display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;">
+            <canvas id="maze-canvas" width="240" height="240" style="border:2px solid var(--border);border-radius:10px;background:white;flex-shrink:0;"></canvas>
+            <div>
+              <div id="maze-preview-info" style="font-size:0.82rem;color:var(--text-mid);line-height:2;"></div>
+              <button id="maze-dl-btn" onclick="downloadMazePDF('student')" style="margin-top:1rem;padding:0.65rem 1.4rem;background:var(--green);color:white;border:none;border-radius:10px;font-family:inherit;font-size:0.82rem;font-weight:700;cursor:pointer;">이 레벨로 출력하기</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="background:var(--green-bg);border-color:rgba(74,158,117,0.2);">
+          <div style="font-size:0.8rem;font-weight:800;color:var(--green);margin-bottom:0.6rem;">🖨️ 출력 안내</div>
+          <div style="font-size:0.78rem;color:var(--text-mid);line-height:1.9;">
+            1. PDF 다운로드 후 A4 용지에 인쇄하세요 (가로/세로 모두 가능)<br>
+            2. 연필과 지우개를 준비해요 — 틀려도 괜찮아요!<br>
+            3. 미로를 풀고 나서 앱에 <strong>완료 인증</strong>을 남기면 감정 꽃이 피어나요 🌸<br>
+            4. 교사용은 정답이 포함되어 있으니 학생에게 미리 나눠주지 마세요
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 사용량 기록 ════════════════════════ -->
+      <div class="screen" id="screen-usage">
+        <div class="page-header">
+          <div class="page-title">📱 스마트폰 사용량 기록</div>
+          <div class="page-desc">오늘 스마트폰을 얼마나 사용했나요? 꾸준한 자기 모니터링이 변화의 첫걸음이에요.</div>
+        </div>
+
+        <!-- 오늘의 기록 -->
+        <div class="two-col" style="gap:1.5rem;margin-bottom:1.5rem;">
+          <div class="card">
+            <div style="font-size:0.8rem;font-weight:800;color:var(--text);margin-bottom:1.2rem;">📌 오늘 사용량 입력</div>
+            <div style="text-align:center;margin-bottom:1.2rem;">
+              <div id="usage-display" style="font-size:3rem;font-weight:900;color:var(--green);line-height:1;">4.5</div>
+              <div style="font-size:0.78rem;color:var(--text-light);margin-top:0.3rem;">시간 / 오늘</div>
+            </div>
+            <input type="range" id="usage-slider" min="0" max="12" step="0.5" value="4.5"
+              oninput="onUsageSlider(this.value)"
+              style="width:100%;accent-color:var(--green);height:6px;cursor:pointer;margin-bottom:0.8rem;">
+            <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-light);">
+              <span>0시간</span><span>6시간</span><span>12시간</span>
+            </div>
+            <div id="usage-feedback" style="margin-top:1rem;padding:0.75rem;background:var(--green-bg);border-radius:10px;font-size:0.78rem;color:var(--green);font-weight:600;text-align:center;">
+              보통 수준이에요. 조금 더 줄여볼까요? 💚
+            </div>
+            <button onclick="saveUsage()" style="width:100%;margin-top:1rem;padding:0.75rem;background:var(--green);color:white;border:none;border-radius:10px;font-family:inherit;font-size:0.85rem;font-weight:700;cursor:pointer;transition:all 0.18s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+              오늘 기록 저장하기
+            </button>
+          </div>
+
+          <div class="card">
+            <div style="font-size:0.8rem;font-weight:800;color:var(--text);margin-bottom:1rem;">📊 이번 주 사용량</div>
+            <div id="usage-bar-chart" style="display:flex;align-items:flex-end;gap:0.5rem;height:140px;padding:0 0.5rem;"></div>
+            <div style="display:flex;justify-content:space-around;margin-top:0.5rem;font-size:0.65rem;color:var(--text-light);">
+              <span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span><span>오늘</span>
+            </div>
+            <div style="margin-top:1rem;padding:0.6rem 0.8rem;background:var(--bg);border-radius:8px;display:flex;justify-content:space-between;font-size:0.75rem;">
+              <span style="color:var(--text-light);">주간 평균</span>
+              <strong style="color:var(--text);">5.1시간/일</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- 정서-사용량 상관관계 -->
+        <div class="card">
+          <div style="font-size:0.8rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;">📈 정서 점수 vs 사용량 상관관계</div>
+          <div style="font-size:0.72rem;color:var(--text-light);margin-bottom:1.2rem;">사용량이 적은 날일수록 정서 Valence 점수가 높아지는 경향을 보여요</div>
+          <div style="position:relative;height:180px;padding:0 0.5rem;" id="corr-chart-wrap">
+            <canvas id="corr-canvas" width="600" height="180" style="width:100%;height:100%;display:block;"></canvas>
+          </div>
+          <div style="display:flex;gap:1.5rem;margin-top:1rem;font-size:0.72rem;justify-content:center;">
+            <div style="display:flex;align-items:center;gap:0.4rem;"><div style="width:20px;height:3px;background:var(--green);border-radius:2px;"></div>정서 점수 (valence)</div>
+            <div style="display:flex;align-items:center;gap:0.4rem;"><div style="width:20px;height:3px;background:var(--orange);border-radius:2px;"></div>스마트폰 사용량</div>
+          </div>
+        </div>
+
+        <div class="card" style="background:var(--purple-bg);border-color:rgba(124,107,192,0.2);">
+          <div style="font-size:0.8rem;font-weight:800;color:var(--purple);margin-bottom:0.6rem;">💡 수퍼바이저 분석</div>
+          <div style="font-size:0.78rem;color:var(--text-mid);line-height:1.9;">
+            최근 7일 데이터 기준 · 사용량 감소 추세 <strong style="color:var(--green);">+12%</strong> 개선<br>
+            정서 Valence 평균: <strong>62점</strong> → <strong style="color:var(--green);">71점</strong> (상승)<br>
+            스마트폰 사용량-정서 상관계수: <strong style="color:var(--purple);">r = −0.73</strong> (강한 부적 상관)
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 관리자: 학생 현황 ══════════════════ -->
+      <div class="screen" id="screen-admin-dash">
+        <div class="page-header" style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+          <div>
+            <div class="page-title" style="display:flex;align-items:center;gap:0.7rem;">
+              📋 학생 현황 대시보드
+              <span class="admin-badge">관리자 모드</span>
+            </div>
+            <div class="page-desc">한강중학교 담당 학생 전체 현황. 위기신호 발생 시 자동 알림이 전송됩니다.</div>
+          </div>
+        </div>
+
+        <!-- KPI 카드 -->
+        <div class="kpi-grid">
+          <div class="kpi-card" style="border-color:rgba(74,158,117,0.3);">
+            <div class="kpi-val" style="color:var(--green);">12</div>
+            <div class="kpi-lbl">담당 학생 수</div>
+            <div class="kpi-sub" style="color:var(--green);">↑ 이번 학기 신규 3명</div>
+          </div>
+          <div class="kpi-card" style="border-color:rgba(217,79,79,0.3);">
+            <div class="kpi-val" style="color:#D94F4F;">2</div>
+            <div class="kpi-lbl">미확인 위기신호</div>
+            <div class="kpi-sub" style="color:#D94F4F;">즉시 확인 필요</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val">9</div>
+            <div class="kpi-lbl">이번 주 활성 학생</div>
+            <div class="kpi-sub" style="color:var(--text-light);">75% 참여율</div>
+          </div>
+          <div class="kpi-card" style="border-color:rgba(212,135,91,0.3);">
+            <div class="kpi-val" style="color:var(--orange);">3</div>
+            <div class="kpi-lbl">주의 이상 학생</div>
+            <div class="kpi-sub" style="color:var(--orange);">자가진단 10점 이상</div>
+          </div>
+        </div>
+
+        <!-- 학생 목록 테이블 -->
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div style="padding:1rem 1.3rem 0.8rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:0.8rem;font-weight:800;color:var(--text);">학생 목록</div>
+            <div style="font-size:0.7rem;color:var(--text-light);">클릭 → 학생 상세 보기</div>
+          </div>
+          <table class="student-table">
+            <thead>
+              <tr>
+                <th>이름</th><th>학교·학년</th><th>자가진단</th><th>최근 접속</th><th>마음일기</th><th>상태</th>
+              </tr>
+            </thead>
+            <tbody id="student-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ══ 관리자: 위기신호 ═══════════════════ -->
+      <div class="screen" id="screen-admin-crisis">
+        <div class="page-header">
+          <div class="page-title" style="display:flex;align-items:center;gap:0.7rem;">
+            🚨 위기신호 알림
+            <span class="admin-badge">관리자 모드</span>
+          </div>
+          <div class="page-desc">AI가 자해·우울·위험 키워드를 감지하거나 자가진단이 위험 수준일 때 자동 생성됩니다.</div>
+        </div>
+
+        <div style="display:flex;gap:0.6rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+          <button onclick="filterCrisis('all')"   id="cf-all"  style="padding:0.4rem 1rem;border-radius:999px;border:1.5px solid var(--green);background:var(--green);color:white;font-family:inherit;font-size:0.75rem;font-weight:700;cursor:pointer;">전체</button>
+          <button onclick="filterCrisis('new')"   id="cf-new"  style="padding:0.4rem 1rem;border-radius:999px;border:1.5px solid var(--border);background:white;color:var(--text-mid);font-family:inherit;font-size:0.75rem;font-weight:700;cursor:pointer;">미확인</button>
+          <button onclick="filterCrisis('done')"  id="cf-done" style="padding:0.4rem 1rem;border-radius:999px;border:1.5px solid var(--border);background:white;color:var(--text-mid);font-family:inherit;font-size:0.75rem;font-weight:700;cursor:pointer;">확인완료</button>
+        </div>
+
+        <div id="crisis-list"></div>
+      </div>
+
+      <!-- ══ 관리자: 학생 상세 ══════════════════ -->
+      <div class="screen" id="screen-admin-student">
+        <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <div class="page-title" style="display:flex;align-items:center;gap:0.7rem;">
+              👤 학생 상세
+              <span class="admin-badge">관리자 모드</span>
+            </div>
+            <div class="page-desc">개별 학생의 전체 기록 및 상태를 확인합니다.</div>
+          </div>
+          <div style="display:flex;gap:0.6rem;">
+            <button onclick="prevStudent()" style="padding:0.4rem 0.9rem;border-radius:8px;border:1.5px solid var(--border);background:white;font-family:inherit;font-size:0.78rem;font-weight:600;cursor:pointer;">← 이전</button>
+            <button onclick="nextStudent()" style="padding:0.4rem 0.9rem;border-radius:8px;border:1.5px solid var(--border);background:white;font-family:inherit;font-size:0.78rem;font-weight:600;cursor:pointer;">다음 →</button>
+          </div>
+        </div>
+        <div id="student-detail-content"></div>
+      </div>
+
     </div><!-- /screen-area -->
+
+    <!-- PHONE BOTTOM NAV (phone mode only) -->
+    <div class="phone-bottomnav" id="phone-bottomnav">
+      <div class="phone-bottomnav-item active" id="pnav-home" onclick="goTo('home');updatePhoneNav('home')">
+        <span class="phone-bottomnav-icon">🏠</span>
+        <span class="phone-bottomnav-lbl">홈</span>
+      </div>
+      <div class="phone-bottomnav-item" id="pnav-diary" onclick="goTo('diary');updatePhoneNav('diary')">
+        <span class="phone-bottomnav-icon">📖</span>
+        <span class="phone-bottomnav-lbl">일기</span>
+      </div>
+      <div class="phone-bottomnav-item" id="pnav-ciref" onclick="goTo('ciref');updatePhoneNav('ciref')">
+        <span class="phone-bottomnav-icon">🔮</span>
+        <span class="phone-bottomnav-lbl">미래의 나</span>
+      </div>
+      <div class="phone-bottomnav-item" id="pnav-diag" onclick="goTo('diag');updatePhoneNav('diag')">
+        <span class="phone-bottomnav-icon">📊</span>
+        <span class="phone-bottomnav-lbl">자가진단</span>
+      </div>
+      <div class="phone-bottomnav-item" id="pnav-usage" onclick="goTo('usage');updatePhoneNav('usage')">
+        <span class="phone-bottomnav-icon">📱</span>
+        <span class="phone-bottomnav-lbl">사용량</span>
+      </div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /app -->
+
+<!-- PHONE MODE EXIT (outside .app, always visible over background) -->
+<button class="phone-exit-btn" onclick="togglePhoneFrame()">✕ 폰프레임 종료</button>
 
 <script>
 // ─── ONBOARDING ───────────────────────────
@@ -889,24 +1246,406 @@ function resetToOnboarding() {
   document.getElementById('ob-0').classList.add('active');
 }
 
-function goAdminPlaceholder() {
-  alert('👷 관리자 모드는 Stage 4에서 구현됩니다.\n\n현재 진행 상황:\n✅ Stage 1 — 온보딩 완료\n🔲 Stage 2 — 학생 기능 추가\n🔲 Stage 3 — 신규 화면 (미로·사용량)\n🔲 Stage 4 — 관리자 뷰\n🔲 Stage 5 — 모바일 폰프레임');
+function goAdminPlaceholder() { toggleAdmin(); }
+
+// ─── 관리자 모드 ───────────────────────────
+let isAdminMode = false;
+
+const STUDENTS = [
+  { id:0, name:'김지민', avatar:'🦊', school:'한강중학교', grade:'중2', diagScore:8,  diagLv:'안전',  lastSeen:'오늘',  streak:7,  usage:[6.5,5.0,7.0,4.0,5.5,8.0,4.5], valence:[55,68,42,78,65,38,71], diaries:['오늘 독서실에서 공부했어요. 스마트폰 안 봤더니 집중이 잘 됐어요.','친구랑 농구했어요. 땀 흘리고 나니 기분이 상쾌했어요.'], memo:'' },
+  { id:1, name:'이수연', avatar:'🐰', school:'한강중학교', grade:'중1', diagScore:16, diagLv:'위험',  lastSeen:'어제',  streak:2,  usage:[9.0,10.5,8.0,11.0,9.5,10.0,8.5], valence:[30,22,35,18,28,20,32], diaries:['요즘 너무 지쳐요. 학교 가기 싫고 아무것도 하기 싫어요.','스마트폰 없으면 뭘 해야 할지 모르겠어요.'], memo:'' },
+  { id:2, name:'박태준', avatar:'🐯', school:'한강중학교', grade:'중3', diagScore:12, diagLv:'주의',  lastSeen:'2일 전', streak:4,  usage:[5.0,6.5,4.5,7.0,5.5,6.0,5.5], valence:[62,55,70,48,65,58,68], diaries:['수행평가 준비하느라 바빴어요. 유튜브 보다가 늦게 잠들었어요.','오늘은 일찍 자려고요.'], memo:'' },
+];
+
+const CRISES = [
+  { id:0, studentId:1, type:'자가진단 위험', time:'오늘 09:14', status:'new', detail:'자가진단 결과 16점 (위험 수준). PHQ-A 기반 우울 하위 척도 3개 항목 최고점 선택. 즉각적인 면담이 권고됩니다.', action:'면담 요청' },
+  { id:1, studentId:1, type:'AI 키워드 감지', time:'어제 22:38', status:'new', detail:'마음일기 본문에서 "지쳐요", "하기 싫어요" 고빈도 감지. 직접적 자해 언급은 없으나 정서적 탈진 패턴 확인. 추가 모니터링 권고.', action:'모니터링' },
+  { id:2, studentId:2, type:'자가진단 주의', time:'3일 전 16:02', status:'done', detail:'자가진단 결과 12점 (주의 수준). 통제력 척도 하락. 게임·유튜브 사용 급증 패턴 확인. 동기 강화 면담 권고.', action:'면담 완료' },
+];
+
+function toggleAdmin() {
+  isAdminMode = !isAdminMode;
+  const app = document.querySelector('.app');
+  const btn = document.getElementById('admin-toggle-btn');
+  const userCard = document.getElementById('sidebar-user-card');
+  if (isAdminMode) {
+    app.classList.add('admin-mode');
+    btn.classList.add('active');
+    btn.textContent = '🎓 학생 모드';
+    userCard.innerHTML = `<div style="display:flex;align-items:center;gap:0.6rem;"><div class="user-avatar" style="background:#D94F4F;font-size:0.7rem;font-weight:800;">관</div><div class="user-info"><div class="user-name">김선생님</div><div class="user-role" style="color:rgba(217,79,79,0.7);">관리자 계정</div></div></div><div class="user-streak" style="background:rgba(217,79,79,0.12);color:#D94F4F;">🛡️ 관리자 권한</div>`;
+    goTo('admin-dash');
+  } else {
+    app.classList.remove('admin-mode');
+    btn.classList.remove('active');
+    btn.textContent = '🛡️ 관리자 모드';
+    userCard.innerHTML = `<div style="display:flex;align-items:center;gap:0.6rem;"><div class="user-avatar" id="user-display-avatar" style="font-size:1.1rem;background:transparent;">🦊</div><div class="user-info"><div class="user-name" id="user-display-name">김지민</div><div class="user-role" id="user-display-role">학생 계정 · 중2</div></div></div><div class="user-streak" id="user-streak-badge">🔥 7일 연속 접속</div>`;
+    goTo('home');
+  }
+}
+
+// ─── 관리자: 학생 현황 ─────────────────────
+function initAdminDash() {
+  const tbody = document.getElementById('student-table-body');
+  if (!tbody || tbody.children.length > 0) return;
+  STUDENTS.forEach(s => {
+    const risk = s.diagLv === '위험' ? 'risk-danger' : s.diagLv === '주의' ? 'risk-caution' : 'risk-safe';
+    const tr = document.createElement('tr');
+    tr.onclick = () => { selectedStudentId = s.id; goTo('admin-student'); };
+    tr.innerHTML = `
+      <td><div class="stu-name">${s.avatar} ${s.name}</div></td>
+      <td><div class="stu-school">${s.school} ${s.grade}</div></td>
+      <td><span class="risk-chip ${risk}">${s.diagScore}점 · ${s.diagLv}</span></td>
+      <td style="color:var(--text-light);font-size:0.75rem;">${s.lastSeen}</td>
+      <td style="font-size:0.75rem;">${s.diaries.length}건</td>
+      <td><span class="risk-chip ${risk}">${s.diagLv}</span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ─── 관리자: 위기신호 ─────────────────────
+let crisisFilter = 'all';
+
+function initAdminCrisis() {
+  renderCrisisList();
+}
+
+function filterCrisis(f) {
+  crisisFilter = f;
+  ['all','new','done'].forEach(k => {
+    const el = document.getElementById('cf-' + k);
+    el.style.background = k === f ? 'var(--green)' : 'white';
+    el.style.color      = k === f ? 'white' : 'var(--text-mid)';
+    el.style.borderColor= k === f ? 'var(--green)' : 'var(--border)';
+  });
+  renderCrisisList();
+}
+
+function renderCrisisList() {
+  const wrap = document.getElementById('crisis-list');
+  if (!wrap) return;
+  const list = crisisFilter === 'all' ? CRISES : CRISES.filter(c => c.status === crisisFilter);
+  wrap.innerHTML = list.map(c => {
+    const s = STUDENTS[c.studentId];
+    const isNew = c.status === 'new';
+    return `<div class="crisis-card ${isNew ? 'crisis-new' : 'crisis-done'}">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+        <div>
+          <div class="crisis-title">${isNew ? '🚨' : '✅'} ${s.avatar} ${s.name} — ${c.type}</div>
+          <div class="crisis-meta">${c.time} · ${isNew ? '미확인' : '확인완료'}</div>
+        </div>
+        ${isNew ? `<button onclick="confirmCrisis(${c.id})" style="padding:0.4rem 1rem;background:#D94F4F;color:white;border:none;border-radius:8px;font-family:inherit;font-size:0.75rem;font-weight:700;cursor:pointer;">${c.action}</button>` :
+                  `<span style="font-size:0.72rem;color:var(--text-light);">조치 완료</span>`}
+      </div>
+      <div class="crisis-body">${c.detail}</div>
+      <div style="margin-top:0.7rem;">
+        <button onclick="selectedStudentId=${c.studentId};goTo('admin-student')" style="font-size:0.72rem;color:var(--green);background:none;border:none;cursor:pointer;font-family:inherit;font-weight:600;">→ 학생 상세 보기</button>
+      </div>
+    </div>`;
+  }).join('') || '<div style="text-align:center;padding:2rem;color:var(--text-light);font-size:0.85rem;">해당 항목이 없습니다</div>';
+}
+
+function confirmCrisis(id) {
+  CRISES[id].status = 'done';
+  renderCrisisList();
+  const badge = document.querySelector('#nav-admin-crisis span[style*="D94F4F"]');
+  const remaining = CRISES.filter(c => c.status === 'new').length;
+  if (badge) badge.textContent = remaining || '';
+  if (!remaining && badge) badge.style.display = 'none';
+}
+
+// ─── 관리자: 학생 상세 ─────────────────────
+let selectedStudentId = 0;
+
+function prevStudent() { selectedStudentId = (selectedStudentId - 1 + STUDENTS.length) % STUDENTS.length; renderStudentDetail(); }
+function nextStudent() { selectedStudentId = (selectedStudentId + 1) % STUDENTS.length; renderStudentDetail(); }
+
+function renderStudentDetail() {
+  const s = STUDENTS[selectedStudentId];
+  const risk = s.diagLv === '위험' ? 'risk-danger' : s.diagLv === '주의' ? 'risk-caution' : 'risk-safe';
+  const wrap = document.getElementById('student-detail-content');
+  if (!wrap) return;
+
+  const usageBars = s.usage.map((v,i) => {
+    const days = ['월','화','수','목','금','토','오늘'];
+    const pct = Math.round((v / 12) * 100);
+    return `<div class="mini-bar-row">
+      <div class="mini-bar-lbl">${days[i]}</div>
+      <div class="mini-bar-track"><div class="mini-bar-fill" style="width:0%;background:${v >= 8 ? 'var(--red)' : v >= 5 ? 'var(--orange)' : 'var(--green)'};" data-w="${pct}"></div></div>
+      <div class="mini-bar-val">${v}h</div>
+    </div>`;
+  }).join('');
+
+  const diagBars = ['통제','금단','일상방해','집착','기능저하'].map((cat,i) => {
+    const score = Math.min(4, Math.max(1, Math.round(s.diagScore / 5 + (i % 2 === 0 ? 0.5 : -0.3))));
+    return `<div class="mini-bar-row">
+      <div class="mini-bar-lbl">${cat}</div>
+      <div class="mini-bar-track"><div class="mini-bar-fill" style="width:0%;background:${score >= 3 ? 'var(--red)' : score === 2 ? 'var(--orange)' : 'var(--green)'};" data-w="${score * 25}"></div></div>
+      <div class="mini-bar-val">${score}/4</div>
+    </div>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <!-- 학생 프로필 -->
+    <div class="card" style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+      <div style="font-size:3rem;line-height:1;">${s.avatar}</div>
+      <div style="flex:1;">
+        <div style="font-size:1.2rem;font-weight:900;color:var(--text);">${s.name}</div>
+        <div style="font-size:0.78rem;color:var(--text-light);margin-top:0.2rem;">${s.school} · ${s.grade}</div>
+        <div style="display:flex;gap:0.5rem;margin-top:0.6rem;flex-wrap:wrap;">
+          <span class="risk-chip ${risk}">${s.diagScore}점 · ${s.diagLv}</span>
+          <span style="font-size:0.68rem;padding:0.2rem 0.55rem;background:var(--bg);color:var(--text-light);border-radius:999px;font-weight:600;">최근 접속 ${s.lastSeen}</span>
+          <span style="font-size:0.68rem;padding:0.2rem 0.55rem;background:var(--green-bg);color:var(--green);border-radius:999px;font-weight:600;">🔥 ${s.streak}일 연속</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+        <button onclick="alert('${s.name} 학생에게 상담 면담 요청이 전송됩니다 (시연)')" style="padding:0.5rem 1rem;background:var(--green);color:white;border:none;border-radius:10px;font-family:inherit;font-size:0.78rem;font-weight:700;cursor:pointer;">면담 요청</button>
+        <button onclick="alert('Resend API → 학부모 이메일 전송 (시연)')" style="padding:0.5rem 1rem;background:white;color:var(--text);border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:0.78rem;font-weight:700;cursor:pointer;">학부모 알림</button>
+      </div>
+    </div>
+
+    <div class="two-col" style="gap:1.5rem;margin-bottom:1.5rem;">
+      <!-- 자가진단 -->
+      <div class="card">
+        <div style="font-size:0.8rem;font-weight:800;color:var(--text);margin-bottom:1rem;">📊 자가진단 영역별 점수</div>
+        <div id="diag-bars-${s.id}">${diagBars}</div>
+        <div style="margin-top:1rem;padding:0.65rem;background:var(--bg);border-radius:8px;font-size:0.75rem;display:flex;justify-content:space-between;">
+          <span style="color:var(--text-light);">총점</span>
+          <strong class="${risk === 'risk-danger' ? 'style=color:var(--red)' : ''}">${s.diagScore}점 / 20점</strong>
+        </div>
+      </div>
+
+      <!-- 사용량 -->
+      <div class="card">
+        <div style="font-size:0.8rem;font-weight:800;color:var(--text);margin-bottom:1rem;">📱 최근 7일 사용량</div>
+        <div id="usage-bars-${s.id}">${usageBars}</div>
+        <div style="margin-top:1rem;padding:0.65rem;background:var(--bg);border-radius:8px;font-size:0.75rem;display:flex;justify-content:space-between;">
+          <span style="color:var(--text-light);">주간 평균</span>
+          <strong>${(s.usage.reduce((a,b)=>a+b,0)/s.usage.length).toFixed(1)}시간/일</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- 마음일기 -->
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div style="font-size:0.8rem;font-weight:800;color:var(--text);margin-bottom:1rem;">📖 최근 마음일기 <span style="font-size:0.65rem;color:var(--text-light);font-weight:500;">(AI 요약 · 실제 텍스트는 암호화)</span></div>
+      ${s.diaries.map((d,i) => `<div class="diary-row"><div class="diary-row-date">${i === 0 ? '오늘' : i === 1 ? '어제' : `${i+1}일 전`}</div><div class="diary-row-text">${d}</div></div>`).join('')}
+    </div>
+
+    <!-- 관리자 메모 -->
+    <div class="card">
+      <div style="font-size:0.8rem;font-weight:800;color:var(--text);margin-bottom:0.8rem;">📝 상담사 메모 <span style="font-size:0.65rem;color:var(--text-light);font-weight:500;">(관리자만 열람)</span></div>
+      <textarea class="memo-area" id="memo-${s.id}" placeholder="학생 관찰 사항, 면담 내용, 특이사항을 기록하세요...">${s.memo}</textarea>
+      <button onclick="saveMemo(${s.id})" style="margin-top:0.7rem;padding:0.55rem 1.2rem;background:var(--green);color:white;border:none;border-radius:8px;font-family:inherit;font-size:0.78rem;font-weight:700;cursor:pointer;">저장</button>
+    </div>`;
+
+  setTimeout(() => {
+    wrap.querySelectorAll('.mini-bar-fill[data-w]').forEach(el => {
+      el.style.transition = 'width 0.8s ease';
+      el.style.width = el.dataset.w + '%';
+    });
+  }, 100);
+}
+
+function saveMemo(id) {
+  const el = document.getElementById('memo-' + id);
+  if (el) { STUDENTS[id].memo = el.value; alert('메모가 저장되었습니다.'); }
+}
+
+// ─── 미로 워크시트 ─────────────────────────
+const MAZE_LEVELS = [
+  { lv:1,  size:'10×10', time:'3~5분',   diff:'매우 쉬움' },
+  { lv:2,  size:'12×12', time:'5~7분',   diff:'쉬움' },
+  { lv:3,  size:'14×14', time:'7~10분',  diff:'쉬움' },
+  { lv:4,  size:'16×16', time:'10~13분', diff:'보통' },
+  { lv:5,  size:'18×18', time:'13~17분', diff:'보통' },
+  { lv:6,  size:'20×20', time:'17~22분', diff:'약간 어려움' },
+  { lv:7,  size:'23×23', time:'22~28분', diff:'어려움' },
+  { lv:8,  size:'26×26', time:'28~35분', diff:'어려움' },
+  { lv:9,  size:'30×30', time:'35~45분', diff:'매우 어려움' },
+  { lv:10, size:'35×35', time:'45~60분', diff:'극한' },
+];
+let selectedMazeLevel = 1;
+
+function initMaze() {
+  if (document.getElementById('maze-level-grid').children.length > 0) return;
+  const grid = document.getElementById('maze-level-grid');
+  MAZE_LEVELS.forEach(m => {
+    const card = document.createElement('div');
+    card.id = 'mlv-' + m.lv;
+    card.style.cssText = 'padding:0.9rem;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.18s;text-align:center;background:white;';
+    card.innerHTML = `<div style="font-size:1.1rem;font-weight:900;color:var(--text);">Lv.${m.lv}</div><div style="font-size:0.65rem;color:var(--text-light);margin-top:0.2rem;">${m.size}</div><div style="font-size:0.6rem;font-weight:700;margin-top:0.35rem;padding:0.15rem 0.4rem;background:var(--green-bg);color:var(--green);border-radius:999px;">${m.diff}</div>`;
+    card.onclick = () => selectMazeLevel(m.lv);
+    grid.appendChild(card);
+  });
+  selectMazeLevel(1);
+}
+
+function selectMazeLevel(lv) {
+  selectedMazeLevel = lv;
+  MAZE_LEVELS.forEach(m => {
+    const el = document.getElementById('mlv-' + m.lv);
+    if (!el) return;
+    el.style.borderColor = m.lv === lv ? 'var(--green)' : 'var(--border)';
+    el.style.background = m.lv === lv ? 'var(--green-bg)' : 'white';
+  });
+  const m = MAZE_LEVELS[lv - 1];
+  document.getElementById('maze-preview-card').style.display = 'block';
+  document.getElementById('maze-preview-label').textContent = `레벨 ${lv} 프리뷰 — ${m.size} 미로`;
+  document.getElementById('maze-preview-info').innerHTML =
+    `크기: <strong>${m.size}</strong><br>예상 소요: <strong>${m.time}</strong><br>난이도: <strong>${m.diff}</strong><br><br>PDF 출력 후 연필로 풀어보세요!`;
+  drawMiniMaze(lv);
+}
+
+function drawMiniMaze(lv) {
+  const canvas = document.getElementById('maze-canvas');
+  const ctx = canvas.getContext('2d');
+  const N = 8;
+  const cell = 240 / N;
+  ctx.clearRect(0, 0, 240, 240);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, 240, 240);
+  ctx.strokeStyle = '#1A2332';
+  ctx.lineWidth = 2;
+  const seed = lv * 137;
+  function rng(i) { return ((seed * (i + 1) * 6364136223846793005 + 1) & 0x7fffffff) / 0x7fffffff; }
+  for (let r = 0; r < N; r++) {
+    for (let c = 0; c < N; c++) {
+      const x = c * cell, y = r * cell;
+      if (r === 0) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + cell, y); ctx.stroke(); }
+      if (c === 0) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + cell); ctx.stroke(); }
+      if (r < N - 1 && rng(r * N + c) > 0.38) { ctx.beginPath(); ctx.moveTo(x, y + cell); ctx.lineTo(x + cell, y + cell); ctx.stroke(); }
+      if (c < N - 1 && rng((r * N + c) * 3 + 1) > 0.38) { ctx.beginPath(); ctx.moveTo(x + cell, y); ctx.lineTo(x + cell, y + cell); ctx.stroke(); }
+    }
+  }
+  ctx.strokeStyle = '#1A2332';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(0, 0, 240, 240);
+  ctx.clearRect(cell * 0.5 - 1, 0, cell - 2, 2);
+  ctx.clearRect(cell * (N - 1) + 1, 240 - 2, cell - 2, 2);
+  ctx.fillStyle = 'var(--green)'; ctx.font = 'bold 12px sans-serif'; ctx.fillText('입구', 4, 14);
+  ctx.fillStyle = 'var(--red)'; ctx.fillText('출구', 240 - 34, 234);
+}
+
+function downloadMazePDF(type) {
+  const m = MAZE_LEVELS[selectedMazeLevel - 1];
+  const label = type === 'student' ? '학생용 (정답 없음)' : '교사용 (정답 포함)';
+  alert(`📄 ${label} PDF 다운로드\n\n레벨 ${selectedMazeLevel} — ${m.size} 미로 (${m.diff})\n\n실제 서비스에서는 jsPDF + SVG 렌더링으로 A4 PDF가 즉시 생성됩니다.\n학생용/교사용 각 1페이지로 구성돼요.`);
+}
+
+// ─── 사용량 기록 ───────────────────────────
+const USAGE_DATA = [6.5, 5.0, 7.0, 4.0, 5.5, 8.0, 4.5];
+const VALENCE_DATA = [55, 68, 42, 78, 65, 38, 71];
+
+function initUsage() {
+  drawUsageBar();
+  drawCorrChart();
+}
+
+function onUsageSlider(v) {
+  document.getElementById('usage-display').textContent = parseFloat(v).toFixed(1);
+  const msgs = [
+    [0, 1, '🌟 정말 훌륭해요! 스마트폰 없는 하루!', 'var(--green)'],
+    [1, 3, '💚 매우 적게 사용했어요. 잘하고 있어요!', 'var(--green)'],
+    [3, 5, '💛 보통 수준이에요. 조금 더 줄여볼까요?', '#C07820'],
+    [5, 8, '🟠 사용량이 다소 많아요. 목표를 세워봐요.', 'var(--orange)'],
+    [8, 12, '🔴 오늘 많이 사용했네요. 선생님께 이야기해봐요.', 'var(--red)'],
+  ];
+  const h = parseFloat(v);
+  const m = msgs.find(([lo, hi]) => h >= lo && h <= hi) || msgs[4];
+  const fb = document.getElementById('usage-feedback');
+  fb.textContent = m[2];
+  fb.style.background = m[3] === 'var(--green)' ? 'var(--green-bg)' : m[3] === 'var(--red)' ? 'var(--red-bg)' : 'var(--orange-bg)';
+  fb.style.color = m[3];
+}
+
+function saveUsage() {
+  const v = document.getElementById('usage-slider').value;
+  const fb = document.getElementById('usage-feedback');
+  fb.textContent = `✅ ${parseFloat(v).toFixed(1)}시간 기록 완료! 내일도 기록해봐요 🌱`;
+  fb.style.background = 'var(--green-bg)'; fb.style.color = 'var(--green)';
+}
+
+function drawUsageBar() {
+  const wrap = document.getElementById('usage-bar-chart');
+  if (wrap.children.length > 0) return;
+  const MAX_H = 120, MAX_V = 12;
+  USAGE_DATA.forEach((v, i) => {
+    const col = document.createElement('div');
+    col.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;';
+    const h = Math.round((v / MAX_V) * MAX_H);
+    const isToday = i === USAGE_DATA.length - 1;
+    const bar = document.createElement('div');
+    bar.style.cssText = `width:100%;height:${h}px;border-radius:6px 6px 0 0;background:${isToday ? 'var(--green)' : 'var(--border)'};transition:height 0.5s ease;position:relative;`;
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'font-size:0.6rem;color:var(--text-light);font-weight:600;';
+    lbl.textContent = v.toFixed(1);
+    col.appendChild(lbl); col.appendChild(bar);
+    wrap.appendChild(col);
+  });
+}
+
+function drawCorrChart() {
+  const canvas = document.getElementById('corr-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 600, H = 180;
+  canvas.width = W; canvas.height = H;
+  const PAD = { t: 16, b: 24, l: 40, r: 20 };
+  const days = USAGE_DATA.length;
+  const xStep = (W - PAD.l - PAD.r) / (days - 1);
+  ctx.clearRect(0, 0, W, H);
+  ctx.strokeStyle = 'var(--border)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 4; i++) {
+    const y = PAD.t + ((H - PAD.t - PAD.b) / 3) * i;
+    ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(W - PAD.r, y); ctx.stroke();
+  }
+  function drawLine(data, maxVal, color) {
+    ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    data.forEach((v, i) => {
+      const x = PAD.l + i * xStep;
+      const y = PAD.t + (1 - v / maxVal) * (H - PAD.t - PAD.b);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    data.forEach((v, i) => {
+      const x = PAD.l + i * xStep;
+      const y = PAD.t + (1 - v / maxVal) * (H - PAD.t - PAD.b);
+      ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = color; ctx.fill();
+    });
+  }
+  drawLine(VALENCE_DATA, 100, '#4A9E75');
+  drawLine(USAGE_DATA, 12, '#D4875B');
+  ctx.fillStyle = 'var(--text-light)'; ctx.font = '10px sans-serif';
+  ['월','화','수','목','금','토','오늘'].forEach((d, i) => {
+    ctx.fillText(d, PAD.l + i * xStep - 6, H - 4);
+  });
 }
 
 // ─── ROUTING ──────────────────────────────
 let current = 'home';
-const TITLES = { home:'홈 대시보드', diary:'마음일기', ciref:'미래의 나 (CIREF)', diag:'스마트폰 자가진단' };
+const TITLES = { home:'홈 대시보드', diary:'마음일기', ciref:'미래의 나 (CIREF)', diag:'스마트폰 자가진단', maze:'미로 워크시트', usage:'스마트폰 사용량 기록', 'admin-dash':'학생 현황 대시보드', 'admin-crisis':'위기신호 알림', 'admin-student':'학생 상세' };
 
 function goTo(id) {
   if (id === current) return;
   document.getElementById('screen-' + current).classList.remove('active');
   document.getElementById('screen-' + id).classList.add('active');
-  document.getElementById('nav-' + current).classList.remove('active');
-  document.getElementById('nav-' + id).classList.add('active');
-  document.getElementById('topbar-title').textContent = TITLES[id];
+  const prevNav = document.getElementById('nav-' + current);
+  const nextNav = document.getElementById('nav-' + id);
+  if (prevNav) prevNav.classList.remove('active');
+  if (nextNav) nextNav.classList.add('active');
+  document.getElementById('topbar-title').textContent = TITLES[id] || id;
   current = id;
   if (id === 'ciref' && cirefStep === 0) initCiref();
   if (id === 'diag') initDiag();
+  if (id === 'maze') initMaze();
+  if (id === 'usage') initUsage();
+  if (id === 'admin-dash') initAdminDash();
+  if (id === 'admin-crisis') initAdminCrisis();
+  if (id === 'admin-student') renderStudentDetail();
+  if (isPhoneMode) updatePhoneNav(id);
 }
 
 // ─── LOADING ──────────────────────────────
@@ -1234,6 +1973,49 @@ function showDiagResult() {
       el.style.width = el.dataset.w + '%';
     });
   }, 150);
+}
+
+// ─── 폰프레임 ─────────────────────────────
+let isPhoneMode = false;
+
+function togglePhoneFrame() {
+  isPhoneMode = !isPhoneMode;
+  document.body.classList.toggle('phone-mode', isPhoneMode);
+  const btn = document.getElementById('phone-toggle-btn');
+  if (isPhoneMode) {
+    btn.style.background = 'var(--purple)';
+    btn.style.color = 'white';
+    btn.style.borderColor = 'var(--purple)';
+    updatePhoneNav(current);
+    updatePhoneClock();
+    phoneClockInterval = setInterval(updatePhoneClock, 30000);
+    if (isAdminMode) toggleAdmin();
+  } else {
+    btn.style.background = 'var(--purple-bg)';
+    btn.style.color = 'var(--purple)';
+    btn.style.borderColor = 'rgba(124,107,192,0.4)';
+    clearInterval(phoneClockInterval);
+  }
+}
+
+let phoneClockInterval = null;
+function updatePhoneClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const el = document.getElementById('phone-clock');
+  if (el) el.textContent = h + ':' + m;
+}
+
+function updatePhoneNav(id) {
+  const tabs = ['home','diary','ciref','diag','usage'];
+  tabs.forEach(t => {
+    const el = document.getElementById('pnav-' + t);
+    if (el) el.classList.toggle('active', t === id);
+  });
+  const title = TITLES[id] || id;
+  const el = document.getElementById('phone-titlebar-text');
+  if (el) el.textContent = title;
 }
 
 // ─── INIT ─────────────────────────────────
