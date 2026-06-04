@@ -489,6 +489,49 @@ textarea::placeholder { color: var(--text-light); }
 .topbar-btn { background: transparent; border: 1.5px solid var(--border); border-radius: 8px; padding: 0.4rem 0.75rem; font-size: 0.72rem; font-weight: 700; color: var(--text-mid); cursor: pointer; font-family: inherit; transition: all 0.18s; white-space: nowrap; }
 .topbar-btn:hover { background: var(--bg); color: var(--text); }
 .topbar-sep-line { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+
+/* ─── TUTORIAL SLIDES ─────────────────────── */
+.ob-tutorial-wrap { width: 100%; max-width: 420px; }
+.ob-slide { display: none; }
+.ob-slide.active { display: block; animation: fadeUp 0.3s ease; }
+.ob-slide img { width: 100%; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.ob-slide-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 1.2rem; gap: 0.8rem; }
+.ob-slide-dots { display: flex; gap: 0.35rem; align-items: center; }
+.ob-slide-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s; flex-shrink: 0; }
+.ob-slide-dot.on { background: var(--green); width: 18px; border-radius: 4px; }
+.ob-nav-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 8px; padding: 0.5rem 1rem; font-family: inherit; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.18s; white-space: nowrap; }
+.ob-nav-btn:hover { background: rgba(255,255,255,0.2); }
+.ob-nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+/* ─── JOURNEY HOME ────────────────────────── */
+.journey-section { margin-bottom: 1.8rem; }
+.journey-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.journey-title { font-size: 0.88rem; font-weight: 800; color: var(--text); }
+.journey-date { font-size: 0.7rem; color: var(--text-light); font-weight: 600; }
+.step-cards { display: flex; flex-direction: column; gap: 0.75rem; }
+.step-card {
+  display: flex; align-items: center; gap: 1.1rem;
+  background: var(--white); border: 2px solid var(--border);
+  border-radius: 16px; padding: 1.1rem 1.3rem;
+  cursor: pointer; transition: all 0.2s; position: relative;
+}
+.step-card.unlocked:hover { transform: translateX(4px); border-color: var(--green-light); box-shadow: 0 4px 16px rgba(74,158,117,0.1); }
+.step-card.locked { cursor: default; opacity: 0.5; background: var(--bg); }
+.step-card.completed { border-color: rgba(74,158,117,0.4); background: var(--green-bg); cursor: pointer; }
+.step-card.completed:hover { transform: translateX(4px); }
+.step-card.reward-unlock { border-color: var(--orange); background: linear-gradient(135deg, #FEF3EB, #FFF9F5); cursor: pointer; }
+.step-card.reward-unlock:hover { transform: translateX(4px); box-shadow: 0 4px 16px rgba(212,135,91,0.18); }
+.step-card.reward-locked { border-color: rgba(212,135,91,0.2); background: linear-gradient(135deg, #FEF3EB, #FFF9F5); opacity: 0.5; cursor: default; }
+.scard-num { width: 30px; height: 30px; border-radius: 50%; background: var(--border); color: var(--text-light); font-size: 0.78rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s; }
+.step-card.unlocked .scard-num, .step-card.completed .scard-num { background: var(--green); color: white; }
+.step-card.reward-unlock .scard-num { background: var(--orange); color: white; font-size: 1rem !important; }
+.scard-emoji { font-size: 1.7rem; flex-shrink: 0; }
+.scard-body { flex: 1; min-width: 0; }
+.scard-name { font-size: 0.92rem; font-weight: 800; color: var(--text); }
+.step-card.locked .scard-name { color: var(--text-light); }
+.scard-desc { font-size: 0.72rem; color: var(--text-light); margin-top: 0.18rem; line-height: 1.45; }
+.scard-arrow { font-size: 0.82rem; font-weight: 700; flex-shrink: 0; }
+.reward-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 0.25rem 0; }
 </style>
 </head>
 <body>
@@ -577,8 +620,42 @@ textarea::placeholder { color: var(--text-light); }
         <div class="int-btn" onclick="toggleInterest(this)">요리</div>
         <div class="int-btn" onclick="toggleInterest(this)">야외활동</div>
       </div>
-      <button class="ob-btn" onclick="completeProfile()">드림마을 시작하기 🌱</button>
+      <button class="ob-btn" onclick="obNext(3)">다음 — 사용 가이드 보기 →</button>
     </div>
+  </div>
+
+  <!-- STEP 3: TUTORIAL -->
+  <div class="ob-screen" id="ob-3">
+    <button class="ob-back" onclick="obNext(2)">← 돌아가기</button>
+    <div style="text-align:center;margin-bottom:1.2rem;">
+      <div style="font-size:1.2rem;font-weight:900;color:white;margin-bottom:0.25rem;">📖 사용 가이드</div>
+      <div style="font-size:0.78rem;color:rgba(255,255,255,0.45);">드림마을을 100% 활용하는 방법이에요</div>
+    </div>
+    <div class="ob-tutorial-wrap">
+      <div id="tut-0" class="ob-slide active"><img src="cardnews/1.png" alt="가이드 1"></div>
+      <div id="tut-1" class="ob-slide"><img src="cardnews/2.png" alt="가이드 2"></div>
+      <div id="tut-2" class="ob-slide"><img src="cardnews/3.png" alt="가이드 3"></div>
+      <div id="tut-3" class="ob-slide"><img src="cardnews/4.png" alt="가이드 4"></div>
+      <div id="tut-4" class="ob-slide"><img src="cardnews/5.png" alt="가이드 5"></div>
+      <div id="tut-5" class="ob-slide"><img src="cardnews/6.png" alt="가이드 6"></div>
+      <div id="tut-6" class="ob-slide"><img src="cardnews/7.png" alt="가이드 7"></div>
+      <div id="tut-7" class="ob-slide"><img src="cardnews/8.png" alt="가이드 8"></div>
+      <div class="ob-slide-nav">
+        <button class="ob-nav-btn" id="tut-prev" onclick="tutGo(tutSlide-1)" disabled>← 이전</button>
+        <div class="ob-slide-dots">
+          <div class="ob-slide-dot on" id="tdot-0"></div>
+          <div class="ob-slide-dot" id="tdot-1"></div>
+          <div class="ob-slide-dot" id="tdot-2"></div>
+          <div class="ob-slide-dot" id="tdot-3"></div>
+          <div class="ob-slide-dot" id="tdot-4"></div>
+          <div class="ob-slide-dot" id="tdot-5"></div>
+          <div class="ob-slide-dot" id="tdot-6"></div>
+          <div class="ob-slide-dot" id="tdot-7"></div>
+        </div>
+        <button class="ob-nav-btn" id="tut-next" onclick="tutGo(tutSlide+1)">다음 →</button>
+      </div>
+    </div>
+    <button class="ob-link" style="margin-top:1rem;" onclick="completeProfile()">건너뛰기 →</button>
   </div>
 
 </div>
@@ -725,33 +802,53 @@ textarea::placeholder { color: var(--text-light); }
       <div class="screen active" id="screen-home">
         <div class="page-header">
           <div class="page-title" id="home-greeting">안녕하세요, 김지민 🦊</div>
-          <div class="page-desc">오늘도 드림마을에서 나를 돌봐요. 아래 모듈을 선택해 시작하세요.</div>
+          <div class="page-desc">오늘의 여정을 차례로 완료하면 특별한 보상이 기다려요 🎁</div>
         </div>
 
-        <div class="home-grid">
-          <div class="module-card" onclick="goTo('diary')">
-            <span class="module-emoji">📖</span>
-            <div class="module-name">마음일기</div>
-            <div class="module-desc">오늘의 감정을 기록하고 AI가 꽃으로 시각화해줘요</div>
-            <span class="phase-chip phase-1">Phase 1</span>
+        <!-- 오늘의 여정 -->
+        <div class="journey-section">
+          <div class="journey-top">
+            <div class="journey-title">📅 오늘의 여정</div>
+            <div class="journey-date" id="journey-date"></div>
           </div>
-          <div class="module-card" onclick="goTo('ciref')">
-            <span class="module-emoji">🔮</span>
-            <div class="module-name">미래의 나</div>
-            <div class="module-desc">CIREF 4단계 대화로 AI가 5년 후의 나를 그려줘요</div>
-            <span class="phase-chip phase-2">Phase 2 핵심</span>
-          </div>
-          <div class="module-card" onclick="goTo('diag')">
-            <span class="module-emoji">📊</span>
-            <div class="module-name">나의 자가진단</div>
-            <div class="module-desc">스마트폰 중독 척도와 우울·불안 척도를 측정해요</div>
-            <span class="phase-chip phase-1">Phase 1</span>
-          </div>
-          <div class="module-card" onclick="goTo('maze')">
-            <span class="module-emoji">🧩</span>
-            <div class="module-name">미로 워크시트</div>
-            <div class="module-desc">종이+펜으로 두뇌를 활성화! PDF 출력 후 직접 풀어보세요</div>
-            <span class="phase-chip phase-3">Phase 3</span>
+          <div class="step-cards">
+            <div class="step-card unlocked" id="scard-diary" onclick="goTo('diary')">
+              <div class="scard-num" id="snum-diary">1</div>
+              <div class="scard-emoji">📖</div>
+              <div class="scard-body">
+                <div class="scard-name">마음일기</div>
+                <div class="scard-desc">오늘의 감정을 기록하고 AI가 꽃으로 시각화해줘요</div>
+              </div>
+              <div class="scard-arrow" id="sarrow-diary" style="color:var(--green);">시작 →</div>
+            </div>
+            <div class="step-card locked" id="scard-ciref">
+              <div class="scard-num" id="snum-ciref">2</div>
+              <div class="scard-emoji">🔮</div>
+              <div class="scard-body">
+                <div class="scard-name">미래의 나</div>
+                <div class="scard-desc">CIREF 4단계 대화로 AI가 5년 후의 나를 그려줘요</div>
+              </div>
+              <div class="scard-arrow" id="sarrow-ciref" style="color:var(--text-light);">🔒</div>
+            </div>
+            <div class="step-card locked" id="scard-diag">
+              <div class="scard-num" id="snum-diag">3</div>
+              <div class="scard-emoji">📊</div>
+              <div class="scard-body">
+                <div class="scard-name">자가진단</div>
+                <div class="scard-desc">스마트폰 중독 척도와 우울·불안 척도를 측정해요</div>
+              </div>
+              <div class="scard-arrow" id="sarrow-diag" style="color:var(--text-light);">🔒</div>
+            </div>
+            <div class="reward-divider"></div>
+            <div class="step-card reward-locked" id="scard-reward">
+              <div class="scard-num" id="snum-reward" style="background:rgba(212,135,91,0.2);color:var(--orange);font-size:1rem;">🎁</div>
+              <div class="scard-emoji">🧩</div>
+              <div class="scard-body">
+                <div class="scard-name" style="color:var(--orange);">오늘의 네모로직</div>
+                <div class="scard-desc">3단계 완료 후 오늘의 퍼즐 PDF가 언락돼요</div>
+              </div>
+              <div class="scard-arrow" id="sarrow-reward" style="color:var(--text-light);">🔒</div>
+            </div>
           </div>
         </div>
 
@@ -1199,6 +1296,7 @@ function obNext(step) {
   document.getElementById('ob-' + obStep).classList.remove('active');
   obStep = step;
   document.getElementById('ob-' + step).classList.add('active');
+  if (step === 3) { tutSlide = 0; tutGo(0); }
 }
 
 function validateSignup() {
@@ -1624,6 +1722,104 @@ function drawCorrChart() {
   });
 }
 
+// ─── TUTORIAL ─────────────────────────────
+let tutSlide = 0;
+const TUT_TOTAL = 8;
+
+function tutGo(n) {
+  document.getElementById('tut-' + tutSlide).classList.remove('active');
+  tutSlide = Math.max(0, Math.min(n, TUT_TOTAL - 1));
+  document.getElementById('tut-' + tutSlide).classList.add('active');
+  for (let i = 0; i < TUT_TOTAL; i++) {
+    const d = document.getElementById('tdot-' + i);
+    if (d) d.className = 'ob-slide-dot' + (i === tutSlide ? ' on' : '');
+  }
+  const prevBtn = document.getElementById('tut-prev');
+  if (prevBtn) prevBtn.disabled = tutSlide === 0;
+  const nextBtn = document.getElementById('tut-next');
+  if (nextBtn) {
+    if (tutSlide === TUT_TOTAL - 1) {
+      nextBtn.textContent = '시작하기 🌱';
+      nextBtn.onclick = () => completeProfile();
+    } else {
+      nextBtn.textContent = '다음 →';
+      nextBtn.onclick = () => tutGo(tutSlide + 1);
+    }
+  }
+}
+
+// ─── DAILY PROGRESS ───────────────────────
+let dailyProgress = { diary: false, ciref: false, diag: false };
+
+function unlockStep(step) {
+  dailyProgress[step] = true;
+  updateStepCards();
+}
+
+function updateStepCards() {
+  const { diary, ciref, diag } = dailyProgress;
+  const dateEl = document.getElementById('journey-date');
+  if (dateEl) {
+    const today = new Date();
+    dateEl.textContent = today.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
+  }
+
+  function setCard(id, numId, arrowId, state, onclickFn, numText, arrowText, arrowColor) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.className = 'step-card ' + state;
+    el.onclick = onclickFn;
+    const num = document.getElementById(numId);
+    if (num) num.textContent = numText;
+    const arrow = document.getElementById(arrowId);
+    if (arrow) { arrow.textContent = arrowText; arrow.style.color = arrowColor; }
+  }
+
+  setCard('scard-diary', 'snum-diary', 'sarrow-diary',
+    diary ? 'completed' : 'unlocked',
+    () => goTo('diary'),
+    diary ? '✓' : '1',
+    diary ? '✅' : '시작 →',
+    'var(--green)');
+
+  setCard('scard-ciref', 'snum-ciref', 'sarrow-ciref',
+    !diary ? 'locked' : ciref ? 'completed' : 'unlocked',
+    diary ? () => goTo('ciref') : null,
+    ciref ? '✓' : '2',
+    !diary ? '🔒' : ciref ? '✅' : '시작 →',
+    !diary ? 'var(--text-light)' : 'var(--green)');
+
+  setCard('scard-diag', 'snum-diag', 'sarrow-diag',
+    !ciref ? 'locked' : diag ? 'completed' : 'unlocked',
+    ciref ? () => goTo('diag') : null,
+    diag ? '✓' : '3',
+    !ciref ? '🔒' : diag ? '✅' : '시작 →',
+    !ciref ? 'var(--text-light)' : 'var(--green)');
+
+  const sr = document.getElementById('scard-reward');
+  const ar = document.getElementById('sarrow-reward');
+  if (sr && ar) {
+    if (diag) {
+      sr.className = 'step-card reward-unlock';
+      sr.onclick = () => downloadNonogram();
+      ar.textContent = '📥 받기';
+      ar.style.color = 'var(--orange)';
+    } else {
+      sr.className = 'step-card reward-locked';
+      sr.onclick = null;
+      ar.textContent = '🔒';
+      ar.style.color = 'var(--text-light)';
+    }
+  }
+}
+
+function downloadNonogram() {
+  const today = new Date();
+  const y = today.getFullYear(), m = today.getMonth()+1, d = today.getDate();
+  const no = ((y * 31 + m) * 31 + d) % 1000 + 1;
+  alert(`🎉 오늘의 네모로직 언락!\n\n날짜: ${today.toLocaleDateString('ko-KR')}\n퍼즐 번호: #${no}\n\n실제 서비스에서는 오늘의 네모로직 PDF가 즉시 생성·다운로드됩니다! 🧩`);
+}
+
 // ─── ROUTING ──────────────────────────────
 let current = 'home';
 const TITLES = { home:'홈 대시보드', diary:'마음일기', ciref:'미래의 나 (CIREF)', diag:'스마트폰 자가진단', maze:'미로 워크시트', usage:'스마트폰 사용량 기록', 'admin-dash':'학생 현황 대시보드', 'admin-crisis':'위기신호 알림', 'admin-student':'학생 상세' };
@@ -1645,6 +1841,7 @@ function goTo(id) {
   if (id === 'admin-dash') initAdminDash();
   if (id === 'admin-crisis') initAdminCrisis();
   if (id === 'admin-student') renderStudentDetail();
+  if (id === 'home') updateStepCards();
   if (isPhoneMode) updatePhoneNav(id);
 }
 
@@ -1699,6 +1896,7 @@ function runDiaryAnalysis() {
   showLoad('AI 감정 분석 중...', 'Claude API가 감정 Valence를 추출하고 있어요 🌸');
   setTimeout(() => {
     hideLoad();
+    unlockStep('diary');
     const vp = Math.round(d.v * 100);
     document.getElementById('diary-result-wrap').innerHTML = `
       <div class="result-panel">
@@ -1832,6 +2030,7 @@ function genFutureImage() {
   showLoad('AI 이미지 생성 중...', 'fal.ai가 5년 후의 모습을 그리고 있어요 🎨');
   setTimeout(() => {
     hideLoad();
+    unlockStep('ciref');
     document.getElementById('chat-msgs').style.display = 'none';
     const identity = cirefAnswers[2] || '꿈을 향해 노력하는 사람';
     const emotion = cirefAnswers[1] || '뿌듯하고 자유로운';
@@ -1922,6 +2121,7 @@ function nextQ() {
 
 function showDiagResult() {
   const total = dScores.reduce((a,b)=>a+b,0);
+  unlockStep('diag');
   const pct = Math.round((total / 20) * 100);
   document.getElementById('diag-prog-bar').style.width = '100%';
   document.getElementById('diag-prog-label').textContent = '검사 완료';
@@ -2021,6 +2221,7 @@ function updatePhoneNav(id) {
 // ─── INIT ─────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initDiag();
+  updateStepCards();
 });
 </script>
 </body>
