@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>인터넷 드림마을 — 기술 시연</title>
+<title>인터넷 드림마을 — 완전 시연 프로토타입</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -362,9 +362,154 @@ textarea::placeholder { color: var(--text-light); }
 .scale-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .scale-text { font-size: 0.74rem; color: var(--text-mid); }
 .ref-text { font-size: 0.74rem; color: var(--text-mid); line-height: 1.65; }
+
+/* ─── ONBOARDING OVERLAY ──────────────────────── */
+#onboarding-root {
+  position: fixed; inset: 0; z-index: 200;
+  background: #1E2A24;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.4s ease;
+  overflow-y: auto;
+}
+#onboarding-root.ob-hidden { opacity: 0; pointer-events: none; }
+
+.ob-screen { display: none; flex-direction: column; align-items: center; text-align: center; width: 100%; max-width: 460px; padding: 2.5rem 1.5rem; }
+.ob-screen.active { display: flex; animation: fadeUp 0.35s ease; }
+
+.ob-logo-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(74,158,117,0.2); border: 1px solid rgba(74,158,117,0.35); border-radius: 10px; padding: 0.5rem 1rem; margin-bottom: 1.5rem; }
+.ob-logo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); animation: obpulse 2s infinite; }
+@keyframes obpulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+.ob-logo-text { font-size: 0.65rem; font-weight: 700; color: var(--green); letter-spacing: 0.08em; }
+.ob-title { font-size: 2.5rem; font-weight: 900; color: white; line-height: 1.15; margin-bottom: 0.7rem; }
+.ob-sub { font-size: 0.88rem; color: rgba(255,255,255,0.5); margin-bottom: 2rem; line-height: 1.65; }
+.ob-features { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 2.5rem; }
+.ob-feat { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; padding: 0.4rem 0.85rem; font-size: 0.74rem; color: rgba(255,255,255,0.65); }
+.ob-btn { background: linear-gradient(135deg, var(--green), #3A8D65); color: white; border: none; border-radius: 14px; padding: 1rem 2rem; font-size: 1rem; font-weight: 800; cursor: pointer; font-family: inherit; transition: all 0.2s; width: 100%; }
+.ob-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(74,158,117,0.35); }
+.ob-link { color: rgba(255,255,255,0.35); font-size: 0.8rem; margin-top: 1.1rem; cursor: pointer; text-decoration: underline; transition: color 0.2s; background: none; border: none; font-family: inherit; }
+.ob-link:hover { color: rgba(255,255,255,0.65); }
+
+.ob-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2rem; width: 100%; text-align: left; }
+.ob-step-title { font-size: 1.4rem; font-weight: 800; color: white; margin-bottom: 0.35rem; }
+.ob-step-sub { font-size: 0.82rem; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; }
+.ob-field { margin-bottom: 1rem; }
+.ob-label { font-size: 0.7rem; font-weight: 700; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem; display: block; letter-spacing: 0.06em; text-transform: uppercase; }
+.ob-input { width: 100%; background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.9rem; color: white; font-family: inherit; outline: none; transition: border-color 0.2s; }
+.ob-input:focus { border-color: var(--green); }
+.ob-input::placeholder { color: rgba(255,255,255,0.22); }
+.ob-input option { background: #1E2A24; color: white; }
+.ob-back { background: none; border: none; color: rgba(255,255,255,0.38); font-size: 0.8rem; cursor: pointer; font-family: inherit; padding: 0; margin-bottom: 1.2rem; align-self: flex-start; transition: color 0.2s; }
+.ob-back:hover { color: rgba(255,255,255,0.7); }
+.ob-progress { display: flex; gap: 0.4rem; margin-bottom: 2rem; }
+.ob-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.18); transition: background 0.3s; }
+.ob-dot.on { background: var(--green); }
+
+.avatar-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 0.5rem; margin-bottom: 1.5rem; }
+.av-btn { background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 0.6rem; font-size: 1.5rem; cursor: pointer; transition: all 0.18s; text-align: center; }
+.av-btn:hover { background: rgba(74,158,117,0.2); border-color: rgba(74,158,117,0.4); }
+.av-btn.selected { background: rgba(74,158,117,0.25); border-color: var(--green); }
+.interest-grid { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.int-btn { background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.12); border-radius: 999px; padding: 0.4rem 0.85rem; font-size: 0.78rem; color: rgba(255,255,255,0.55); cursor: pointer; transition: all 0.18s; }
+.int-btn.selected { background: rgba(74,158,117,0.2); border-color: var(--green); color: var(--green-light); }
+
+/* ─── TOPBAR EXTRAS ───── */
+.topbar-btn { background: transparent; border: 1.5px solid var(--border); border-radius: 8px; padding: 0.4rem 0.75rem; font-size: 0.72rem; font-weight: 700; color: var(--text-mid); cursor: pointer; font-family: inherit; transition: all 0.18s; white-space: nowrap; }
+.topbar-btn:hover { background: var(--bg); color: var(--text); }
+.topbar-sep-line { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
 </style>
 </head>
 <body>
+<!-- ─── ONBOARDING OVERLAY ──────────────────── -->
+<div id="onboarding-root">
+
+  <!-- STEP 0: WELCOME -->
+  <div class="ob-screen active" id="ob-0">
+    <div class="ob-logo-badge">
+      <div class="ob-logo-dot"></div>
+      <span class="ob-logo-text">인터넷 드림마을 · DEMO</span>
+    </div>
+    <div class="ob-title">스마트폰과<br>건강하게 살기</div>
+    <div class="ob-sub">AI와 함께하는 스마트폰 과몰입 방지<br>청소년 상담 플랫폼</div>
+    <div class="ob-features">
+      <span class="ob-feat">🌸 감정 일기</span>
+      <span class="ob-feat">🔮 미래 시각화</span>
+      <span class="ob-feat">📊 자가진단</span>
+      <span class="ob-feat">🧩 뇌훈련 워크시트</span>
+    </div>
+    <button class="ob-btn" onclick="obNext(1)">시작하기 →</button>
+    <button class="ob-link" onclick="goAdminPlaceholder()">관리자 로그인 →</button>
+  </div>
+
+  <!-- STEP 1: SIGNUP -->
+  <div class="ob-screen" id="ob-1">
+    <button class="ob-back" onclick="obNext(0)">← 돌아가기</button>
+    <div class="ob-progress">
+      <div class="ob-dot on"></div><div class="ob-dot"></div>
+    </div>
+    <div class="ob-card">
+      <div class="ob-step-title">📝 계정 만들기</div>
+      <div class="ob-step-sub">기관에서 제공한 정보를 입력해주세요</div>
+      <div class="ob-field">
+        <label class="ob-label">이름</label>
+        <input type="text" class="ob-input" id="ob-name" placeholder="홍길동">
+      </div>
+      <div class="ob-field">
+        <label class="ob-label">학교</label>
+        <input type="text" class="ob-input" id="ob-school" placeholder="한강중학교">
+      </div>
+      <div class="ob-field">
+        <label class="ob-label">학년</label>
+        <select class="ob-input" id="ob-grade">
+          <option value="">선택하세요</option>
+          <option value="중1">중학교 1학년</option>
+          <option value="중2" selected>중학교 2학년</option>
+          <option value="중3">중학교 3학년</option>
+          <option value="고1">고등학교 1학년</option>
+          <option value="고2">고등학교 2학년</option>
+          <option value="고3">고등학교 3학년</option>
+        </select>
+      </div>
+      <div class="ob-field">
+        <label class="ob-label">기관 코드</label>
+        <input type="text" class="ob-input" id="ob-code" placeholder="DREAM2024">
+      </div>
+      <button class="ob-btn" style="margin-top:0.5rem;" onclick="validateSignup()">다음 →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: PROFILE -->
+  <div class="ob-screen" id="ob-2">
+    <button class="ob-back" onclick="obNext(1)">← 돌아가기</button>
+    <div class="ob-progress">
+      <div class="ob-dot on"></div><div class="ob-dot on"></div>
+    </div>
+    <div class="ob-card">
+      <div class="ob-step-title" id="ob-profile-greeting">안녕하세요! 👋</div>
+      <div class="ob-step-sub">프로필을 완성해볼까요?</div>
+      <label class="ob-label">아바타 선택</label>
+      <div class="avatar-grid" id="avatar-grid">
+        <div class="av-btn selected" onclick="pickAvatar(this,'🦊')">🦊</div>
+        <div class="av-btn" onclick="pickAvatar(this,'🐻')">🐻</div>
+        <div class="av-btn" onclick="pickAvatar(this,'🐧')">🐧</div>
+        <div class="av-btn" onclick="pickAvatar(this,'🦁')">🦁</div>
+        <div class="av-btn" onclick="pickAvatar(this,'🐱')">🐱</div>
+        <div class="av-btn" onclick="pickAvatar(this,'🐶')">🐶</div>
+      </div>
+      <label class="ob-label">관심사 (여러 개 선택)</label>
+      <div class="interest-grid">
+        <div class="int-btn" onclick="toggleInterest(this)">그림 그리기</div>
+        <div class="int-btn" onclick="toggleInterest(this)">음악</div>
+        <div class="int-btn" onclick="toggleInterest(this)">독서</div>
+        <div class="int-btn" onclick="toggleInterest(this)">운동</div>
+        <div class="int-btn" onclick="toggleInterest(this)">요리</div>
+        <div class="int-btn" onclick="toggleInterest(this)">야외활동</div>
+      </div>
+      <button class="ob-btn" onclick="completeProfile()">드림마을 시작하기 🌱</button>
+    </div>
+  </div>
+
+</div>
+
 <div class="app">
 
   <!-- ─── SIDEBAR ─────────────────────────── -->
@@ -417,10 +562,10 @@ textarea::placeholder { color: var(--text-light); }
     <div style="flex:1;"></div>
     <div class="user-card">
       <div style="display:flex;align-items:center;gap:0.6rem;">
-        <div class="user-avatar">지</div>
+        <div class="user-avatar" id="user-display-avatar" style="font-size:1.1rem;background:transparent;">🦊</div>
         <div class="user-info">
-          <div class="user-name">김지민</div>
-          <div class="user-role">학생 계정 · 중학교 2학년</div>
+          <div class="user-name" id="user-display-name">김지민</div>
+          <div class="user-role" id="user-display-role">학생 계정 · 중2</div>
         </div>
       </div>
       <div class="user-streak">🔥 7일 연속 접속</div>
@@ -438,6 +583,8 @@ textarea::placeholder { color: var(--text-light); }
         <strong id="topbar-title">홈 대시보드</strong>
       </div>
       <div class="topbar-right">
+        <button class="topbar-btn" onclick="resetToOnboarding()">🔄 처음부터</button>
+        <div class="topbar-sep-line"></div>
         <span class="tech-pill pill-green">Claude API</span>
         <span class="tech-pill pill-purple">fal.ai</span>
         <span class="tech-pill pill-orange">Supabase</span>
@@ -457,7 +604,7 @@ textarea::placeholder { color: var(--text-light); }
       <!-- ══ HOME ══════════════════════════════ -->
       <div class="screen active" id="screen-home">
         <div class="page-header">
-          <div class="page-title">안녕하세요, 김지민 학생 👋</div>
+          <div class="page-title" id="home-greeting">안녕하세요, 김지민 🦊</div>
           <div class="page-desc">오늘도 드림마을에서 나를 돌봐요. 아래 모듈을 선택해 시작하세요.</div>
         </div>
 
@@ -687,6 +834,65 @@ textarea::placeholder { color: var(--text-light); }
 </div><!-- /app -->
 
 <script>
+// ─── ONBOARDING ───────────────────────────
+let userProfile = { name: '김지민', school: '한강중학교', grade: '중2', avatar: '🦊', interests: [] };
+let obStep = 0;
+
+function obNext(step) {
+  document.getElementById('ob-' + obStep).classList.remove('active');
+  obStep = step;
+  document.getElementById('ob-' + step).classList.add('active');
+}
+
+function validateSignup() {
+  const name = document.getElementById('ob-name').value.trim();
+  const school = document.getElementById('ob-school').value.trim();
+  const grade = document.getElementById('ob-grade').value;
+  const code = document.getElementById('ob-code').value.trim();
+  if (!name || !school || !grade || !code) { alert('모든 항목을 입력해주세요'); return; }
+  userProfile.name = name;
+  userProfile.school = school;
+  userProfile.grade = grade;
+  document.getElementById('ob-profile-greeting').textContent = `안녕하세요, ${name}! 👋`;
+  obNext(2);
+}
+
+function pickAvatar(el, av) {
+  document.querySelectorAll('.av-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  userProfile.avatar = av;
+}
+
+function toggleInterest(el) {
+  el.classList.toggle('selected');
+  const txt = el.textContent;
+  if (el.classList.contains('selected')) userProfile.interests.push(txt);
+  else userProfile.interests = userProfile.interests.filter(i => i !== txt);
+}
+
+function completeProfile() {
+  document.getElementById('user-display-name').textContent = userProfile.name;
+  document.getElementById('user-display-role').textContent = `학생 계정 · ${userProfile.grade}`;
+  document.getElementById('user-display-avatar').textContent = userProfile.avatar;
+  document.getElementById('home-greeting').textContent = `안녕하세요, ${userProfile.name} ${userProfile.avatar}`;
+  const ob = document.getElementById('onboarding-root');
+  ob.classList.add('ob-hidden');
+  setTimeout(() => { ob.style.display = 'none'; }, 420);
+}
+
+function resetToOnboarding() {
+  const ob = document.getElementById('onboarding-root');
+  ob.style.display = 'flex';
+  requestAnimationFrame(() => ob.classList.remove('ob-hidden'));
+  obStep = 0;
+  document.querySelectorAll('.ob-screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('ob-0').classList.add('active');
+}
+
+function goAdminPlaceholder() {
+  alert('👷 관리자 모드는 Stage 4에서 구현됩니다.\n\n현재 진행 상황:\n✅ Stage 1 — 온보딩 완료\n🔲 Stage 2 — 학생 기능 추가\n🔲 Stage 3 — 신규 화면 (미로·사용량)\n🔲 Stage 4 — 관리자 뷰\n🔲 Stage 5 — 모바일 폰프레임');
+}
+
 // ─── ROUTING ──────────────────────────────
 let current = 'home';
 const TITLES = { home:'홈 대시보드', diary:'마음일기', ciref:'미래의 나 (CIREF)', diag:'스마트폰 자가진단' };

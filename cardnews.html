@@ -22,6 +22,9 @@
   --text-light: #718096;
   --nav-h: 60px;
   --tab-h: 48px;
+  --c1-tag-bg: rgba(123,200,164,0.22);
+  --c1-tag-color: #a8e6cc;
+  --c1-tag-border: rgba(123,200,164,0.4);
 }
 
 body {
@@ -369,9 +372,9 @@ body {
   flex-wrap: wrap;
 }
 .c1-tag {
-  background: rgba(123,200,164,0.22);
-  color: #a8e6cc;
-  border: 1px solid rgba(123,200,164,0.4);
+  background: var(--c1-tag-bg);
+  color: var(--c1-tag-color);
+  border: 1px solid var(--c1-tag-border);
   padding: 4px 12px;
   border-radius: 999px;
   font-size: 11px;
@@ -881,11 +884,13 @@ body {
         <input type="text" id="tpl-name-input" placeholder="템플릿 이름 (예: 봄 행사용)">
         <button class="modal-save-btn" onclick="saveTemplate()">현재 상태 저장</button>
       </div>
+      <div style="font-size:11px;color:var(--text-light);padding:4px 2px;line-height:1.6;">💡 <strong>공유할 때:</strong> 하단 "HTML 파일로 공유"로 현재 상태 + 저장된 템플릿이 포함된 파일을 내보내세요. 상대방이 그 HTML 파일을 열면 바로 사용 가능합니다.</div>
       <div class="modal-list" id="tpl-list"></div>
     </div>
     <div class="modal-ftr">
-      <button onclick="exportJSON()">↓ JSON 내보내기</button>
-      <button onclick="importJSON()">↑ JSON 가져오기</button>
+      <button onclick="exportHtmlEmbed()" style="background:var(--primary);color:#fff;border-color:var(--primary);">📤 HTML 파일로 공유</button>
+      <button onclick="exportJSON()">↓ JSON 백업</button>
+      <button onclick="importJSON()">↑ JSON 복원</button>
     </div>
   </div>
 </div>
@@ -945,14 +950,14 @@ body {
 
 <!-- SLIDE TAB BAR -->
 <div class="slide-bar">
-  <button class="s-tab active" onclick="goSlide(0)">표지<span class="s-num">01</span></button>
-  <button class="s-tab" onclick="goSlide(1)">문제 제기<span class="s-num">02</span></button>
-  <button class="s-tab" onclick="goSlide(2)">해결책<span class="s-num">03</span></button>
-  <button class="s-tab" onclick="goSlide(3)">마음일기<span class="s-num">04</span></button>
-  <button class="s-tab" onclick="goSlide(4)">미래의 나<span class="s-num">05</span></button>
-  <button class="s-tab" onclick="goSlide(5)">자가진단<span class="s-num">06</span></button>
-  <button class="s-tab" onclick="goSlide(6)">사용자 구조<span class="s-num">07</span></button>
-  <button class="s-tab" onclick="goSlide(7)">마무리<span class="s-num">08</span></button>
+  <button class="s-tab active" onclick="goSlide(0)">COVER<span class="s-num">01</span></button>
+  <button class="s-tab" onclick="goSlide(1)">STATS<span class="s-num">02</span></button>
+  <button class="s-tab" onclick="goSlide(2)">FEATURE<span class="s-num">03</span></button>
+  <button class="s-tab" onclick="goSlide(3)">PHOTO·A<span class="s-num">04</span></button>
+  <button class="s-tab" onclick="goSlide(4)">PHOTO·B<span class="s-num">05</span></button>
+  <button class="s-tab" onclick="goSlide(5)">PHOTO·C<span class="s-num">06</span></button>
+  <button class="s-tab" onclick="goSlide(6)">LIST<span class="s-num">07</span></button>
+  <button class="s-tab" onclick="goSlide(7)">CTA<span class="s-num">08</span></button>
 </div>
 
 <!-- WORKSPACE -->
@@ -963,7 +968,7 @@ body {
 
     <!-- CTRL 01 -->
     <div class="ctrl-slide active" id="ctrl-0">
-      <div class="sec-title">01 · 표지</div>
+      <div class="sec-title">01 · COVER</div>
       <div class="form-g">
         <label>상단 핸들</label>
         <input type="text" id="c1-handle" value="@dreamvillage.kr">
@@ -1017,7 +1022,7 @@ body {
 
     <!-- CTRL 02 -->
     <div class="ctrl-slide" id="ctrl-1">
-      <div class="sec-title">02 · 문제 제기</div>
+      <div class="sec-title">02 · STATS</div>
       <div class="form-g">
         <label>태그라인</label>
         <input type="text" id="c2-tag" value="지금 이 순간에도">
@@ -1085,7 +1090,7 @@ body {
 
     <!-- CTRL 03 -->
     <div class="ctrl-slide" id="ctrl-2">
-      <div class="sec-title">03 · 해결책</div>
+      <div class="sec-title">03 · FEATURE</div>
       <div class="form-g">
         <label>태그</label>
         <input type="text" id="c3-tag" value="우리의 해결책">
@@ -1152,7 +1157,7 @@ body {
 
     <!-- CTRL 04 -->
     <div class="ctrl-slide" id="ctrl-3">
-      <div class="sec-title">04 · 마음일기</div>
+      <div class="sec-title">04 · PHOTO · A</div>
       <div class="form-g">
         <label>이미지 업로드</label>
         <div class="upload-area">
@@ -1191,7 +1196,7 @@ AI가 꽃으로 시각화해요</textarea>
 
     <!-- CTRL 05 -->
     <div class="ctrl-slide" id="ctrl-4">
-      <div class="sec-title">05 · 미래의 나</div>
+      <div class="sec-title">05 · PHOTO · B</div>
       <div class="form-g">
         <label>이미지 업로드</label>
         <div class="upload-area">
@@ -1230,7 +1235,7 @@ AI가 꽃으로 시각화해요</textarea>
 
     <!-- CTRL 06 -->
     <div class="ctrl-slide" id="ctrl-5">
-      <div class="sec-title">06 · 자가진단</div>
+      <div class="sec-title">06 · PHOTO · C</div>
       <div class="form-g">
         <label>이미지 업로드</label>
         <div class="upload-area">
@@ -1269,7 +1274,7 @@ AI가 꽃으로 시각화해요</textarea>
 
     <!-- CTRL 07 -->
     <div class="ctrl-slide" id="ctrl-6">
-      <div class="sec-title">07 · 사용자 구조</div>
+      <div class="sec-title">07 · LIST</div>
       <div class="form-g">
         <label>태그</label>
         <input type="text" id="c7-tag" value="관리 체계">
@@ -1330,7 +1335,7 @@ AI가 꽃으로 시각화해요</textarea>
 
     <!-- CTRL 08 -->
     <div class="ctrl-slide" id="ctrl-7">
-      <div class="sec-title">08 · 마무리</div>
+      <div class="sec-title">08 · CTA</div>
       <div class="form-g">
         <label>이미지 업로드</label>
         <div class="upload-area">
@@ -1628,11 +1633,27 @@ function darken(hex) {
   return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
 }
 
+function hexToRgb(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return { r: (n >> 16), g: ((n >> 8) & 0xff), b: (n & 0xff) };
+}
+function lightenHex(hex, amt) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.min(255, (n >> 16) + amt);
+  const g = Math.min(255, ((n >> 8) & 0xff) + amt);
+  const b = Math.min(255, (n & 0xff) + amt);
+  return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
+}
+
 function applyAccent(hex) {
   currentAccent = hex;
   currentAccentDark = darken(hex);
   document.documentElement.style.setProperty('--primary', hex);
   document.documentElement.style.setProperty('--primary-dark', currentAccentDark);
+  const rgb = hexToRgb(hex);
+  document.documentElement.style.setProperty('--c1-tag-bg', `rgba(${rgb.r},${rgb.g},${rgb.b},0.22)`);
+  document.documentElement.style.setProperty('--c1-tag-color', lightenHex(hex, 45));
+  document.documentElement.style.setProperty('--c1-tag-border', `rgba(${rgb.r},${rgb.g},${rgb.b},0.4)`);
 }
 
 function setAccent(chip) {
@@ -1808,6 +1829,26 @@ function importJSON() {
     reader.readAsText(file);
   });
   inp.click();
+}
+
+function exportHtmlEmbed() {
+  const state = getState();
+  const templates = loadTemplates();
+  const preloadScript = `<script id="tpl-preload">
+(function(){
+  try{localStorage.setItem('dreamvillage_autosave',${JSON.stringify(JSON.stringify(state))});}catch(e){}
+  try{localStorage.setItem('dreamvillage_templates',${JSON.stringify(JSON.stringify(templates))});}catch(e){}
+})();
+<\/script>`;
+  let html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  html = html.replace(/<script id="tpl-preload">[\s\S]*?<\/script>\s*/g, '');
+  html = html.replace('</head>', preloadScript + '\n</head>');
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `드림마을_카드뉴스_${new Date().toISOString().slice(0,10)}.html`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
 }
 
 /* ═══════════════════════════════════
