@@ -178,7 +178,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 
   <!-- HEADER -->
   <div class="page-hdr">
-    <a href="app.html" class="hdr-back">‹</a>
     <div>
       <div class="hdr-title">🧩 네모로직 메이커</div>
       <div class="hdr-sub">내 이미지로 나만의 퍼즐 만들기</div>
@@ -226,7 +225,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
           <input type="file" id="file-inp" accept="image/*" onchange="handleFile(this.files[0])">
           <div class="upload-ico">📷</div>
           <div class="upload-txt">이미지를 끌어다 놓거나 클릭하세요</div>
-          <div class="upload-sub">PNG · JPG · GIF 지원<br>단순하고 대비 뚜렷한 이미지일수록 예뻐요</div>
+          <div class="upload-sub">PNG · JPG · GIF 지원<br>캐릭터·아이콘·로고처럼 윤곽선이 뚜렷할수록 예뻐요</div>
         </div>
 
         <div id="preview-sec" style="display:none">
@@ -239,7 +238,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
             <button class="change-btn" onclick="clearImg()">다시 선택</button>
           </div>
           <div class="thresh-row">
-            <span class="thresh-lbl">밝기 임계값</span>
+            <span class="thresh-lbl">선 감도</span>
             <input type="range" class="thresh-slider" id="thresh" min="30" max="225" value="128" oninput="onThresh()">
             <canvas id="mini-cv" class="mini-canvas" width="56" height="56"></canvas>
           </div>
@@ -406,23 +405,54 @@ function toggleHow() {
   document.getElementById('how-arr').classList.toggle('open');
 }
 
-// ── IMAGE → GRID ──
+// ── IMAGE → GRID (Sobel edge detection) ──
 function img2grid(img, N) {
+  // Render at 4× resolution for better edge sampling
+  const SCALE = 4;
+  const W = N * SCALE, H = N * SCALE;
   const cv = document.createElement('canvas');
-  cv.width = N; cv.height = N;
+  cv.width = W; cv.height = H;
   const ctx = cv.getContext('2d');
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
-  ctx.drawImage(img, 0, 0, N, N);
-  const data = ctx.getImageData(0,0,N,N).data;
+  ctx.drawImage(img, 0, 0, W, H);
+  const data = ctx.getImageData(0, 0, W, H).data;
+
+  // Grayscale (transparent → white)
+  const lum = new Float32Array(W * H);
+  for (let i = 0; i < W * H; i++) {
+    if (data[i*4+3] < 64) { lum[i] = 255; continue; }
+    lum[i] = 0.299*data[i*4] + 0.587*data[i*4+1] + 0.114*data[i*4+2];
+  }
+
+  // Sobel edge magnitude
+  const edge = new Float32Array(W * H);
+  let maxE = 1;
+  for (let r = 1; r < H-1; r++) {
+    for (let c = 1; c < W-1; c++) {
+      const g = (dr, dc) => lum[(r+dr)*W+(c+dc)];
+      const gx = -g(-1,-1) + g(-1,1) - 2*g(0,-1) + 2*g(0,1) - g(1,-1) + g(1,1);
+      const gy = -g(-1,-1) - 2*g(-1,0) - g(-1,1) + g(1,-1) + 2*g(1,0) + g(1,1);
+      const mag = Math.sqrt(gx*gx + gy*gy);
+      edge[r*W+c] = mag;
+      if (mag > maxE) maxE = mag;
+    }
+  }
+
+  // Downsample N×N: max edge per block, normalize, threshold
+  // High slider (선 감도) = lower threshold = more edges detected
+  const thresh = 255 - S.thresh;
   const grid = [];
   for (let r = 0; r < N; r++) {
     const row = [];
     for (let c = 0; c < N; c++) {
-      const i = (r*N+c)*4;
-      if (data[i+3] < 64) { row.push(0); continue; }
-      const gray = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
-      row.push(gray < S.thresh ? 1 : 0);
+      let maxVal = 0;
+      for (let dr = 0; dr < SCALE; dr++)
+        for (let dc = 0; dc < SCALE; dc++) {
+          const pr = r*SCALE+dr, pc = c*SCALE+dc;
+          if (pr < H && pc < W) maxVal = Math.max(maxVal, edge[pr*W+pc]);
+        }
+      row.push((maxVal / maxE * 255) > thresh ? 1 : 0);
     }
     grid.push(row);
   }
