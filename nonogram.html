@@ -101,7 +101,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 .reset-btn:hover{border-color:var(--g);color:var(--gd)}
 
 /* ── GRID ── */
-.grid-wrap{padding:0.4rem 1rem 0.6rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.grid-wrap{padding:0.4rem 0.25rem 0.6rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .nono-tbl{border-collapse:collapse;margin:0 auto}
 .nono-tbl td,.nono-tbl th{border:1px solid var(--br);text-align:center;vertical-align:middle;padding:0;font-family:'Noto Sans KR',sans-serif}
 .c-corner{border:none!important;background:transparent}
@@ -113,19 +113,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 .gcell.x{background:#F8FAFB!important}
 .gcell.x::after{content:'✕';font-size:0.55rem;color:var(--r);font-weight:700;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
 
-/* Cell sizes — gcell must be truly square */
-.nono-tbl[data-s="5"] .gcell{width:44px;height:44px;min-width:44px;min-height:44px}
-.nono-tbl[data-s="5"] .c-col{width:44px;min-width:44px;height:44px;font-size:0.65rem}
-.nono-tbl[data-s="5"] .c-row{height:44px;min-height:44px;font-size:0.65rem;padding:0 6px}
-.nono-tbl[data-s="10"] .gcell{width:30px;height:30px;min-width:30px;min-height:30px}
-.nono-tbl[data-s="10"] .c-col{width:30px;min-width:30px;height:30px}
-.nono-tbl[data-s="10"] .c-row{height:30px;min-height:30px;padding:0 5px}
-.nono-tbl[data-s="15"] .gcell{width:22px;height:22px;min-width:22px;min-height:22px}
-.nono-tbl[data-s="15"] .c-col{width:22px;min-width:22px;height:22px;font-size:0.45rem}
-.nono-tbl[data-s="15"] .c-row{height:22px;min-height:22px;font-size:0.45rem;padding:0 3px}
+/* Cell sizes driven by JS via --cs (cell size) and --cf (clue font) variables */
+.nono-tbl .gcell{width:var(--cs,30px);height:var(--cs,30px);min-width:var(--cs,30px);min-height:var(--cs,30px)}
+.nono-tbl .c-col{width:var(--cs,30px);min-width:var(--cs,30px);height:var(--cs,30px);font-size:var(--cf,0.58rem)}
+.nono-tbl .c-row{height:var(--cs,30px);min-height:var(--cs,30px);font-size:var(--cf,0.58rem);padding:0 5px;min-width:32px}
+.nono-tbl .gcell.x::after{font-size:calc(var(--cs,30px) * 0.45)}
 
 /* Bold border every 5 cells */
-.nono-tbl[data-s="10"] .gcell:nth-child(5n),.nono-tbl[data-s="15"] .gcell:nth-child(5n){border-right:2px solid #B0BEC5}
+.nono-tbl .gcell:nth-child(5n){border-right:2px solid #B0BEC5}
 
 /* ── SUBMIT ── */
 .submit-area{padding:0 1rem 0.5rem}
@@ -155,9 +150,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 @media(max-width:480px){
   .diff-name{font-size:0.64rem}
   .diff-size{font-size:0.5rem}
-  .nono-tbl[data-s="15"] .gcell{width:18px;height:18px;min-width:18px;min-height:18px}
-  .nono-tbl[data-s="15"] .c-col{width:18px;min-width:18px;height:18px}
-  .nono-tbl[data-s="15"] .c-row{height:18px;min-height:18px}
 }
 </style>
 </head>
@@ -185,12 +177,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
           난이도 선택
         </div>
         <div class="diff-btns">
-          <div class="diff-btn sel" id="db-easy" onclick="setDiff('easy')">
-            <span class="diff-icon">🌱</span>
-            <span class="diff-name">초급</span>
-            <span class="diff-size">5 × 5</span>
-          </div>
-          <div class="diff-btn" id="db-medium" onclick="setDiff('medium')">
+          <div class="diff-btn sel" id="db-medium" onclick="setDiff('medium')">
             <span class="diff-icon">🌿</span>
             <span class="diff-name">중급</span>
             <span class="diff-size">10 × 10</span>
@@ -199,6 +186,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
             <span class="diff-icon">🌳</span>
             <span class="diff-name">고급</span>
             <span class="diff-size">15 × 15</span>
+          </div>
+          <div class="diff-btn" id="db-expert" onclick="setDiff('expert')">
+            <span class="diff-icon">🏆</span>
+            <span class="diff-name">고수</span>
+            <span class="diff-size">20 × 20</span>
           </div>
         </div>
       </div>
@@ -312,7 +304,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 <script>
 // ── STATE ──
 const S = {
-  diff: 'easy', N: 5,
+  diff: 'medium', N: 10,
   solution: null, playerGrid: null,
   imgEl: null, thresh: 128,
   timerSec: 0, timerInt: null
@@ -320,8 +312,8 @@ const S = {
 
 // ── DIFFICULTY ──
 function setDiff(d) {
-  S.diff = d; S.N = {easy:5,medium:10,hard:15}[d];
-  ['easy','medium','hard'].forEach(k => document.getElementById('db-'+k).classList.toggle('sel', k===d));
+  S.diff = d; S.N = {medium:10,hard:15,expert:20}[d];
+  ['medium','hard','expert'].forEach(k => document.getElementById('db-'+k).classList.toggle('sel', k===d));
   if (S.imgEl) drawMini();
 }
 
@@ -433,6 +425,14 @@ function colClues(g) {
 }
 
 // ── RENDER GRID ──
+function calcCellSize(N) {
+  const vw = Math.min(window.innerWidth, 720);
+  const rowClueW = 40;
+  const pad = 8;
+  const raw = Math.floor((vw - pad - rowClueW) / N);
+  return Math.max(Math.min(raw, 52), 12);
+}
+
 function renderGrid() {
   const N = S.N;
   const rc = rowClues(S.solution);
@@ -460,6 +460,11 @@ function renderGrid() {
   }
   h += '</tbody></table>';
   document.getElementById('grid-cont').innerHTML = h;
+  const cs = calcCellSize(N);
+  const cf = cs >= 30 ? '0.68rem' : cs >= 22 ? '0.58rem' : cs >= 16 ? '0.48rem' : '0.4rem';
+  const tbl = document.querySelector('.nono-tbl');
+  tbl.style.setProperty('--cs', cs + 'px');
+  tbl.style.setProperty('--cf', cf);
 }
 
 // ── GAME ──
@@ -468,10 +473,10 @@ function startGame() {
   S.solution = img2grid(S.imgEl, S.N);
   S.playerGrid = Array.from({length:S.N},()=>Array(S.N).fill(0));
 
-  const labels={easy:'초급',medium:'중급',hard:'고급'};
+  const labels={medium:'중급',hard:'고급',expert:'고수'};
   const tag = document.getElementById('diff-tag');
   tag.textContent = labels[S.diff];
-  tag.className = 'diff-tag '+S.diff;
+  tag.className = 'diff-tag '+(S.diff==='expert'?'hard':S.diff);
   document.getElementById('game-lbl').textContent = `나만의 퍼즐 · ${S.N}×${S.N}`;
 
   document.getElementById('setup-page').style.display = 'none';
