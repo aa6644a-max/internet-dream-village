@@ -90,8 +90,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 
 /* ── GAME PAGE ── */
 #game-page{display:none}
-#game-page.show{display:block}
-.game-toprow{display:flex;align-items:center;gap:0.5rem;padding:0.85rem 1rem 0.25rem;flex-wrap:wrap}
+#game-page.show{display:flex;flex-direction:column;height:calc(100vh - 60px);overflow:hidden}
+.game-toprow{display:flex;align-items:center;gap:0.5rem;padding:0.65rem 1rem 0.25rem;flex-wrap:wrap;flex-shrink:0}
 .diff-tag{font-size:0.58rem;font-weight:700;padding:0.18rem 0.52rem;border-radius:999px}
 .diff-tag.easy{background:var(--blb);color:var(--bld)}
 .diff-tag.medium{background:var(--ob);color:#9A5B00}
@@ -101,7 +101,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 .reset-btn:hover{border-color:var(--g);color:var(--gd)}
 
 /* ── GRID ── */
-.grid-wrap{padding:0.4rem 0.25rem 0.6rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.grid-wrap{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:0.3rem 0.25rem;display:flex;align-items:flex-start;justify-content:center}
 .nono-tbl{border-collapse:collapse;margin:0 auto}
 .nono-tbl td,.nono-tbl th{border:1px solid var(--br);text-align:center;vertical-align:middle;padding:0;font-family:'Noto Sans KR',sans-serif}
 .c-corner{border:none!important;background:transparent}
@@ -123,7 +123,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 .nono-tbl .gcell:nth-child(5n){border-right:2px solid #B0BEC5}
 
 /* ── SUBMIT ── */
-.submit-area{padding:0 1rem 0.5rem}
+.submit-area{flex-shrink:0;padding:0.4rem 1rem 0.75rem;background:var(--hdr-bg);border-top:1px solid var(--br)}
 .submit-btn{width:100%;padding:0.85rem;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;font-size:0.8rem;font-weight:800;box-shadow:0 4px 14px rgba(167,139,250,0.28);transition:opacity 0.18s;font-family:inherit}
 .submit-btn:hover{opacity:0.9}
 .result-bar{border-radius:10px;padding:0.52rem 0.75rem;margin-top:0.5rem;font-size:0.68rem;font-weight:700;display:none;line-height:1.5}
@@ -150,6 +150,26 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 @media(max-width:480px){
   .diff-name{font-size:0.64rem}
   .diff-size{font-size:0.5rem}
+}
+
+.print-btn{width:100%;padding:0.62rem;border-radius:12px;border:1.5px solid var(--br);background:var(--w);font-size:0.7rem;font-weight:700;color:var(--tm);cursor:pointer;margin-top:0.4rem;font-family:inherit;transition:border-color 0.15s,color 0.15s}
+.print-btn:hover{border-color:var(--g);color:var(--gd)}
+
+/* ── A4 PRINT ── */
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:white!important;margin:0;padding:0}
+  .page-hdr,.game-toprow,.submit-area,#setup-page,.success-ov{display:none!important}
+  .wrap{max-width:100%;padding:0;margin:0}
+  #game-page{display:block!important;height:auto!important;overflow:visible!important}
+  .grid-wrap{display:block!important;overflow:visible!important;padding:8mm}
+
+  .nono-tbl .gcell{width:var(--pcs,12mm)!important;height:var(--pcs,12mm)!important;min-width:var(--pcs,12mm)!important;min-height:var(--pcs,12mm)!important;background:white!important;border:0.3mm solid #888!important}
+  .nono-tbl .gcell.on{background:#111!important}
+  .nono-tbl .gcell.x::after{display:none!important}
+  .nono-tbl .c-col{width:var(--pcs,12mm)!important;min-width:var(--pcs,12mm)!important;height:var(--pcs,12mm)!important;background:#f0f0f0!important;border:0.3mm solid #aaa!important;font-size:var(--pcf,7pt)!important}
+  .nono-tbl .c-row{height:var(--pcs,12mm)!important;min-height:var(--pcs,12mm)!important;background:#f0f0f0!important;border:0.3mm solid #aaa!important;font-size:var(--pcf,7pt)!important;padding:0 2mm!important}
+  .nono-tbl .c-corner{border:none!important;background:transparent!important}
 }
 </style>
 </head>
@@ -281,7 +301,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
     <div class="submit-area">
       <button class="submit-btn" onclick="checkAnswer()">✓ 완성 확인</button>
       <div class="result-bar" id="result-bar"></div>
-      <button class="back-btn" onclick="goSetup()">← 새 퍼즐 만들기</button>
+      <div style="display:flex;gap:0.5rem;margin-top:0.4rem">
+        <button class="print-btn" style="margin:0" onclick="window.print()">🖨️ A4 출력</button>
+        <button class="back-btn" style="margin:0" onclick="goSetup()">← 새 퍼즐</button>
+      </div>
     </div>
   </div>
 
@@ -427,9 +450,14 @@ function colClues(g) {
 // ── RENDER GRID ──
 function calcCellSize(N) {
   const vw = Math.min(window.innerWidth, 720);
+  const vh = window.innerHeight;
   const rowClueW = 40;
-  const pad = 8;
-  const raw = Math.floor((vw - pad - rowClueW) / N);
+  const padW = 8;
+  const byWidth = Math.floor((vw - padW - rowClueW) / N);
+  // Height available: viewport minus header(60) + toprow(48) + submit(90)
+  const colClueRows = Math.ceil(N / 3);
+  const byHeight = Math.floor((vh - 198) / (N + colClueRows));
+  const raw = Math.min(byWidth, byHeight);
   return Math.max(Math.min(raw, 52), 12);
 }
 
@@ -465,6 +493,11 @@ function renderGrid() {
   const tbl = document.querySelector('.nono-tbl');
   tbl.style.setProperty('--cs', cs + 'px');
   tbl.style.setProperty('--cf', cf);
+  // Print sizes (A4: ~190mm printable width, minus ~15mm row-clue)
+  const pcs = {10:'16mm', 15:'11mm', 20:'8mm'}[N] || '10mm';
+  const pcf = {10:'8pt', 15:'7pt', 20:'6pt'}[N] || '7pt';
+  tbl.style.setProperty('--pcs', pcs);
+  tbl.style.setProperty('--pcf', pcf);
 }
 
 // ── GAME ──
@@ -481,6 +514,7 @@ function startGame() {
 
   document.getElementById('setup-page').style.display = 'none';
   document.getElementById('game-page').classList.add('show');
+  document.body.style.overflow = 'hidden';
   document.getElementById('result-bar').classList.remove('show');
 
   renderGrid();
@@ -557,6 +591,7 @@ function goSetup() {
   document.getElementById('timer').classList.remove('show');
   document.getElementById('game-page').classList.remove('show');
   document.getElementById('setup-page').style.display='block';
+  document.body.style.overflow = '';
 }
 </script>
 </body>
