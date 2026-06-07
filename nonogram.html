@@ -155,6 +155,18 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 .print-btn{width:100%;padding:0.62rem;border-radius:12px;border:1.5px solid var(--br);background:var(--w);font-size:0.7rem;font-weight:700;color:var(--tm);cursor:pointer;margin-top:0.4rem;font-family:inherit;transition:border-color 0.15s,color 0.15s}
 .print-btn:hover{border-color:var(--g);color:var(--gd)}
 
+/* ── LOADING OVERLAY ── */
+.loading-ov{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;z-index:300}
+.loading-ov.show{display:flex}
+.loading-card{background:var(--w);border-radius:20px;padding:2rem 2rem 1.8rem;text-align:center;max-width:290px;width:90%;animation:pop 0.3s ease}
+.loading-spin{display:inline-block;animation:spin 1.2s linear infinite;font-size:2rem;margin-bottom:0.5rem}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.api-inp{width:100%;border:1.5px solid var(--br);border-radius:10px;padding:0.6rem 0.8rem;font-size:0.7rem;color:var(--t);outline:none;font-family:inherit;transition:border-color 0.15s;background:var(--bg)}
+.api-inp:focus{border-color:var(--p);background:var(--w)}
+.api-badge{display:inline-block;font-size:0.52rem;font-weight:700;padding:0.08rem 0.4rem;border-radius:999px;vertical-align:middle;margin-left:0.3rem}
+.api-badge.on{background:var(--blb);color:var(--bld)}
+.api-badge.off{background:var(--ob);color:#8a5700}
+
 /* ── A4 PRINT ── */
 @media print{
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -245,7 +257,24 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
         </div>
       </div>
 
-      <!-- Step 3: How to play -->
+      <!-- Step 3: AI 변환 (optional) -->
+      <div class="card">
+        <div class="card-title">
+          <span class="step-num" style="background:var(--p)">AI</span>
+          Claude AI 변환
+          <span class="api-badge off" id="ai-badge">엣지 감지 모드</span>
+        </div>
+        <div style="font-size:0.62rem;color:var(--tm);margin-bottom:0.65rem;line-height:1.65">
+          API 키 입력 시 AI가 이미지를 분석해 캐릭터 외곽선을 자동 추출해요.<br>
+          곰돌이, 피카츄 같은 캐릭터도 깔끔하게 변환됩니다.
+        </div>
+        <input type="password" class="api-inp" id="api-key-inp"
+          placeholder="sk-ant-api03-..." autocomplete="off"
+          oninput="onApiKey(this.value)">
+        <div id="api-status" style="font-size:0.58rem;margin-top:0.38rem;min-height:1.1em;line-height:1.5"></div>
+      </div>
+
+      <!-- Step 4: How to play -->
       <div class="card">
         <div class="card-title how-hd" onclick="toggleHow()">
           <span class="step-num" style="background:var(--p)">?</span>
@@ -309,6 +338,15 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 
 </div><!-- /wrap -->
 
+<!-- LOADING OVERLAY -->
+<div class="loading-ov" id="loading-ov">
+  <div class="loading-card">
+    <div class="loading-spin">🤖</div>
+    <div style="font-size:0.88rem;font-weight:800;color:var(--t);margin-bottom:0.3rem">AI 변환 중...</div>
+    <div style="font-size:0.65rem;color:var(--tm)" id="loading-msg">이미지를 분석하고 있어요</div>
+  </div>
+</div>
+
 <!-- SUCCESS OVERLAY -->
 <div class="success-ov" id="success-ov">
   <div class="success-card">
@@ -331,6 +369,96 @@ const S = {
   imgEl: null, thresh: 128,
   timerSec: 0, timerInt: null
 };
+
+// ── API KEY ──
+function onApiKey(v) {
+  const status = document.getElementById('api-status');
+  const badge = document.getElementById('ai-badge');
+  if (!v) {
+    status.textContent = '';
+    badge.textContent = '엣지 감지 모드';
+    badge.className = 'api-badge off';
+    return;
+  }
+  if (v.startsWith('sk-ant-')) {
+    status.innerHTML = '✅ API 키 확인 — <b>AI 변환 활성화</b>';
+    status.style.color = 'var(--bld)';
+    badge.textContent = 'AI 모드 ON';
+    badge.className = 'api-badge on';
+  } else {
+    status.textContent = '⚠️ Anthropic 키는 sk-ant- 로 시작해요';
+    status.style.color = 'var(--r)';
+    badge.textContent = '엣지 감지 모드';
+    badge.className = 'api-badge off';
+  }
+}
+
+// ── AI IMAGE → GRID ──
+function getApiImageData() {
+  const img = S.imgEl;
+  const MAX = 768;
+  const scale = Math.min(1, MAX / Math.max(img.width, img.height));
+  const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
+  const cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  cv.getContext('2d').drawImage(img, 0, 0, w, h);
+  const dataUrl = cv.toDataURL('image/jpeg', 0.92);
+  return { base64: dataUrl.split(',')[1], mediaType: 'image/jpeg' };
+}
+
+async function img2gridAI(N) {
+  const apiKey = document.getElementById('api-key-inp').value.trim();
+  const { base64, mediaType } = getApiImageData();
+
+  const prompt = `이 이미지를 ${N}×${N} 네모로직(노노그램) 퍼즐 그리드로 변환해주세요.
+
+- 이미지 속 주요 캐릭터/물체의 실루엣과 외곽선을 파악하세요
+- 컬러링북 선화처럼: 윤곽선·형태 → 1(채움), 배경·여백 → 0(빔)
+- 정확히 ${N}행 × ${N}열 2D 배열로 반환하세요
+- JSON 배열만 반환하세요. 마크다운 없이, 설명 없이, 순수 JSON만.
+
+형식: [[0,1,1,...],[1,0,1,...],...]  (${N}개 행, 각 행 ${N}개 값)`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 4096,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
+          { type: 'text', text: prompt }
+        ]
+      }]
+    })
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error?.message || `API 오류 ${res.status}`);
+  }
+
+  const data = await res.json();
+  let text = data.content[0].text.trim();
+  // Strip markdown code blocks if present
+  text = text.replace(/^```[a-z]*\n?/,'').replace(/\n?```$/,'').trim();
+
+  const grid = JSON.parse(text);
+  if (!Array.isArray(grid) || grid.length !== N)
+    throw new Error(`행 수 오류: ${grid.length}행 반환 (기대: ${N}행)`);
+  for (let i = 0; i < grid.length; i++) {
+    if (!Array.isArray(grid[i]) || grid[i].length !== N)
+      throw new Error(`${i+1}행 열 수 오류: ${grid[i]?.length}열 반환 (기대: ${N}열)`);
+  }
+  return grid.map(row => row.map(v => v ? 1 : 0));
+}
 
 // ── DIFFICULTY ──
 function setDiff(d) {
@@ -531,9 +659,33 @@ function renderGrid() {
 }
 
 // ── GAME ──
-function startGame() {
+async function startGame() {
   if (!S.imgEl) return;
-  S.solution = img2grid(S.imgEl, S.N);
+
+  const apiKey = document.getElementById('api-key-inp').value.trim();
+  const useAI = apiKey.startsWith('sk-ant-');
+
+  if (useAI) {
+    const ov = document.getElementById('loading-ov');
+    const msg = document.getElementById('loading-msg');
+    ov.classList.add('show');
+    msg.textContent = `Claude가 ${S.N}×${S.N} 그리드를 생성하는 중...`;
+    try {
+      S.solution = await img2gridAI(S.N);
+    } catch(e) {
+      ov.classList.remove('show');
+      const isCors = e.message.includes('Failed to fetch') || e.message.includes('NetworkError');
+      const errMsg = isCors
+        ? 'CORS 오류: 브라우저에서 직접 API 호출이 차단됐어요.\n로컬에서 실행하거나 프록시가 필요합니다.\n\n엣지 감지 방식으로 대신 진행할까요?'
+        : `AI 변환 실패:\n${e.message}\n\n엣지 감지 방식으로 대신 진행할까요?`;
+      if (!confirm(errMsg)) return;
+      S.solution = img2grid(S.imgEl, S.N);
+    }
+    ov.classList.remove('show');
+  } else {
+    S.solution = img2grid(S.imgEl, S.N);
+  }
+
   S.playerGrid = Array.from({length:S.N},()=>Array(S.N).fill(0));
 
   const labels={medium:'중급',hard:'고급',expert:'고수'};
