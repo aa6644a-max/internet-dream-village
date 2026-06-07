@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>인터넷 드림마을</title>
+<style>
+:root{
+  --sb:#1A3258;--sbw:80px;
+  --g:#6EBDF5;--gd:#3A9FD8;--gb:#EBF5FF;
+  --p:#A78BFA;--pd:#8B6FE8;--pb:#F5F0FF;
+  --o:#F59E0B;--ob:#FFF8E6;
+  --bl:#8EDDBA;--blb:#F0FDF9;
+  --am:#FFD97A;--amb:#FFFBEC;
+  --r:#E05252;--rb:#FEF0F0;
+  --t:#1A1A2E;--tm:#6B7280;--tl:#9CA3AF;
+  --br:#E5E7EB;--bg:#F2F4F7;--w:#FFFFFF;
+  --sh:0 4px 20px rgba(110,189,245,0.12);
+  --shm:0 8px 28px rgba(110,189,245,0.18);
+  --hdr:linear-gradient(135deg,#6EBDF5 0%,#8EDDBA 100%);
+  --hdr-bg:linear-gradient(135deg,#EBF5FF 0%,#F0FDF9 50%,#F5F3FF 100%);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#0D1117;color:var(--t);-webkit-font-smoothing:antialiased}
+
+/* ── PHONE ── */
+.phone-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.phone{width:390px;height:844px;background:var(--bg);border-radius:52px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 0 0 14px #1C1C1E,0 0 0 16px #333,0 50px 100px rgba(0,0,0,0.7)}
+
+/* ── STATUS BAR ── */
+.status-bar{height:50px;background:var(--w);display:flex;align-items:flex-end;justify-content:space-between;padding:0 24px 8px;flex-shrink:0;position:relative;z-index:10}
+.dynamic-island{position:absolute;top:0;left:50%;transform:translateX(-50%);width:116px;height:34px;background:#000;border-radius:0 0 20px 20px}
+.sb-time{font-size:0.82rem;font-weight:700;color:var(--t)}
+.sb-icons{display:flex;gap:5px;align-items:center;font-size:0.7rem;color:var(--t)}
+
+/* ── CONTENT + SCREENS ── */
+.content{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;pointer-events:none;transform:translateX(16px);transition:opacity 0.25s ease,transform 0.25s ease}
+.screen.active{opacity:1;pointer-events:all;transform:translateX(0)}
+.screen::-webkit-scrollbar{display:none}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{height:72px;background:var(--w);border-top:1px solid var(--br);display:none;align-items:flex-start;padding-top:6px;flex-shrink:0}
+.bottom-nav.show{display:flex}
+.nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--tl);transition:color 0.2s;padding:4px 0}
+.nav-tab.active{color:var(--g)}
+.nav-icon{font-size:1.2rem;line-height:1}
+.nav-lbl{font-size:0.52rem;font-weight:700;letter-spacing:0.03em}
+
+/* ── LOADING ── */
+.loading-ov{position:fixed;inset:0;z-index:999;background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem;opacity:0;pointer-events:none;transition:opacity 0.22s}
+.loading-ov.show{opacity:1;pointer-events:all}
+.spinner{width:36px;height:36px;border:3px solid var(--br);border-top-color:var(--g);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-size:0.88rem;font-weight:700;color:var(--tm)}
+.load-sub{font-size:0.7rem;color:var(--tl)}
+
+/* ── ONBOARDING ── */
+#s-ob{background:var(--hdr-bg)}
+.ob-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:2.5rem 1.8rem;text-align:center}
+.ob-logo{width:72px;height:72px;background:var(--hdr);border-radius:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.3rem;box-shadow:0 8px 28px rgba(110,189,245,0.35)}
+.ob-app{font-size:1.4rem;font-weight:900;color:var(--t);margin-bottom:0.3rem;letter-spacing:-0.02em}
+.ob-sub{font-size:0.76rem;color:var(--tl);line-height:1.65;margin-bottom:2rem}
+.ob-modules{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1.8rem;width:100%}
+.ob-mod{background:var(--w);border:1.5px solid var(--br);border-radius:14px;padding:0.7rem 0.8rem;text-align:left;box-shadow:var(--sh)}
+.ob-mod-dot{width:8px;height:8px;border-radius:50%;margin-bottom:0.4rem}
+.ob-mod-code{font-size:0.52rem;font-weight:800;color:var(--tl);letter-spacing:0.08em;margin-bottom:0.1rem}
+.ob-mod-name{font-size:0.7rem;font-weight:700;color:var(--t)}
+.ob-mod-desc{font-size:0.58rem;color:var(--tl);margin-top:0.08rem}
+.ob-form{background:var(--w);border-radius:18px;padding:1.4rem;width:100%;text-align:left;margin-bottom:1rem;box-shadow:var(--shm)}
+.ob-lbl{font-size:0.62rem;font-weight:700;color:var(--tl);letter-spacing:0.06em;display:block;margin-bottom:0.45rem}
+.ob-input{width:100%;background:var(--bg);border:2px solid var(--br);border-radius:12px;padding:0.78rem 1rem;font-size:0.95rem;color:var(--t);font-family:inherit;font-weight:600;outline:none;transition:border-color 0.2s}
+.ob-input:focus{border-color:var(--g)}
+.ob-input::placeholder{color:var(--tl);font-weight:400}
+.ob-btn{width:100%;padding:0.95rem;background:var(--hdr);color:white;border:none;border-radius:14px;font-size:0.9rem;font-weight:800;cursor:pointer;font-family:inherit;transition:all 0.2s;letter-spacing:0.02em;box-shadow:0 4px 20px rgba(110,189,245,0.35)}
+.ob-btn:hover{opacity:0.9;transform:translateY(-1px)}
+
+/* ── JOURNEY MAP ── */
+#s-jmap{background:var(--hdr-bg)}
+.jmap-wrap{padding:1.4rem 1.3rem 2rem;min-height:100%;display:flex;flex-direction:column}
+.jmap-hd{text-align:center;margin-bottom:1.6rem;padding-top:0.4rem}
+.jmap-tag{display:inline-block;font-size:0.56rem;font-weight:700;color:var(--g);letter-spacing:0.1em;background:var(--gb);border-radius:999px;padding:0.26rem 0.75rem;margin-bottom:0.6rem}
+.jmap-title{font-size:1.25rem;font-weight:900;color:var(--t);margin-bottom:0.25rem;letter-spacing:-0.01em}
+.jmap-sub{font-size:0.7rem;color:var(--tl);line-height:1.65}
+.jmap-stages{display:flex;flex-direction:column;gap:0;flex:1}
+.jstage{display:flex;align-items:flex-start;gap:0.85rem;padding:0.75rem 0}
+.jstage-left{display:flex;flex-direction:column;align-items:center;width:40px;flex-shrink:0}
+.jnum{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:900;color:white;flex-shrink:0}
+.jline{width:2px;height:28px;background:var(--br);margin:4px auto}
+.jstage-body{flex:1;padding-top:5px}
+.jstage-name{font-size:0.88rem;font-weight:800;color:var(--t);margin-bottom:0.18rem}
+.jstage-desc{font-size:0.67rem;color:var(--tl);line-height:1.5;margin-bottom:0.32rem}
+.jstage-time{font-size:0.56rem;font-weight:700;padding:0.1rem 0.48rem;border-radius:999px;display:inline-block}
+.jstage:last-child .jline{display:none}
+.jmap-hint{margin-top:0.9rem;padding:0.65rem 1rem;background:rgba(255,255,255,0.7);border:1px solid rgba(110,189,245,0.2);border-radius:10px;font-size:0.66rem;color:var(--tm);text-align:center;line-height:1.5}
+.jmap-start{width:100%;margin-top:0.9rem;padding:0.95rem;background:var(--hdr);color:white;border:none;border-radius:14px;font-size:0.9rem;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:0.02em;transition:all 0.2s;box-shadow:0 4px 20px rgba(110,189,245,0.35)}
+.jmap-start:hover{opacity:0.9;transform:translateY(-1px)}
+
+/* ── HOME ── */
+#s-home{background:var(--bg)}
+.hm-top{background:var(--hdr);padding:0.9rem 1.1rem 1rem;border-bottom:none}
+.hm-row{display:flex;align-items:center;gap:0.65rem;margin-bottom:0.18rem}
+.hm-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.hm-name{font-size:0.88rem;font-weight:800;color:#fff}
+.hm-sub{font-size:0.58rem;color:rgba(255,255,255,0.78);margin-top:0.04rem}
+.streak{display:inline-flex;align-items:center;gap:0.22rem;font-size:0.56rem;font-weight:700;color:#fff;background:rgba(255,255,255,0.22);border:1px solid rgba(255,255,255,0.3);border-radius:999px;padding:0.18rem 0.48rem;margin-left:auto}
+.hm-body{padding:0.95rem 1.1rem 1.2rem}
+.sec-hd{font-size:0.7rem;font-weight:800;color:var(--t);display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem}
+.sec-date{font-size:0.56rem;color:var(--tl);font-weight:500}
+.step-list{display:flex;flex-direction:column;gap:0.42rem;margin-bottom:1rem}
+.sitem{background:var(--w);border:1.5px solid var(--br);border-radius:12px;padding:0.7rem 0.8rem;display:flex;align-items:center;gap:0.65rem;cursor:pointer;transition:all 0.2s;box-shadow:var(--sh)}
+.sitem:active{transform:scale(0.98)}
+.sitem.locked{opacity:0.4;cursor:default;background:var(--bg);box-shadow:none}
+.sitem.done{border-color:rgba(82,183,136,0.3);background:#F0FAF5}
+.sitem.rw{border-color:rgba(224,122,95,0.3);background:#FDF7F5}
+.sitem.rw.locked{opacity:0.4}
+.s-circle{width:26px;height:26px;border-radius:50%;background:var(--br);color:var(--tl);font-size:0.62rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s}
+.sitem:not(.locked):not(.done) .s-circle{background:var(--g);color:white}
+.sitem.done .s-circle{background:var(--g);color:white}
+.sitem.rw:not(.locked) .s-circle{background:var(--o);color:white;font-size:0.85rem}
+.s-emoji{font-size:1.2rem;flex-shrink:0}
+.s-body{flex:1;min-width:0}
+.s-name{font-size:0.8rem;font-weight:800;color:var(--t)}
+.sitem.locked .s-name{color:var(--tl)}
+.sitem.rw:not(.locked) .s-name{color:var(--o)}
+.s-meta{font-size:0.58rem;color:var(--tl);margin-top:0.05rem}
+.s-arr{font-size:0.72rem;color:var(--tl);flex-shrink:0}
+.sitem:not(.locked) .s-arr{color:var(--g)}
+.sitem.rw:not(.locked) .s-arr{color:var(--o)}
+.done-banner{background:linear-gradient(135deg,#EBF5FF,#F5F0FF);border:1.5px solid rgba(110,189,245,0.28);border-radius:14px;padding:0.85rem 0.95rem;display:flex;align-items:center;gap:0.8rem;margin-bottom:0.85rem;display:none}
+.db-icon{font-size:1.9rem;flex-shrink:0}
+.db-title{font-size:0.82rem;font-weight:900;color:var(--t);margin-bottom:0.15rem}
+.db-sub{font-size:0.58rem;color:var(--tm);line-height:1.5}
+.stats-card{background:var(--w);border:1.5px solid var(--br);border-radius:13px;padding:0.85rem;box-shadow:var(--sh)}
+.stats-title{font-size:0.68rem;font-weight:800;color:var(--t);margin-bottom:0.6rem}
+.stat-row{display:flex;align-items:center;gap:0.55rem;padding:0.38rem 0;border-bottom:1px solid var(--br)}
+.stat-row:last-child{border-bottom:none}
+.stat-ico{font-size:0.88rem;width:20px;text-align:center}
+.stat-inf{flex:1}
+.stat-lbl{font-size:0.56rem;color:var(--tl)}
+.stat-val{font-size:0.7rem;font-weight:700;color:var(--t)}
+.chip{font-size:0.52rem;font-weight:700;padding:0.1rem 0.38rem;border-radius:999px}
+.chip-g{background:var(--gb);color:var(--gd)}
+.chip-o{background:var(--ob);color:var(--o)}
+
+/* ── COMMON HEADER ── */
+.scr-header{background:var(--w);padding:0.88rem 1.1rem;border-bottom:1px solid var(--br);display:flex;align-items:center;gap:0.6rem;flex-shrink:0}
+.scr-back{width:32px;height:32px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--t);transition:background 0.2s;flex-shrink:0}
+.scr-back:hover{background:var(--br)}
+.scr-title{font-size:0.9rem;font-weight:800;color:var(--t);flex:1}
+.jp-wrap{display:flex;align-items:center;gap:0}
+.jp-dot{width:7px;height:7px;border-radius:50%;background:var(--br);transition:all 0.3s;flex-shrink:0}
+.jp-dot.done,.jp-dot.active{background:var(--g)}
+.jp-dot.active{box-shadow:0 0 0 3px rgba(82,183,136,0.22)}
+.jp-line{width:13px;height:2px;background:var(--br);transition:background 0.3s}
+.jp-line.done{background:var(--g)}
+
+/* ── CALENDAR ── */
+.cal-wrap{background:var(--w);border:1.5px solid var(--br);border-radius:13px;padding:0.72rem 0.68rem 0.8rem;box-shadow:var(--sh);margin-bottom:0.75rem}
+.cal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem}
+.cal-month{font-size:0.72rem;font-weight:800;color:var(--t)}
+.cal-streak-badge{font-size:0.56rem;color:var(--p);font-weight:700;background:var(--pb);border-radius:999px;padding:0.12rem 0.44rem}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:3px}
+.cal-day-lbl{font-size:0.48rem;font-weight:700;color:var(--tl);text-align:center;padding:0.08rem 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-cell{aspect-ratio:1;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.15s;position:relative;gap:1px}
+.cal-cell.empty,.cal-cell.future{cursor:default;pointer-events:none}
+.cal-cell:not(.empty):not(.future):active{background:var(--gb)}
+.cal-cell.today{background:var(--pb);border:1.5px solid var(--p)}
+.cal-cell.future{opacity:0.22}
+.cal-num{font-size:0.5rem;font-weight:600;color:var(--tl);line-height:1}
+.cal-cell.today .cal-num{color:var(--p);font-weight:800}
+.cal-cell.has-flower .cal-num{color:var(--tm)}
+.cal-fl{font-size:0.78rem;line-height:1}
+.cal-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--t);color:#fff;border-radius:8px;padding:0.3rem 0.55rem;font-size:0.52rem;font-weight:700;white-space:nowrap;z-index:200;pointer-events:none;animation:fup 0.15s ease}
+.cal-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--t)}
+
+/* ── DIARY ── */
+#s-diary{background:var(--bg)}
+.d-body{padding:1rem}
+.step-tag{font-size:0.58rem;font-weight:700;color:var(--g);letter-spacing:0.08em;display:flex;align-items:center;gap:0.32rem;margin-bottom:0.8rem}
+.step-tag-bar{width:3px;height:13px;background:var(--g);border-radius:2px}
+.card{background:var(--w);border:1.5px solid var(--br);border-radius:14px;padding:0.95rem;margin-bottom:0.7rem;box-shadow:var(--sh)}
+.card-lbl{font-size:0.68rem;font-weight:700;color:var(--tm);margin-bottom:0.58rem}
+.emo-grid{display:flex;gap:0.38rem;flex-wrap:wrap}
+.emo-btn{display:flex;flex-direction:column;align-items:center;gap:0.2rem;background:var(--bg);border:2px solid var(--br);border-radius:12px;padding:0.48rem 0.58rem;cursor:pointer;transition:all 0.18s;font-family:inherit}
+.emo-ico{font-size:1.25rem}
+.emo-lbl{font-size:0.48rem;color:var(--tl);font-weight:600}
+.emo-btn.sel{border-color:var(--g);background:var(--gb)}
+.emo-btn.sel .emo-lbl{color:var(--gd);font-weight:700}
+.d-textarea{width:100%;border:2px solid var(--br);border-radius:12px;padding:0.78rem;font-size:0.82rem;line-height:1.7;color:var(--t);resize:none;outline:none;font-family:inherit;background:white;transition:border-color 0.2s;min-height:118px}
+.d-textarea:focus{border-color:var(--g)}
+.d-textarea::placeholder{color:var(--tl);font-size:0.74rem}
+.char-cnt{font-size:0.56rem;color:var(--tl);text-align:right;margin-top:0.22rem}
+.hint-box{background:var(--gb);border-left:3px solid var(--g);border-radius:0 10px 10px 0;padding:0.58rem 0.82rem;font-size:0.66rem;color:var(--tm);line-height:1.6;margin-bottom:0.7rem}
+.pri-btn{width:100%;padding:0.83rem;background:linear-gradient(135deg,var(--g),var(--gd));color:white;border:none;border-radius:13px;font-size:0.85rem;font-weight:800;cursor:pointer;font-family:inherit;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:0.38rem;box-shadow:0 4px 14px rgba(82,183,136,0.22)}
+.pri-btn:hover:not(:disabled){transform:translateY(-1px)}
+.pri-btn:disabled{background:var(--br);color:var(--tl);cursor:not-allowed;box-shadow:none}
+.nxt-btn{width:100%;padding:0.83rem;color:white;border:none;border-radius:13px;font-size:0.83rem;font-weight:800;cursor:pointer;font-family:inherit;transition:all 0.2s;margin-top:0.5rem}
+.nxt-btn.g{background:linear-gradient(135deg,var(--g),var(--gd));box-shadow:0 4px 14px rgba(82,183,136,0.22)}
+.nxt-btn.p{background:linear-gradient(135deg,var(--p),var(--pd));box-shadow:0 4px 14px rgba(139,126,200,0.22)}
+.nxt-btn.o{background:linear-gradient(135deg,var(--o),#C4673A);box-shadow:0 4px 14px rgba(224,122,95,0.22)}
+.nxt-btn.dark{background:var(--hdr);box-shadow:0 4px 14px rgba(110,189,245,0.3)}
+.nxt-btn:hover{transform:translateY(-1px)}
+.ghost-btn{width:100%;padding:0.42rem;background:transparent;color:var(--tl);border:none;font-size:0.66rem;cursor:pointer;font-family:inherit;margin-top:0.08rem}
+
+/* Flower result */
+@keyframes fup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bloom{from{opacity:0;transform:scale(0) rotate(-180deg)}to{opacity:1;transform:scale(1) rotate(0deg)}}
+
+/* ── DIARY RESULT SCREEN ── */
+#s-diary-result{background:var(--hdr-bg)}
+.dr-top{background:var(--hdr);padding:0.88rem 1.1rem;display:flex;align-items:center;gap:0.6rem;flex-shrink:0}
+.dr-back{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.92rem;color:white;flex-shrink:0}
+.dr-title{font-size:0.9rem;font-weight:800;color:white;flex:1}
+.dr-date{font-size:0.58rem;color:rgba(255,255,255,0.7)}
+.dr-body{padding:1.2rem 1.3rem 1.8rem;display:flex;flex-direction:column;align-items:center}
+.dr-bloom{display:flex;justify-content:center;margin:0.5rem 0 0.8rem;animation:bloom 1.1s cubic-bezier(0.34,1.56,0.64,1) forwards}
+.dr-name{font-size:1.25rem;font-weight:900;color:var(--t);margin-bottom:0.55rem;text-align:center;letter-spacing:-0.01em}
+.dr-tags{display:flex;gap:0.38rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.2rem}
+.dr-tag{font-size:0.62rem;font-weight:700;color:var(--gd);background:rgba(255,255,255,0.85);border:1px solid rgba(110,189,245,0.25);border-radius:999px;padding:0.18rem 0.62rem}
+.dr-card{background:rgba(255,255,255,0.88);backdrop-filter:blur(8px);border:1.5px solid rgba(110,189,245,0.15);border-radius:16px;padding:1rem 1.1rem;width:100%;margin-bottom:0.75rem;box-shadow:var(--sh)}
+.dr-card-t{font-size:0.6rem;font-weight:700;color:var(--g);display:block;margin-bottom:0.22rem}
+.dr-val-hd{display:flex;justify-content:space-between;font-size:0.6rem;color:var(--tl);margin-bottom:0.3rem}
+.dr-track{height:6px;background:var(--br);border-radius:3px;overflow:hidden}
+.dr-fill{height:100%;background:linear-gradient(90deg,var(--r),#F9A870 40%,var(--g));border-radius:3px;transition:width 1.2s ease}
+.dr-msg{font-size:0.73rem;color:var(--tm);line-height:1.7}
+.val-card{background:white;border:1.5px solid var(--br);border-radius:12px;padding:0.78rem;margin-bottom:0.65rem;box-shadow:var(--sh)}
+.val-hd{display:flex;justify-content:space-between;font-size:0.6rem;color:var(--tl);margin-bottom:0.3rem}
+.val-track{height:6px;background:var(--br);border-radius:3px;overflow:hidden}
+.val-fill{height:100%;background:linear-gradient(90deg,var(--r),#F9A870 40%,var(--g));border-radius:3px;transition:width 1.2s ease}
+.ai-box{background:white;border:1.5px solid var(--br);border-radius:12px;padding:0.78rem;margin-bottom:0.65rem;font-size:0.72rem;color:var(--tm);line-height:1.7;box-shadow:var(--sh)}
+.ai-box-t{font-size:0.54rem;font-weight:700;color:var(--g);display:block;margin-bottom:0.22rem}
+
+/* ── CIREF ── */
+#s-ciref{background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
+.ciref-scroll{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.ciref-hd{background:var(--w);padding:0.88rem 1.1rem;border-bottom:1px solid var(--br);display:flex;align-items:center;gap:0.6rem;flex-shrink:0}
+.ciref-back{width:30px;height:30px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.92rem;color:var(--t);flex-shrink:0}
+.ciref-title-txt{font-size:0.88rem;font-weight:800;color:var(--t);flex:1}
+.ciref-badge{font-size:0.54rem;font-weight:700;color:var(--p);background:var(--pb);border-radius:999px;padding:0.14rem 0.52rem}
+.ciref-prog{display:flex;align-items:center;background:var(--w);padding:0.55rem 1.1rem 0.85rem;gap:0;flex-shrink:0;border-bottom:1px solid var(--br)}
+.cp-dot{width:7px;height:7px;border-radius:50%;background:var(--br);transition:all 0.3s;flex-shrink:0}
+.cp-dot.done,.cp-dot.active{background:var(--p)}
+.cp-dot.active{box-shadow:0 0 0 3px rgba(139,126,200,0.2)}
+.cp-line{flex:1;height:2px;background:var(--br);transition:background 0.3s}
+.cp-line.done{background:var(--p)}
+.ciref-illus{background:linear-gradient(160deg,#EBF5FF 0%,#F5F0FF 100%);padding:1rem;display:flex;justify-content:center;flex-shrink:0;overflow:hidden}
+.chat-area{padding:0.85rem 1rem;display:flex;flex-direction:column;gap:0.62rem}
+.chat-ai{display:flex;align-items:flex-end;gap:0.48rem;animation:fup 0.3s ease}
+.chat-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--pd));display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0}
+.bubble-ai{background:white;border:1px solid var(--br);border-radius:14px 14px 14px 4px;padding:0.62rem 0.78rem;font-size:0.72rem;color:var(--tm);line-height:1.65;max-width:78%;box-shadow:var(--sh)}
+.bubble-ai .ex-chips{display:flex;gap:0.3rem;flex-wrap:wrap;margin-top:0.48rem}
+.ex-chip{background:var(--pb);border:1px solid rgba(139,126,200,0.18);border-radius:999px;padding:0.22rem 0.58rem;font-size:0.58rem;color:var(--p);cursor:pointer;transition:all 0.18s;font-family:inherit}
+.ex-chip:hover{background:var(--p);color:white}
+.chat-user{display:flex;justify-content:flex-end;animation:fup 0.3s ease}
+.bubble-user{background:linear-gradient(135deg,var(--g),var(--gd));color:white;border-radius:14px 14px 4px 14px;padding:0.62rem 0.78rem;font-size:0.72rem;line-height:1.65;max-width:78%}
+.chat-input-area{padding:0.62rem 1rem;background:white;border-top:1px solid var(--br);flex-shrink:0}
+.chat-input-row{display:flex;gap:0.38rem;align-items:flex-end}
+.chat-input{flex:1;border:1.5px solid var(--br);border-radius:12px;padding:0.52rem 0.78rem;font-size:0.78rem;font-family:inherit;outline:none;resize:none;min-height:36px;max-height:96px;transition:border-color 0.2s;color:var(--t)}
+.chat-input:focus{border-color:var(--p)}
+.chat-send{width:34px;height:34px;border-radius:50%;background:var(--p);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.88rem;color:white;flex-shrink:0;transition:background 0.18s}
+.chat-send:hover{background:var(--pd)}
+.future-wrap{padding:0 1rem}
+.future-card{background:linear-gradient(135deg,var(--pb),var(--gb));border:1.5px solid rgba(139,126,200,0.18);border-radius:14px;padding:1.05rem;text-align:center;margin-bottom:0.65rem;animation:fup 0.4s ease}
+.fc-lbl{font-size:0.54rem;font-weight:700;color:var(--p);letter-spacing:0.08em;margin-bottom:0.55rem}
+.fc-img{font-size:3.8rem;line-height:1;margin-bottom:0.42rem}
+.fc-name{font-size:0.84rem;font-weight:800;color:var(--t)}
+.fc-emo{font-size:0.64rem;color:var(--tl);margin-top:0.14rem}
+.fc-summary{background:rgba(255,255,255,0.7);border-radius:10px;padding:0.58rem 0.78rem;font-size:0.66rem;color:var(--tm);line-height:1.6;margin-top:0.65rem;text-align:left;border:1px solid rgba(139,126,200,0.1)}
+.ref-area{padding:0 1rem 1.2rem}
+.ref-lbl{font-size:0.62rem;font-weight:700;color:var(--tm);margin-bottom:0.32rem}
+.ref-input{width:100%;border:1.5px solid var(--br);border-radius:12px;padding:0.68rem 0.78rem;font-size:0.72rem;font-family:inherit;outline:none;resize:none;min-height:68px;transition:border-color 0.2s;color:var(--t);margin-bottom:0.58rem}
+.ref-input:focus{border-color:var(--p)}
+.ref-input::placeholder{color:var(--tl)}
+
+/* ── DIAGNOSIS ── */
+#s-diag{background:var(--bg)}
+.diag-prog-bar-hd{background:white;padding:0.68rem 1.1rem;border-bottom:1px solid var(--br)}
+.dprog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.32rem}
+.dprog-lbl{font-size:0.58rem;color:var(--tl)}
+.dprog-pct{font-size:0.58rem;font-weight:700;color:var(--g)}
+.dprog-track{height:5px;background:var(--br);border-radius:3px;overflow:hidden}
+.dprog-fill{height:100%;background:var(--g);border-radius:3px;transition:width 0.5s ease}
+.diag-body{padding:1rem}
+.q-card{background:white;border:1.5px solid var(--br);border-radius:14px;padding:0.98rem;margin-bottom:0.68rem;box-shadow:var(--sh);animation:fup 0.3s ease}
+.q-num{font-size:0.54rem;font-weight:700;color:var(--g);letter-spacing:0.08em;margin-bottom:0.48rem}
+.q-txt{font-size:0.84rem;font-weight:700;color:var(--t);line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:0.4rem;margin-top:0.82rem}
+.opt-btn{display:flex;align-items:center;gap:0.58rem;background:var(--bg);border:2px solid var(--br);border-radius:12px;padding:0.58rem 0.78rem;cursor:pointer;font-family:inherit;font-size:0.76rem;color:var(--tm);transition:all 0.18s;text-align:left}
+.opt-btn:hover{border-color:var(--gb);background:var(--gb)}
+.opt-btn.sel{border-color:var(--g);background:var(--gb);color:var(--t);font-weight:700}
+.opt-circle{width:17px;height:17px;border-radius:50%;border:2px solid var(--br);flex-shrink:0;transition:all 0.18s}
+.opt-btn.sel .opt-circle{border-color:var(--g);background:var(--g)}
+.d-next-btn{width:100%;padding:0.78rem;background:var(--g);color:white;border:none;border-radius:13px;font-size:0.82rem;font-weight:800;cursor:pointer;font-family:inherit;transition:all 0.2s;box-shadow:0 4px 14px rgba(82,183,136,0.2)}
+.d-next-btn:disabled{background:var(--br);color:var(--tl);cursor:not-allowed;box-shadow:none}
+.score-card{background:white;border:1.5px solid var(--br);border-radius:14px;padding:1.1rem;text-align:center;margin-bottom:0.68rem;box-shadow:var(--sh);animation:fup 0.4s ease}
+.score-card-top{display:flex;justify-content:flex-end;margin-bottom:0.5rem}
+.score-date{font-size:0.58rem;color:var(--tl);font-weight:500}
+.score-badges{display:flex;gap:0.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:0.5rem}
+.lv-badge{display:inline-block;font-size:0.6rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:999px}
+.lv-s{background:var(--gb);color:var(--gd)}
+.lv-c{background:var(--ob);color:var(--o)}
+.lv-d{background:var(--rb);color:var(--r)}
+.type-badge{display:inline-block;font-size:0.58rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:999px;background:var(--pb);color:var(--p)}
+.score-num{font-size:2.8rem;font-weight:900;color:var(--t);line-height:1}
+.score-denom{font-size:0.9rem;color:var(--tl)}
+.score-desc{font-size:0.7rem;color:var(--tm);margin-top:0.4rem;line-height:1.6}
+.chart-card{background:white;border:1.5px solid var(--br);border-radius:13px;padding:0.82rem;margin-bottom:0.68rem;box-shadow:var(--sh)}
+.chart-row{display:flex;align-items:center;gap:0.48rem;margin-bottom:0.4rem}
+.chart-row:last-child{margin-bottom:0}
+.chart-cat{font-size:0.58rem;color:var(--tl);width:50px;flex-shrink:0;text-align:right}
+.chart-track{flex:1;height:6px;background:var(--br);border-radius:3px;overflow:hidden}
+.chart-fill{height:100%;border-radius:3px;transition:width 1.1s ease}
+.chart-num{font-size:0.58rem;font-weight:700;color:var(--t);width:24px;text-align:right}
+.rec-card{background:var(--bg);border:1.5px solid var(--br);border-radius:13px;padding:0.82rem;margin-bottom:0.68rem}
+.rec-t{font-size:0.66rem;font-weight:800;color:var(--t);margin-bottom:0.48rem}
+.rec-row{font-size:0.66rem;color:var(--tm);padding:0.24rem 0;border-bottom:1px solid var(--br);line-height:1.5}
+.rec-row:last-child{border-bottom:none}
+.rec-row::before{content:'• ';color:var(--g)}
+.affirm-card{background:var(--hdr);border-radius:14px;padding:0.92rem 1rem;margin-bottom:0.68rem;display:flex;align-items:center;gap:0.7rem;cursor:pointer;box-shadow:0 4px 20px rgba(110,189,245,0.25)}
+.affirm-ico{font-size:1.7rem;flex-shrink:0}
+.affirm-body{flex:1}
+.affirm-t{font-size:0.78rem;font-weight:800;color:white;margin-bottom:0.16rem}
+.affirm-s{font-size:0.6rem;color:rgba(255,255,255,0.52);line-height:1.4}
+.affirm-arr{font-size:0.8rem;color:rgba(255,255,255,0.55)}
+
+/* ── NONOGRAM ── */
+#s-nonogram{background:var(--bg)}
+.nono-body{padding:1rem}
+.puzzle-card{background:white;border:1.5px solid var(--br);border-radius:14px;padding:0.88rem 0.95rem;margin-bottom:0.72rem;box-shadow:var(--sh)}
+.puzzle-row{display:flex;align-items:center;justify-content:space-between}
+.puzzle-name{font-size:0.85rem;font-weight:800;color:var(--t)}
+.puzzle-meta{font-size:0.58rem;color:var(--tl);margin-top:0.14rem}
+.puzzle-chip{font-size:0.54rem;font-weight:700;padding:0.18rem 0.46rem;border-radius:999px;background:var(--amb);color:#9A7510}
+.preview-wrap{background:white;border:1.5px solid var(--br);border-radius:14px;padding:1rem;margin-bottom:0.72rem;box-shadow:var(--sh);display:flex;justify-content:center}
+.nono-tbl{border-collapse:collapse}
+.nono-tbl td,.nono-tbl th{width:30px;height:30px;text-align:center;vertical-align:middle;font-size:0.56rem;font-weight:700;color:var(--tm)}
+.clue-cell{border:none !important;background:transparent !important;white-space:pre;line-height:1.25;padding:0 4px !important}
+.pcell{background:#F8FAFB;border:1px solid var(--br) !important}
+.pcell.hint-fill{background:rgba(82,183,136,0.12)}
+.pdf-btns{display:flex;flex-direction:column;gap:0.48rem;margin-bottom:0.72rem}
+.pdf-btn{display:flex;align-items:center;gap:0.68rem;width:100%;padding:0.88rem 0.95rem;border-radius:13px;cursor:pointer;font-family:inherit;font-size:0.78rem;font-weight:700;transition:all 0.2s;border:none}
+.pdf-btn.student{background:linear-gradient(135deg,var(--g),var(--gd));color:white;box-shadow:0 4px 12px rgba(82,183,136,0.2)}
+.pdf-btn.student:hover{transform:translateY(-1px)}
+.pdf-btn.teacher{background:white;color:var(--t);border:2px solid var(--br) !important}
+.pdf-btn.teacher:hover{border-color:var(--tl) !important;transform:translateY(-1px)}
+.pdf-ico{font-size:1.3rem}
+.pdf-body{text-align:left}
+.pdf-sub{font-size:0.58rem;font-weight:400;opacity:0.65;display:block;margin-top:0.06rem}
+.guide-card{background:var(--gb);border:1.5px solid rgba(82,183,136,0.16);border-radius:13px;padding:0.82rem 0.95rem;margin-bottom:0.72rem}
+.guide-t{font-size:0.68rem;font-weight:800;color:var(--gd);margin-bottom:0.42rem}
+.guide-body{font-size:0.66rem;color:var(--tm);line-height:1.82}
+
+/* ── WEB SIDEBAR (desktop only) ── */
+.web-sidebar{display:none}
+
+@media (min-width:768px){
+  body{overflow:hidden}
+  .phone-wrap{padding:0;align-items:stretch}
+  .phone{
+    width:100vw;max-width:100vw;height:100vh;
+    border-radius:0;box-shadow:none;background:transparent;
+    flex-direction:row;align-items:stretch;overflow:hidden;
+  }
+  .phone:not(.no-sidebar) .web-sidebar{display:flex}
+  .status-bar,.bottom-nav{display:none!important}
+
+  /* Sidebar */
+  .web-sidebar{
+    flex-direction:column;width:230px;min-width:230px;
+    background:var(--w);border-right:1.5px solid var(--br);
+    height:100vh;padding:1.4rem 0.85rem 1.2rem;flex-shrink:0;
+    gap:0.45rem;box-shadow:2px 0 16px rgba(110,189,245,0.07);overflow-y:auto;
+  }
+  .ws-logo{display:flex;align-items:center;gap:0.6rem;padding:0 0.3rem 0.9rem;border-bottom:1px solid var(--br);margin-bottom:0.1rem}
+  .ws-logo-icon{font-size:1.5rem}
+  .ws-logo-name{font-size:0.76rem;font-weight:800;color:var(--t);line-height:1.25}
+  .ws-logo-sub{font-size:0.5rem;color:var(--tl)}
+  .ws-user{display:flex;align-items:center;gap:0.52rem;background:var(--gb);border-radius:10px;padding:0.52rem 0.65rem;margin-bottom:0.15rem}
+  .ws-av{font-size:1.35rem}
+  .ws-uname{font-size:0.68rem;font-weight:700;color:var(--t)}
+  .ws-usub{font-size:0.52rem;color:var(--tm)}
+  .ws-nav{display:flex;flex-direction:column;gap:0.12rem;flex:1}
+  .ws-nav-lbl{font-size:0.5rem;font-weight:700;color:var(--tl);padding:0.55rem 0.4rem 0.2rem;letter-spacing:0.06em;text-transform:uppercase}
+  .ws-item{
+    display:flex;align-items:center;gap:0.58rem;width:100%;
+    padding:0.58rem 0.7rem;border-radius:10px;border:none;cursor:pointer;
+    background:transparent;text-align:left;font-size:0.72rem;
+    font-weight:600;color:var(--tm);transition:background 0.15s,color 0.15s;font-family:inherit;
+  }
+  .ws-item:hover{background:var(--gb);color:var(--t)}
+  .ws-item.active{background:linear-gradient(135deg,var(--gb),var(--pb));color:var(--gd);font-weight:700}
+  .ws-ico{font-size:1rem;width:22px;text-align:center;flex-shrink:0}
+  .ws-footer{margin-top:auto;padding-top:0.75rem;border-top:1px solid var(--br)}
+  .ws-streak-lbl{font-size:0.6rem;font-weight:700;color:var(--p);background:var(--pb);border-radius:8px;padding:0.36rem 0.55rem;display:inline-block}
+
+  /* Content + screens */
+  .content{background:var(--hdr-bg)}
+  .screen{
+    inset:unset;position:absolute;
+    top:0;bottom:0;left:50%;
+    width:min(680px,100%);
+    transform:translateX(calc(-50% + 16px));
+    border-radius:0;
+  }
+  .screen.active{transform:translateX(-50%)}
+
+  /* Full width for onboarding / jmap */
+  .phone.no-sidebar .content .screen{width:min(520px,100%)}
+}
+</style>
+</head>
+<body>
+
+<div class="loading-ov" id="loading">
+  <div class="spinner"></div>
+  <div class="load-txt" id="load-txt">처리 중...</div>
+  <div class="load-sub" id="load-sub"></div>
+</div>
+
+<div class="phone-wrap">
+<div class="phone no-sidebar" id="phone">
+
+  <div class="web-sidebar" id="web-sidebar">
+    <div class="ws-logo">
+      <span class="ws-logo-icon">🌸</span>
+      <div>
+        <div class="ws-logo-name">인터넷 드림마을</div>
+        <div class="ws-logo-sub">Internet Dream Village</div>
+      </div>
+    </div>
+    <div class="ws-user">
+      <div class="ws-av">😊</div>
+      <div>
+        <div class="ws-uname" id="ws-uname">게스트</div>
+        <div class="ws-usub">오늘도 건강한 하루!</div>
+      </div>
+    </div>
+    <nav class="ws-nav">
+      <div class="ws-nav-lbl">메뉴</div>
+      <button class="ws-item" id="wn-home" onclick="navTo('home')"><span class="ws-ico">🏠</span><span>홈</span></button>
+      <button class="ws-item" id="wn-diary" onclick="navTo('diary')"><span class="ws-ico">🌸</span><span>마음일기</span></button>
+      <button class="ws-item" id="wn-ciref" onclick="navTo('ciref')"><span class="ws-ico">🔮</span><span>미래의 나</span></button>
+      <button class="ws-item" id="wn-diag" onclick="navTo('diag')"><span class="ws-ico">📊</span><span>자가진단</span></button>
+      <button class="ws-item" id="wn-nono" onclick="navTo('nonogram')"><span class="ws-ico">🧩</span><span>네모로직</span></button>
+    </nav>
+    <div class="ws-footer">
+      <div class="ws-streak-lbl" id="ws-streak">🔥 0일 연속</div>
+    </div>
+  </div>
+
+  <div class="status-bar" id="sb">
+    <div class="dynamic-island"></div>
+    <span class="sb-time" id="sb-time">9:41</span>
+    <div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── ONBOARDING ── -->
+    <div class="screen active" id="s-ob">
+      <div class="ob-wrap">
+        <div class="ob-logo">
+          <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+            <path d="M6 22 Q6 14 13 12 Q12 6 18 5 Q25 4 27 11 Q31 12 32 17 Q33 22 29 24 Q27 26 24 25 L10 25 Q6 24 6 22Z" fill="white" opacity="0.85"/>
+            <path d="M4 26 Q5 20 10 19 Q10 14 16 13 Q22 12 24 17 Q28 17 29 21 Q30 25 27 27 L7 27 Q4 26 4 26Z" fill="white" opacity="0.5"/>
+          </svg>
+        </div>
+        <div class="ob-app">인터넷 드림마을</div>
+        <div class="ob-sub">스마트폰 과의존에서 벗어나<br>더 건강한 나를 만드는 45분 여정</div>
+        <div class="ob-modules">
+          <div class="ob-mod">
+            <div class="ob-mod-dot" style="background:#6EBDF5"></div>
+            <div class="ob-mod-code">MIDIAS</div>
+            <div class="ob-mod-name">마음일기</div>
+            <div class="ob-mod-desc">감정 기록 · AI 꽃 분석</div>
+          </div>
+          <div class="ob-mod">
+            <div class="ob-mod-dot" style="background:#A78BFA"></div>
+            <div class="ob-mod-code">CIREF</div>
+            <div class="ob-mod-name">미래의 나</div>
+            <div class="ob-mod-desc">이애니 AI · 4단계 대화</div>
+          </div>
+          <div class="ob-mod">
+            <div class="ob-mod-dot" style="background:#8EDDBA"></div>
+            <div class="ob-mod-code">SCAS</div>
+            <div class="ob-mod-name">자가진단</div>
+            <div class="ob-mod-desc">과몰입 수준 · AI 분석</div>
+          </div>
+          <div class="ob-mod">
+            <div class="ob-mod-dot" style="background:#FFD97A"></div>
+            <div class="ob-mod-code">DIOGEM</div>
+            <div class="ob-mod-name">네모로직</div>
+            <div class="ob-mod-desc">보상 게임 · PDF 출력</div>
+          </div>
+        </div>
+        <div class="ob-form">
+          <label class="ob-lbl">이름을 알려주세요</label>
+          <input class="ob-input" id="ob-name" type="text" placeholder="예: 홍길동" autocomplete="off">
+        </div>
+        <button class="ob-btn" onclick="startApp()">시작하기 →</button>
+      </div>
+    </div>
+
+    <!-- ── JOURNEY MAP ── -->
+    <div class="screen" id="s-jmap">
+      <div class="jmap-wrap">
+        <div class="jmap-hd">
+          <div class="jmap-tag">⏱ 오늘 45분 여정</div>
+          <div class="jmap-title">인터넷 드림마을<br>사용자 여정 프로세스</div>
+          <div class="jmap-sub">스마트폰 과의존에서 벗어나<br>더 나은 나를 만드는 4단계 체험</div>
+        </div>
+        <div class="jmap-stages">
+          <div class="jstage">
+            <div class="jstage-left">
+              <div class="jnum" style="background:#6EBDF5">01</div>
+              <div class="jline"></div>
+            </div>
+            <div class="jstage-body">
+              <div class="jstage-name">마음일기 — MIDIAS</div>
+              <div class="jstage-desc">오늘의 감정을 기록하면 AI가 꽃으로 시각화해요. 감정 밸런스와 AI 코멘트도 함께 제공돼요.</div>
+              <span class="jstage-time" style="background:#EBF5FF;color:#3A9FD8">약 10분</span>
+            </div>
+          </div>
+          <div class="jstage">
+            <div class="jstage-left">
+              <div class="jnum" style="background:#A78BFA">02</div>
+              <div class="jline"></div>
+            </div>
+            <div class="jstage-body">
+              <div class="jstage-name">미래의 나 — CIREF</div>
+              <div class="jstage-desc">AI 이애니와 4단계 대화로 5년 후 자화상을 만들어요. 성장 동기를 높이는 미래 시각화 기법이에요.</div>
+              <span class="jstage-time" style="background:#F5F0FF;color:#8B6FE8">약 15분</span>
+            </div>
+          </div>
+          <div class="jstage">
+            <div class="jstage-left">
+              <div class="jnum" style="background:#8EDDBA">03</div>
+              <div class="jline"></div>
+            </div>
+            <div class="jstage-body">
+              <div class="jstage-name">자가진단 — SCAS</div>
+              <div class="jstage-desc">스마트폰 과몰입 수준을 5개 영역으로 측정해요. AI가 맞춤형 권고사항과 자기 확언문을 제안해요.</div>
+              <span class="jstage-time" style="background:#F0FDF9;color:#2D9A6A">약 10분</span>
+            </div>
+          </div>
+          <div class="jstage">
+            <div class="jstage-left">
+              <div class="jnum" style="background:#FFD97A;color:#8A6200">🎁</div>
+              <div class="jline" style="display:none"></div>
+            </div>
+            <div class="jstage-body">
+              <div class="jstage-name">네모로직 — DIOGEM</div>
+              <div class="jstage-desc">3단계 완료 보상! 뇌훈련 네모로직 퍼즐 PDF를 학생용·교사용으로 출력해서 풀어요.</div>
+              <span class="jstage-time" style="background:#FFFBEC;color:#9A7510">약 10분</span>
+            </div>
+          </div>
+        </div>
+        <div class="jmap-hint">💡 각 단계를 완료하면 자동으로 다음 단계가 열려요</div>
+        <button class="jmap-start" onclick="goTo('diary')">🚀 여정 시작하기</button>
+      </div>
+    </div>
+
+    <!-- ── HOME ── -->
+    <div class="screen" id="s-home">
+      <div class="hm-top">
+          <div class="hm-row">
+            <div class="hm-avatar" id="home-av">😊</div>
+            <div>
+              <div class="hm-name" id="home-name">안녕하세요!</div>
+              <div class="hm-sub">오늘도 건강한 하루 만들어봐요 🌱</div>
+            </div>
+            <div class="streak">🔥 1일차</div>
+          </div>
+        </div>
+        <div class="hm-body">
+          <div class="cal-wrap">
+            <div class="cal-hd">
+              <span class="cal-month" id="cal-month"></span>
+              <span class="cal-streak-badge" id="cal-streak">🔥 0일 연속</span>
+            </div>
+            <div class="cal-days">
+              <div class="cal-day-lbl">일</div>
+              <div class="cal-day-lbl">월</div>
+              <div class="cal-day-lbl">화</div>
+              <div class="cal-day-lbl">수</div>
+              <div class="cal-day-lbl">목</div>
+              <div class="cal-day-lbl">금</div>
+              <div class="cal-day-lbl">토</div>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+          </div>
+          <div class="done-banner" id="done-banner">
+            <div class="db-icon">🏆</div>
+            <div>
+              <div class="db-title">오늘의 45분 여정 완료!</div>
+              <div class="db-sub">마음일기 · 미래의 나 · 자가진단 · 네모로직<br>모두 완료했어요 🌸</div>
+            </div>
+          </div>
+          <div class="sec-hd">
+            <span>📅 오늘의 여정</span>
+            <span class="sec-date" id="home-date"></span>
+          </div>
+          <div class="step-list" id="step-list">
+            <div class="sitem" id="si-diary" onclick="goTo('diary')">
+              <div class="s-circle" id="sc-diary">1</div>
+              <div class="s-emoji">🌸</div>
+              <div class="s-body">
+                <div class="s-name">마음일기</div>
+                <div class="s-meta">감정 기록 · AI 꽃 분석</div>
+              </div>
+              <div class="s-arr" id="sa-diary">시작 →</div>
+            </div>
+            <div class="sitem locked" id="si-ciref">
+              <div class="s-circle" id="sc-ciref">2</div>
+              <div class="s-emoji">🔮</div>
+              <div class="s-body">
+                <div class="s-name">미래의 나</div>
+                <div class="s-meta">이애니 AI · 4단계 대화</div>
+              </div>
+              <div class="s-arr" id="sa-ciref">🔒</div>
+            </div>
+            <div class="sitem locked" id="si-diag">
+              <div class="s-circle" id="sc-diag">3</div>
+              <div class="s-emoji">📊</div>
+              <div class="s-body">
+                <div class="s-name">자가진단</div>
+                <div class="s-meta">스마트폰 과몰입 수준 측정</div>
+              </div>
+              <div class="s-arr" id="sa-diag">🔒</div>
+            </div>
+            <div style="height:1px;background:linear-gradient(90deg,transparent,var(--br),transparent);margin:0.08rem 0"></div>
+            <div class="sitem rw locked" id="si-nono">
+              <div class="s-circle" id="sc-nono">🎁</div>
+              <div class="s-emoji">🧩</div>
+              <div class="s-body">
+                <div class="s-name">오늘의 네모로직</div>
+                <div class="s-meta">3단계 완료 후 언락</div>
+              </div>
+              <div class="s-arr" id="sa-nono">🔒</div>
+            </div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-title">📈 이번 주 현황</div>
+            <div class="stat-row">
+              <div class="stat-ico">🌸</div>
+              <div class="stat-inf">
+                <div class="stat-lbl">마음일기</div>
+                <div class="stat-val" id="stat-diary">아직 기록 없음</div>
+              </div>
+              <span class="chip chip-g" id="chip-diary">오늘 시작</span>
+            </div>
+            <div class="stat-row">
+              <div class="stat-ico">🔮</div>
+              <div class="stat-inf">
+                <div class="stat-lbl">미래의 나 세션</div>
+                <div class="stat-val" id="stat-ciref">아직 없음</div>
+              </div>
+              <span class="chip chip-o" id="chip-ciref">월 3회 권장</span>
+            </div>
+            <div class="stat-row">
+              <div class="stat-ico">📊</div>
+              <div class="stat-inf">
+                <div class="stat-lbl">자가진단 점수</div>
+                <div class="stat-val" id="stat-diag">아직 없음</div>
+              </div>
+              <span class="chip chip-g" id="chip-diag">–</span>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- ── DIARY ── -->
+    <div class="screen" id="s-diary">
+      <div class="scr-header">
+        <button class="scr-back" onclick="goTo('home')">‹</button>
+        <span class="scr-title">마음일기 — MIDIAS</span>
+        <div class="jp-wrap">
+          <div class="jp-dot active" id="jp1-1"></div>
+          <div class="jp-line" id="jp1-l1"></div>
+          <div class="jp-dot" id="jp1-2"></div>
+          <div class="jp-line" id="jp1-l2"></div>
+          <div class="jp-dot" id="jp1-3"></div>
+          <div class="jp-line" id="jp1-l3"></div>
+          <div class="jp-dot" id="jp1-4"></div>
+        </div>
+      </div>
+      <div class="d-body">
+        <div class="step-tag"><div class="step-tag-bar"></div>STEP 01 · 감정 기록</div>
+        <div class="card">
+          <div class="card-lbl">지금 기분이 어때요?</div>
+          <div class="emo-grid" id="emo-grid">
+            <button class="emo-btn" onclick="pickEmo(this,'기쁨')"><span class="emo-ico">😊</span><span class="emo-lbl">기쁨</span></button>
+            <button class="emo-btn" onclick="pickEmo(this,'평온')"><span class="emo-ico">😌</span><span class="emo-lbl">평온</span></button>
+            <button class="emo-btn" onclick="pickEmo(this,'설렘')"><span class="emo-ico">🥰</span><span class="emo-lbl">설렘</span></button>
+            <button class="emo-btn" onclick="pickEmo(this,'불안')"><span class="emo-ico">😰</span><span class="emo-lbl">불안</span></button>
+            <button class="emo-btn" onclick="pickEmo(this,'슬픔')"><span class="emo-ico">😢</span><span class="emo-lbl">슬픔</span></button>
+            <button class="emo-btn" onclick="pickEmo(this,'화남')"><span class="emo-ico">😤</span><span class="emo-lbl">화남</span></button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">오늘 하루를 기록해요</div>
+          <textarea class="d-textarea" id="diary-txt" placeholder="오늘 있었던 일, 느낀 감정을 자유롭게 써보세요. AI가 꽃으로 표현해줄게요 🌸" oninput="onDiaryInput(this)"></textarea>
+          <div class="char-cnt"><span id="d-chars">0</span>/500자</div>
+        </div>
+        <div class="hint-box">💡 예: "오늘 수학 시험을 망쳤는데 친구가 위로해줘서 고마웠어요. 스마트폰을 너무 많이 봐서 죄책감이 들었어요."</div>
+        <button class="pri-btn" id="diary-btn" disabled onclick="runDiary()">🤖 AI 감정 분석하기</button>
+        <div id="diary-result"></div>
+      </div>
+    </div>
+
+    <!-- ── DIARY RESULT ── -->
+    <div class="screen" id="s-diary-result">
+      <div class="dr-top">
+        <button class="dr-back" onclick="goTo('diary')">‹</button>
+        <span class="dr-title">마음일기 결과</span>
+        <span class="dr-date" id="dr-date"></span>
+      </div>
+      <div class="dr-body">
+        <div class="dr-bloom" id="dr-bloom"></div>
+        <div class="dr-name" id="dr-name"></div>
+        <div class="dr-tags" id="dr-tags"></div>
+        <div class="dr-card">
+          <div class="dr-val-hd"><span>감정 밸런스</span><span id="dr-score"></span></div>
+          <div class="dr-track"><div class="dr-fill" id="dr-fill" style="width:0%"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:0.26rem;font-size:0.54rem;color:var(--tl)"><span>부정(0)</span><span>긍정(100)</span></div>
+        </div>
+        <div class="dr-card">
+          <span class="dr-card-t">🤖 AI 코멘트</span>
+          <div class="dr-msg" id="dr-msg"></div>
+        </div>
+        <button class="nxt-btn p" style="width:100%;margin-top:0.2rem" onclick="goTo('ciref')">🔮 다음 단계: 미래의 나 →</button>
+        <button class="ghost-btn" onclick="goTo('home')">홈으로 돌아가기</button>
+      </div>
+    </div>
+
+    <!-- ── CIREF ── -->
+    <div class="screen" id="s-ciref">
+      <div class="ciref-hd">
+        <button class="ciref-back" onclick="goTo('home')">‹</button>
+        <span class="ciref-title-txt">미래의 나 — 이애니 AI</span>
+        <span class="ciref-badge">CIREF</span>
+      </div>
+      <div class="ciref-prog" id="ciref-prog">
+        <div class="cp-dot active" id="cp0"></div>
+        <div class="cp-line" id="cl0"></div>
+        <div class="cp-dot" id="cp1"></div>
+        <div class="cp-line" id="cl1"></div>
+        <div class="cp-dot" id="cp2"></div>
+        <div class="cp-line" id="cl2"></div>
+        <div class="cp-dot" id="cp3"></div>
+      </div>
+      <!-- Room illustration -->
+      <div class="ciref-illus">
+        <svg width="300" height="138" viewBox="0 0 300 138" style="border-radius:12px;display:block;">
+          <defs>
+            <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#B3D8F8"/>
+              <stop offset="100%" stop-color="#D6EEFF"/>
+            </linearGradient>
+            <linearGradient id="flrG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F0E0C8"/>
+              <stop offset="100%" stop-color="#E4CEAC"/>
+            </linearGradient>
+          </defs>
+          <!-- Sky -->
+          <rect width="300" height="138" rx="12" fill="url(#skyG)"/>
+          <!-- Clouds -->
+          <ellipse cx="62" cy="28" rx="30" ry="13" fill="white" opacity="0.88"/>
+          <ellipse cx="80" cy="25" rx="20" ry="11" fill="white" opacity="0.88"/>
+          <ellipse cx="45" cy="30" rx="16" ry="8" fill="white" opacity="0.72"/>
+          <ellipse cx="210" cy="32" rx="24" ry="11" fill="white" opacity="0.82"/>
+          <ellipse cx="226" cy="30" rx="16" ry="9" fill="white" opacity="0.8"/>
+          <!-- Window frame horizontal -->
+          <rect x="0" y="54" width="300" height="6" fill="#DEBB96" opacity="0.7"/>
+          <!-- Floor interior -->
+          <rect x="0" y="92" width="300" height="50" fill="url(#flrG)"/>
+          <!-- Wall interior (warm) -->
+          <rect x="0" y="56" width="300" height="40" fill="#FAF0E0" opacity="0.55"/>
+          <!-- Window vertical frame -->
+          <rect x="148" y="0" width="6" height="58" fill="#DEBB96" opacity="0.7"/>
+          <!-- Desk surface -->
+          <rect x="45" y="88" width="215" height="10" rx="4" fill="#C8905A"/>
+          <!-- Desk legs -->
+          <rect x="56" y="98" width="9" height="36" fill="#A8703A"/>
+          <rect x="240" y="98" width="9" height="36" fill="#A8703A"/>
+          <!-- Books -->
+          <rect x="208" y="68" width="12" height="20" rx="1.5" fill="#E07A5F"/>
+          <rect x="221" y="71" width="10" height="17" rx="1.5" fill="#52B788"/>
+          <rect x="232" y="73" width="9" height="15" rx="1.5" fill="#8B7EC8"/>
+          <!-- Laptop base -->
+          <rect x="125" y="80" width="58" height="8" rx="2.5" fill="#B8B8B8"/>
+          <!-- Laptop screen -->
+          <rect x="129" y="56" width="52" height="36" rx="3" fill="#C8DFEE"/>
+          <rect x="131" y="58" width="48" height="32" rx="2" fill="#E2F0FF"/>
+          <!-- Screen glow text lines -->
+          <rect x="136" y="63" width="30" height="3" rx="1.5" fill="#8B7EC8" opacity="0.5"/>
+          <rect x="136" y="69" width="38" height="2.5" rx="1.2" fill="#8B7EC8" opacity="0.3"/>
+          <rect x="136" y="74" width="26" height="2.5" rx="1.2" fill="#8B7EC8" opacity="0.3"/>
+          <!-- Lamp post -->
+          <line x1="68" y1="88" x2="68" y2="68" stroke="#999" stroke-width="3" stroke-linecap="round"/>
+          <line x1="68" y1="68" x2="88" y2="58" stroke="#999" stroke-width="3" stroke-linecap="round"/>
+          <ellipse cx="91" cy="56" rx="12" ry="7" fill="#F4B942" opacity="0.85"/>
+          <ellipse cx="91" cy="56" rx="20" ry="14" fill="#F4B942" opacity="0.08"/>
+          <!-- Plant (small on desk) -->
+          <ellipse cx="265" cy="85" rx="8" ry="5" fill="#C87840"/>
+          <path d="M265 84 Q262 76 256 72 Q260 72 264 77 Q263 71 268 68 Q270 73 266 78 Q268 73 274 71 Q273 76 266 80Z" fill="#52B788"/>
+          <!-- Person -->
+          <!-- Body/sweater -->
+          <path d="M82 108 Q86 97 100 99 Q114 97 118 108 Q114 118 100 119 Q86 118 82 108Z" fill="#A78BFA"/>
+          <!-- Neck -->
+          <rect x="95" y="87" width="10" height="13" rx="4" fill="#F0B084"/>
+          <!-- Head -->
+          <circle cx="100" cy="76" r="16" fill="#F0B084"/>
+          <!-- Hair top -->
+          <path d="M85 72 Q85 58 100 56 Q115 58 115 72 Q113 63 108 60 Q100 54 92 60 Q87 63 85 72Z" fill="#1A0A00"/>
+          <!-- Hair side left -->
+          <path d="M85 72 Q82 80 84 88 Q87 82 87 76Z" fill="#1A0A00"/>
+          <!-- Glasses -->
+          <circle cx="94" cy="76" r="5.5" fill="none" stroke="#333" stroke-width="1.5"/>
+          <circle cx="106" cy="76" r="5.5" fill="none" stroke="#333" stroke-width="1.5"/>
+          <line x1="99.5" y1="76" x2="100.5" y2="76" stroke="#333" stroke-width="1.5"/>
+          <line x1="88.5" y1="73.5" x2="85.5" y2="72.5" stroke="#333" stroke-width="1.3"/>
+          <!-- Arm -->
+          <path d="M113 101 Q120 95 127 89" stroke="#F0B084" stroke-width="7" stroke-linecap="round" fill="none"/>
+          <!-- Hand on laptop -->
+          <circle cx="128" cy="88" r="5" fill="#F0B084"/>
+        </svg>
+      </div>
+      <div class="ciref-scroll" id="ciref-scroll">
+        <div class="chat-area" id="chat-msgs"></div>
+        <div id="future-area"></div>
+        <div id="ref-area-wrap"></div>
+      </div>
+      <div class="chat-input-area" id="chat-input-area">
+        <div class="chat-input-row">
+          <textarea class="chat-input" id="chat-input" placeholder="답변을 입력하세요..." rows="1" onkeydown="chatEnter(event)" oninput="autoH(this)"></textarea>
+          <button class="chat-send" onclick="sendChat()">↑</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DIAGNOSIS ── -->
+    <div class="screen" id="s-diag">
+      <div class="scr-header">
+        <button class="scr-back" onclick="goTo('home')">‹</button>
+        <span class="scr-title">자가진단 — SCAS</span>
+        <div class="jp-wrap">
+          <div class="jp-dot done"></div>
+          <div class="jp-line done"></div>
+          <div class="jp-dot done"></div>
+          <div class="jp-line done"></div>
+          <div class="jp-dot active"></div>
+          <div class="jp-line"></div>
+          <div class="jp-dot"></div>
+        </div>
+      </div>
+      <div class="diag-prog-bar-hd">
+        <div class="dprog-row">
+          <span class="dprog-lbl" id="dprog-lbl">질문 1 / 5</span>
+          <span class="dprog-pct" id="dprog-pct">20%</span>
+        </div>
+        <div class="dprog-track"><div class="dprog-fill" id="dprog-fill" style="width:20%"></div></div>
+      </div>
+      <div class="diag-body" id="diag-body"></div>
+    </div>
+
+    <!-- ── NONOGRAM ── -->
+    <div class="screen" id="s-nonogram">
+      <div class="scr-header">
+        <button class="scr-back" onclick="goTo('home')">‹</button>
+        <span class="scr-title">네모로직 — DIOGEM</span>
+        <div class="jp-wrap">
+          <div class="jp-dot done"></div>
+          <div class="jp-line done"></div>
+          <div class="jp-dot done"></div>
+          <div class="jp-line done"></div>
+          <div class="jp-dot done"></div>
+          <div class="jp-line done"></div>
+          <div class="jp-dot active"></div>
+        </div>
+      </div>
+      <div class="nono-body">
+        <div class="puzzle-card">
+          <div class="puzzle-row">
+            <div>
+              <div class="puzzle-name" id="puz-name">오늘의 퍼즐 #1</div>
+              <div class="puzzle-meta" id="puz-meta">5×5 · 초급 · 약 10분</div>
+            </div>
+            <div class="puzzle-chip">🎁 보상 언락!</div>
+          </div>
+        </div>
+        <div class="preview-wrap" id="puz-preview"></div>
+        <div class="pdf-btns">
+          <button class="pdf-btn student" onclick="printNonogram('student')">
+            <span class="pdf-ico">📄</span>
+            <div class="pdf-body">
+              <span>학생용 PDF 출력</span>
+              <span class="pdf-sub">빈 칸 — 연필로 직접 풀어요</span>
+            </div>
+          </button>
+          <button class="pdf-btn teacher" onclick="printNonogram('teacher')">
+            <span class="pdf-ico">🗝️</span>
+            <div class="pdf-body">
+              <span>교사용 PDF 출력</span>
+              <span class="pdf-sub">정답 포함 — 학생에게 미리 주지 마세요</span>
+            </div>
+          </button>
+        </div>
+        <div class="guide-card">
+          <div class="guide-t">🖨️ 출력 안내</div>
+          <div class="guide-body">
+            1. PDF 출력 후 A4 용지에 인쇄하세요<br>
+            2. 연필과 지우개를 준비해요 — 틀려도 괜찮아요!<br>
+            3. 가로 줄·세로 줄의 숫자 힌트대로 칸을 채워요<br>
+            4. 완성하면 작은 그림이 나타나요 🌸
+          </div>
+        </div>
+        <button class="nxt-btn g" onclick="completeJourney()">✅ 완료 인증 → 대시보드 보기</button>
+        <button class="ghost-btn" onclick="goTo('home')">홈으로 돌아가기</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-nav" id="bottom-nav">
+    <div class="nav-tab active" id="nt-home" onclick="navTo('home')">
+      <div class="nav-icon">🏠</div><div class="nav-lbl">홈</div>
+    </div>
+    <div class="nav-tab" id="nt-diary" onclick="navTo('diary')">
+      <div class="nav-icon">🌸</div><div class="nav-lbl">일기</div>
+    </div>
+    <div class="nav-tab" id="nt-ciref" onclick="navTo('ciref')">
+      <div class="nav-icon">🔮</div><div class="nav-lbl">미래</div>
+    </div>
+    <div class="nav-tab" id="nt-diag" onclick="navTo('diag')">
+      <div class="nav-icon">📊</div><div class="nav-lbl">진단</div>
+    </div>
+    <div class="nav-tab" id="nt-nono" onclick="navTo('nonogram')">
+      <div class="nav-icon">🧩</div><div class="nav-lbl">게임</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+// ── STATE ──
+const state = {
+  name: '',
+  pickedEmo: null,
+  cirefStep: 0,
+  cirefAnswers: [],
+  diagStep: 0,
+  diagScores: [],
+  diagResult: null,
+  done: { diary: false, ciref: false, diag: false, nono: false },
+  current: 'ob'
+};
+
+// ── CLOCK ──
+function updateClock() {
+  const d = new Date();
+  const h = d.getHours().toString().padStart(2,'0');
+  const m = d.getMinutes().toString().padStart(2,'0');
+  document.getElementById('sb-time').textContent = h + ':' + m;
+}
+updateClock();
+setInterval(updateClock, 30000);
+
+// ── NAVIGATION ──
+function goTo(id) {
+  const prev = state.current;
+  if (prev === id) return;
+  const ps = document.getElementById('s-' + prev);
+  const ns = document.getElementById('s-' + id);
+  if (!ns) return;
+  if (ps) ps.classList.remove('active');
+  ns.classList.add('active');
+  state.current = id;
+
+  const phone = document.getElementById('phone');
+  if (id === 'ob' || id === 'jmap') phone.classList.add('no-sidebar');
+  else phone.classList.remove('no-sidebar');
+
+  const nav = document.getElementById('bottom-nav');
+  if (id !== 'ob' && id !== 'jmap') {
+    nav.classList.add('show');
+    document.getElementById('sb').style.background = 'var(--w)';
+  } else {
+    nav.classList.remove('show');
+    document.getElementById('sb').style.background = 'transparent';
+  }
+
+  if (id === 'ciref' && state.cirefStep === 0 && document.getElementById('chat-msgs').children.length === 0) initCiref();
+  if (id === 'diag' && state.diagStep === 0 && !state.done.diag) initDiag();
+  if (id === 'nonogram') initNonogram();
+  if (id === 'home') { updateHomeDate(); initCalendar(); }
+  updateNavTabs(id);
+}
+
+function navTo(id) {
+  if (id === 'ciref' && !state.done.diary) return;
+  if (id === 'diag' && !state.done.ciref) return;
+  if (id === 'nonogram' && !state.done.diag) return;
+  goTo(id);
+}
+
+function updateNavTabs(id) {
+  const map = { home:'nt-home', diary:'nt-diary', 'diary-result':'nt-diary', ciref:'nt-ciref', diag:'nt-diag', nonogram:'nt-nono' };
+  const wsMap = { home:'wn-home', diary:'wn-diary', 'diary-result':'wn-diary', ciref:'wn-ciref', diag:'wn-diag', nonogram:'wn-nono' };
+  Object.values(map).forEach(t => { const el = document.getElementById(t); if(el) el.classList.remove('active'); });
+  Object.values(wsMap).forEach(t => { const el = document.getElementById(t); if(el) el.classList.remove('active'); });
+  const key = map[id]; if (key) { const el = document.getElementById(key); if(el) el.classList.add('active'); }
+  const wk = wsMap[id]; if (wk) { const el = document.getElementById(wk); if(el) el.classList.add('active'); }
+}
+
+// ── LOADING ──
+function showLoad(txt, sub) {
+  document.getElementById('load-txt').textContent = txt;
+  document.getElementById('load-sub').textContent = sub || '';
+  document.getElementById('loading').classList.add('show');
+}
+function hideLoad() { document.getElementById('loading').classList.remove('show'); }
+
+// ── ONBOARDING ──
+function startApp() {
+  const n = document.getElementById('ob-name').value.trim();
+  if (!n) { document.getElementById('ob-name').focus(); return; }
+  state.name = n;
+  document.getElementById('home-name').textContent = '안녕하세요, ' + n + ' 👋';
+  document.getElementById('home-av').textContent = '😊';
+  document.getElementById('ws-uname').textContent = n;
+  goTo('jmap');
+}
+
+// ── HOME ──
+function updateHomeDate() {
+  const d = new Date();
+  document.getElementById('home-date').textContent = d.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
+}
+updateHomeDate();
+
+function updateSteps() {
+  const { diary, ciref, diag, nono } = state.done;
+  function set(id, sc, sa, cls, num, arr, onclick) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.className = 'sitem ' + cls;
+    el.onclick = onclick;
+    const c = document.getElementById(sc);
+    if (c) c.textContent = num;
+    const a = document.getElementById(sa);
+    if (a) a.textContent = arr;
+  }
+  set('si-diary','sc-diary','sa-diary', diary?'done':'', diary?'✓':'1', diary?'✅':'시작 →', ()=>goTo('diary'));
+  set('si-ciref','sc-ciref','sa-ciref', !diary?'locked':ciref?'done':'', ciref?'✓':'2', !diary?'🔒':ciref?'✅':'시작 →', diary?()=>goTo('ciref'):null);
+  set('si-diag','sc-diag','sa-diag', !ciref?'locked':diag?'done':'', diag?'✓':'3', !ciref?'🔒':diag?'✅':'시작 →', ciref?()=>goTo('diag'):null);
+  set('si-nono','sc-nono','sa-nono', !diag?'rw locked':'rw', nono?'✓':'🎁', !diag?'🔒':nono?'✅':'시작 →', diag?()=>goTo('nonogram'):null);
+}
+
+// ── DIARY ──
+function makePetalSVG(petalColor, centerColor) {
+  const rots = [0,60,120,180,240,300];
+  const petals = rots.map(r => `<ellipse cx="45" cy="22" rx="8" ry="15" fill="${petalColor}" transform="rotate(${r} 45 45)" opacity="0.92"/>`).join('');
+  return `<svg width="90" height="108" viewBox="0 0 90 108">
+    <line x1="45" y1="58" x2="45" y2="100" stroke="#52B788" stroke-width="4.5" stroke-linecap="round"/>
+    <ellipse cx="33" cy="79" rx="13" ry="6.5" fill="#52B788" transform="rotate(-30 33 79)"/>
+    <ellipse cx="57" cy="74" rx="13" ry="6.5" fill="#52B788" transform="rotate(28 57 74)"/>
+    ${petals}
+    <circle cx="45" cy="45" r="13" fill="${centerColor}"/>
+    <circle cx="45" cy="45" r="9" fill="${centerColor}" opacity="0.7"/>
+  </svg>`;
+}
+
+const FLOWERS = {
+  기쁨:  { svg: makePetalSVG('#FFD97A','#F59E0B'), n:'해바라기', c:'#FFD97A', v:0.88, kw:['활기','에너지','긍정'], msg:'밝고 따뜻한 에너지가 느껴져요. 오늘 하루 잘 보냈군요!' },
+  평온:  { svg: makePetalSVG('#A78BFA','#8B6FE8'), n:'라벤더', c:'#A78BFA', v:0.72, kw:['평화','안정','여유'], msg:'마음이 잔잔하고 안정적이에요. 오늘 스스로를 잘 돌봤어요.' },
+  설렘:  { svg: makePetalSVG('#6EBDF5','#3A9FD8'), n:'물망초', c:'#6EBDF5', v:0.82, kw:['기대','흥분','호기심'], msg:'가슴이 두근거리는 하루였군요. 그 에너지 소중히 간직하세요!' },
+  불안:  { svg: makePetalSVG('#8EDDBA','#2D9A6A'), n:'민들레', c:'#8EDDBA', v:0.38, kw:['긴장','걱정','예민'], msg:'오늘 마음이 많이 무거웠군요. 천천히 숨 쉬어봐요.' },
+  슬픔:  { svg: makePetalSVG('#93C5FD','#6EBDF5'), n:'수국', c:'#93C5FD', v:0.28, kw:['무거움','그리움','외로움'], msg:'슬픔도 감정의 일부예요. 오늘 수고했어요.' },
+  화남:  { svg: makePetalSVG('#E05252','#C4442A'), n:'빨간 장미', c:'#E05252', v:0.22, kw:['분노','억울함','답답함'], msg:'많이 힘들었겠어요. 그 감정 표현해줘서 고마워요.' },
+};
+let pickedEmo = null;
+
+// ── CALENDAR ──
+const EMO_KEYS = ['기쁨','평온','설렘','불안','슬픔','화남'];
+const CAL_EMOJI = {기쁨:'🌻',평온:'🪻',설렘:'🌸',불안:'🌿',슬픔:'💧',화남:'🌹'};
+const DEMO_DIARY = {};
+
+function buildDemoData() {
+  const today = new Date();
+  const y = today.getFullYear(), m = today.getMonth(), td = today.getDate();
+  for (let d = 1; d < td; d++) {
+    if (Math.random() > 0.8) continue;
+    const key = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    DEMO_DIARY[key] = EMO_KEYS[Math.floor(Math.random() * EMO_KEYS.length)];
+  }
+}
+
+let calTipEl = null;
+function initCalendar() {
+  if (Object.keys(DEMO_DIARY).length === 0) buildDemoData();
+  const today = new Date();
+  const y = today.getFullYear(), m = today.getMonth(), td = today.getDate();
+  document.getElementById('cal-month').textContent = `${y}년 ${m+1}월`;
+
+  let streak = 0;
+  const checkEnd = state.done.diary ? td : td - 1;
+  for (let d = checkEnd; d >= 1; d--) {
+    const k = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const has = d === td ? state.done.diary : !!DEMO_DIARY[k];
+    if (has) streak++; else break;
+  }
+  document.getElementById('cal-streak').textContent = `🔥 ${streak}일 연속`;
+  const ws = document.getElementById('ws-streak'); if(ws) ws.textContent = `🔥 ${streak}일 연속`;
+
+  const firstDow = new Date(y, m, 1).getDay();
+  const totalDays = new Date(y, m + 1, 0).getDate();
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  for (let i = 0; i < firstDow; i++) {
+    const c = document.createElement('div');
+    c.className = 'cal-cell empty';
+    grid.appendChild(c);
+  }
+
+  for (let d = 1; d <= totalDays; d++) {
+    const key = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = d === td, isFuture = d > td;
+    let emo = DEMO_DIARY[key];
+    if (isToday && state.done.diary) emo = pickedEmo || '평온';
+
+    const cell = document.createElement('div');
+    let cls = 'cal-cell' + (isToday ? ' today' : '') + (isFuture ? ' future' : '') + (emo ? ' has-flower' : '');
+    cell.className = cls;
+    const emoji = emo ? (CAL_EMOJI[emo] || '🌸') : '';
+    cell.innerHTML = `<span class="cal-num">${d}</span>${emoji ? `<span class="cal-fl">${emoji}</span>` : ''}`;
+
+    if (emo && !isFuture) {
+      const ce = emo;
+      cell.addEventListener('click', e => { e.stopPropagation(); showCalTip(cell, ce); });
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function showCalTip(cell, emoKey) {
+  if (calTipEl) { calTipEl.remove(); calTipEl = null; return; }
+  const fl = FLOWERS[emoKey];
+  const tip = document.createElement('div');
+  tip.className = 'cal-tip';
+  tip.textContent = `${CAL_EMOJI[emoKey]} ${fl.n} · ${emoKey}`;
+  cell.appendChild(tip);
+  calTipEl = tip;
+  setTimeout(() => {
+    document.addEventListener('click', function off() {
+      if (calTipEl) { calTipEl.remove(); calTipEl = null; }
+      document.removeEventListener('click', off);
+    });
+  }, 10);
+}
+
+function pickEmo(el, name) {
+  document.querySelectorAll('.emo-btn').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  pickedEmo = name;
+  checkDiaryBtn();
+}
+function onDiaryInput(el) {
+  const v = el.value.length;
+  document.getElementById('d-chars').textContent = v;
+  checkDiaryBtn();
+}
+function checkDiaryBtn() {
+  const btn = document.getElementById('diary-btn');
+  const txt = document.getElementById('diary-txt').value.trim();
+  btn.disabled = !pickedEmo || txt.length < 10;
+}
+function runDiary() {
+  const emo = pickedEmo || '평온';
+  const d = FLOWERS[emo];
+  showLoad('AI 감정 분석 중...', 'AI가 감정을 분석하고 꽃으로 표현하고 있어요 🌸');
+  setTimeout(() => {
+    hideLoad();
+    state.done.diary = true;
+    const vp = Math.round(d.v * 100);
+
+    // 결과 스크린 채우기
+    const today = new Date();
+    document.getElementById('dr-date').textContent =
+      (today.getMonth()+1) + '월 ' + today.getDate() + '일';
+    document.getElementById('dr-bloom').innerHTML = d.svg;
+    document.getElementById('dr-name').textContent = d.n;
+    document.getElementById('dr-tags').innerHTML =
+      d.kw.map(k=>`<span class="dr-tag">${k}</span>`).join('');
+    document.getElementById('dr-score').textContent = vp + '점';
+    document.getElementById('dr-fill').style.width = '0%';
+    document.getElementById('dr-msg').textContent = d.msg;
+
+    // 화면 전환
+    goTo('diary-result');
+
+    // 밸런스 바 애니메이션 (전환 후)
+    setTimeout(() => {
+      const f = document.getElementById('dr-fill');
+      if (f) f.style.width = vp + '%';
+    }, 300);
+
+    updateSteps();
+    document.getElementById('stat-diary').textContent = d.n + ' · ' + emo;
+    document.getElementById('chip-diary').textContent = '✅ 완료';
+  }, 2000);
+}
+
+// ── CIREF ──
+const CQ = [
+  { q:'안녕! 나는 이애니야 🤖✨\n\n오늘은 스마트폰 없이도 행복한 미래의 너를 같이 상상해볼 거야.\n\n5년 후, 스마트폰 없이도 충분히 즐거운 너는 어디서, 누구와, 무엇을 하고 있어?', ex:['카페에서 그림 그려요','도서관에서 친구들과 공부해요','운동장에서 농구해요'], reply:'멋진 장면이네! 눈에 선하게 그려져 ✨\n\n그 순간 기분이 어때? 스스로에 대해 어떤 생각을 하고 있을 것 같아?' },
+  { q:'그 장면에서 기분이 어때?\n스스로에 대해 어떤 생각을 하고 있을 것 같아?', ex:['뿌듯하고 자유로운 느낌이에요','집중할 수 있어서 행복해요','자신이 자랑스러울 것 같아요'], reply:'그 감정이 정말 소중해 😊\n\n스마트폰 과몰입에서 벗어난 미래의 너는 어떤 어른의 모습이랑 닮았어?' },
+  { q:'스마트폰 과몰입에서 벗어난 미래의 너는\n어떤 어른의 모습이랑 닮았어?', ex:['꿈을 향해 노력하는 사람이요','가족과 시간을 잘 보내는 사람이요','좋아하는 일을 직업으로 가진 사람이요'], reply:'진짜 근사한 미래 모습이야! 💪\n\n마지막 질문! 스마트폰 대신 푹 빠져서 해보고 싶은 활동이 뭐야?' },
+  { q:'스마트폰 대신 완전히 빠져들어 하고 싶은\n활동이 뭐야? 그 활동을 하는 미래의 너를 상상해봐 🎯', ex:['그림 그리기요','기타 연주하기요','달리기나 수영이요'], reply:'완벽해! 이제 AI가 5년 후의 너를 그려줄게 🎨✨' },
+];
+let cirefQ = 0;
+
+function initCiref() {
+  cirefQ = 0;
+  state.cirefAnswers = [];
+  document.getElementById('chat-msgs').innerHTML = '';
+  document.getElementById('future-area').innerHTML = '';
+  document.getElementById('ref-area-wrap').innerHTML = '';
+  updateCirefProg(0);
+  setTimeout(() => addAI(CQ[0].q, CQ[0].ex), 600);
+}
+
+function updateCirefProg(step) {
+  for (let i = 0; i < 4; i++) {
+    const dot = document.getElementById('cp' + i);
+    const line = i < 3 ? document.getElementById('cl' + i) : null;
+    if (!dot) continue;
+    dot.className = 'cp-dot' + (i < step ? ' done' : i === step ? ' active' : '');
+    if (line) line.className = 'cp-line' + (i < step ? ' done' : '');
+  }
+}
+
+function addAI(txt, examples) {
+  const msgs = document.getElementById('chat-msgs');
+  const div = document.createElement('div');
+  div.className = 'chat-ai';
+  div.innerHTML = `<div class="chat-avatar">🤖</div>
+    <div class="bubble-ai">${txt.replace(/\n/g,'<br>')}
+      ${examples ? `<div class="ex-chips">${examples.map(e=>`<button class="ex-chip" onclick="fillInput(this)">${e}</button>`).join('')}</div>` : ''}
+    </div>`;
+  msgs.appendChild(div);
+  const sc=document.getElementById('ciref-scroll');if(sc)sc.scrollTop=sc.scrollHeight;
+}
+
+function addUser(txt) {
+  const msgs = document.getElementById('chat-msgs');
+  const div = document.createElement('div');
+  div.className = 'chat-user';
+  div.innerHTML = `<div class="bubble-user">${txt}</div>`;
+  msgs.appendChild(div);
+  const sc=document.getElementById('ciref-scroll');if(sc)sc.scrollTop=sc.scrollHeight;
+}
+
+function fillInput(el) {
+  document.getElementById('chat-input').value = el.textContent;
+}
+
+function chatEnter(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+}
+function autoH(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 96) + 'px';
+}
+
+function sendChat() {
+  const inp = document.getElementById('chat-input');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  addUser(txt);
+  state.cirefAnswers.push(txt);
+  inp.value = '';
+  inp.style.height = '';
+  cirefQ++;
+  updateCirefProg(cirefQ);
+
+  if (cirefQ < 4) {
+    setTimeout(() => {
+      addAI(CQ[cirefQ - 1].reply + '\n\n' + CQ[cirefQ].q, CQ[cirefQ].ex);
+    }, 800);
+  } else {
+    setTimeout(() => {
+      addAI(CQ[3].reply);
+      document.getElementById('chat-input-area').style.display = 'none';
+      setTimeout(() => genFuture(), 1200);
+    }, 800);
+  }
+}
+
+function genFuture() {
+  showLoad('AI 이미지 생성 중...', 'AI가 5년 후의 모습을 그리고 있어요 🎨');
+  setTimeout(() => {
+    hideLoad();
+    state.done.ciref = true;
+    const identity = state.cirefAnswers[2] || '꿈을 향해 노력하는 사람';
+    const emotion = state.cirefAnswers[1] || '뿌듯하고 자유로운';
+    const activity = state.cirefAnswers[3] || '좋아하는 활동';
+    const portraits = ['🧑‍💻','🧑‍🎨','🧑‍🎤','🧑‍🔬','🧑‍🏫','🧑‍🍳'];
+    const portrait = portraits[Math.floor(Math.random() * portraits.length)];
+
+    document.getElementById('future-area').innerHTML = `
+      <div class="future-wrap">
+        <div class="future-card">
+          <div class="fc-lbl">✨ 5년 후의 나 — AI 자화상 생성 완료</div>
+          <div class="fc-img">${portrait}</div>
+          <div class="fc-name">${identity}</div>
+          <div class="fc-emo">${emotion} 기분으로 ${activity}를 하고 있어요</div>
+          <div class="fc-summary">수집된 4개 에피소드에서 강한 성장 동기가 감지돼요. <strong>${identity}</strong>의 미래상이 구체적으로 형성되었고 지연 할인 극복 효과가 기대됩니다.</div>
+        </div>
+      </div>`;
+
+    document.getElementById('ref-area-wrap').innerHTML = `
+      <div class="ref-area">
+        <div class="ref-lbl">💭 리플렉션 노트</div>
+        <textarea class="ref-input" placeholder="이 이미지를 보고 어떤 느낌이 드나요? 자유롭게 기록하세요..."></textarea>
+        <button class="nxt-btn p" onclick="saveCiref()">💾 저장하고 다음 단계 →</button>
+        <button class="ghost-btn" onclick="goTo('home')">홈으로 돌아가기</button>
+      </div>`;
+
+    updateSteps();
+    document.getElementById('stat-ciref').textContent = '이번 달 1회 완료';
+    document.getElementById('chip-ciref').textContent = '✅ 완료';
+    const sc2=document.getElementById('ciref-scroll');if(sc2)sc2.scrollTop=sc2.scrollHeight;
+  }, 2800);
+}
+
+function saveCiref() {
+  showLoad('저장 중...', 'Supabase에 이미지와 리플렉션을 저장하고 있어요');
+  setTimeout(() => { hideLoad(); goTo('diag'); }, 1000);
+}
+
+// ── DIAGNOSIS ──
+const DQS = [
+  { q:'스마트폰 사용을 줄이려고 해도 잘 되지 않는다', cat:'통제', opts:['전혀 그렇지 않다','가끔 그렇다','자주 그렇다','항상 그렇다'] },
+  { q:'스마트폰이 없으면 불안하거나 초조한 느낌이 든다', cat:'금단', opts:['전혀 그렇지 않다','가끔 그렇다','자주 그렇다','항상 그렇다'] },
+  { q:'스마트폰 때문에 수면 시간이 줄어들었다', cat:'일상 방해', opts:['전혀 그렇지 않다','가끔 그렇다','자주 그렇다','항상 그렇다'] },
+  { q:'스마트폰을 하다 보면 시간이 얼마나 지났는지 모른다', cat:'집착', opts:['전혀 그렇지 않다','가끔 그렇다','자주 그렇다','항상 그렇다'] },
+  { q:'스마트폰 사용으로 인해 학교 공부에 지장이 있다', cat:'기능 저하', opts:['전혀 그렇지 않다','가끔 그렇다','자주 그렇다','항상 그렇다'] },
+];
+let pickedScore = null;
+
+function initDiag() {
+  state.diagStep = 0;
+  state.diagScores = [];
+  renderQ();
+}
+
+function renderQ() {
+  const q = DQS[state.diagStep];
+  const pct = Math.round(((state.diagStep + 1) / DQS.length) * 100);
+  document.getElementById('dprog-lbl').textContent = `질문 ${state.diagStep + 1} / ${DQS.length}`;
+  document.getElementById('dprog-pct').textContent = pct + '%';
+  document.getElementById('dprog-fill').style.width = pct + '%';
+  pickedScore = null;
+  document.getElementById('diag-body').innerHTML = `
+    <div class="q-card">
+      <div class="q-num">Q${state.diagStep + 1} · ${q.cat}</div>
+      <div class="q-txt">${q.q}</div>
+      <div class="opts" id="opts">
+        ${q.opts.map((o,i) => `<button class="opt-btn" onclick="pickOpt(this,${i+1})"><div class="opt-circle"></div><span>${o}</span></button>`).join('')}
+      </div>
+    </div>
+    <button class="d-next-btn" id="d-nxt" disabled onclick="nextQ()">${state.diagStep < DQS.length - 1 ? '다음 질문 →' : '결과 보기 📊'}</button>`;
+}
+
+function pickOpt(el, score) {
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  pickedScore = score;
+  document.getElementById('d-nxt').disabled = false;
+}
+
+function nextQ() {
+  if (pickedScore === null) return;
+  state.diagScores.push(pickedScore);
+  pickedScore = null;
+  state.diagStep++;
+  if (state.diagStep < DQS.length) renderQ();
+  else showDiagResult();
+}
+
+function showDiagResult() {
+  const total = state.diagScores.reduce((a,b) => a+b, 0);
+  state.done.diag = true;
+  state.diagResult = total;
+  document.getElementById('dprog-fill').style.width = '100%';
+  document.getElementById('dprog-lbl').textContent = '검사 완료';
+  document.getElementById('dprog-pct').textContent = '100%';
+
+  let lv, lc, diagType, desc, recs;
+  if (total <= 9) {
+    lv='안전'; lc='lv-s'; diagType='균형유지형';
+    desc='스마트폰 사용이 비교적 건강해요. 지금처럼 유지하면 돼요 👍';
+    recs=['규칙적인 디지털 휴식 시간을 유지하세요','좋아하는 오프라인 활동을 즐겨봐요','2주 후 다시 진단받아 보세요'];
+  } else if (total <= 14) {
+    lv='주의'; lc='lv-c'; diagType='이용패턴형';
+    desc='스마트폰이 일상에 조금씩 영향을 주고 있어요. 함께 개선해봐요.';
+    recs=['하루 사용 목표 시간을 정해보세요','식사·취침 1시간 전 스마트폰 OFF','미래의 나 모듈로 동기를 높여봐요'];
+  } else {
+    lv='위험'; lc='lv-d'; diagType='고위험의존형';
+    desc='스마트폰 과의존 위험 수준이에요. 선생님과 상담을 권해요.';
+    recs=['담당 선생님께 상담을 요청해보세요','스마트폰 알림을 최소화해요','매일 마음일기로 감정을 추적해요'];
+  }
+
+  const cats = ['통제','금단','일상 방해','집착','기능 저하'];
+  const colors = ['#52B788','#8B7EC8','#E07A5F','#4A9ABF','#E05252'];
+  const today = new Date();
+  const dateStr = today.getFullYear() + '.' + String(today.getMonth()+1).padStart(2,'0') + '.' + String(today.getDate()).padStart(2,'0');
+
+  document.getElementById('diag-body').innerHTML = `
+    <div class="score-card">
+      <div class="score-card-top"><span class="score-date">${dateStr}</span></div>
+      <div class="score-badges">
+        <span class="lv-badge ${lc}">${lv} 수준</span>
+        <span class="type-badge">${diagType}</span>
+      </div>
+      <div class="score-num">${total}<span class="score-denom"> / 20</span></div>
+      <div class="score-desc">${desc}</div>
+    </div>
+    <div class="chart-card">
+      <div style="font-size:0.66rem;font-weight:800;color:var(--t);margin-bottom:0.55rem;">영역별 점수</div>
+      ${state.diagScores.map((s,i) => `
+        <div class="chart-row">
+          <div class="chart-cat">${cats[i]}</div>
+          <div class="chart-track"><div class="chart-fill" style="width:0%;background:${colors[i]}" data-w="${(s/4)*100}"></div></div>
+          <div class="chart-num">${s}/4</div>
+        </div>`).join('')}
+    </div>
+    <div class="affirm-card" onclick="alert('자기 확언문 만들기 기능은 준비 중입니다 🌱')">
+      <div class="affirm-ico">✍️</div>
+      <div class="affirm-body">
+        <div class="affirm-t">자기 확언문 만들기</div>
+        <div class="affirm-s">AI가 나만의 긍정 확언문을 제안해줘요</div>
+      </div>
+      <div class="affirm-arr">›</div>
+    </div>
+    <div class="rec-card">
+      <div class="rec-t">📋 AI 권고사항</div>
+      ${recs.map(r => `<div class="rec-row">${r}</div>`).join('')}
+    </div>
+    <button class="nxt-btn o" onclick="goTo('nonogram')">🎁 보상 언락! 오늘의 네모로직 →</button>
+    <button class="ghost-btn" onclick="goTo('home')">홈으로 돌아가기</button>`;
+
+  setTimeout(() => {
+    document.querySelectorAll('.chart-fill[data-w]').forEach(el => {
+      el.style.transition = 'width 1.1s ease';
+      el.style.width = el.dataset.w + '%';
+    });
+  }, 150);
+
+  updateSteps();
+  document.getElementById('stat-diag').textContent = total + '점 · ' + lv;
+  document.getElementById('chip-diag').textContent = lv === '안전' ? '✅ 안전' : lv === '주의' ? '⚠️ 주의' : '🚨 위험';
+}
+
+// ── NONOGRAM ──
+const PUZZLES = [
+  {
+    name: '나무 🌲',
+    size: '5×5',
+    grid: [[0,0,1,0,0],[0,1,1,1,0],[1,1,1,1,1],[0,0,1,0,0],[0,0,1,0,0]],
+    rowClues: [['1'],['3'],['5'],['1'],['1']],
+    colClues: [['1'],['2'],['5'],['2'],['1']],
+  },
+  {
+    name: '하트 💕',
+    size: '5×5',
+    grid: [[1,1,0,1,1],[1,1,1,1,1],[1,1,1,1,1],[0,1,1,1,0],[0,0,1,0,0]],
+    rowClues: [['2','2'],['5'],['5'],['3'],['1']],
+    colClues: [['3'],['4'],['4'],['4'],['3']],
+  },
+  {
+    name: '꽃 🌸',
+    size: '5×5',
+    grid: [[0,1,1,1,0],[1,0,1,0,1],[1,1,1,1,1],[1,0,1,0,1],[0,1,1,1,0]],
+    rowClues: [['3'],['1','1','1'],['5'],['1','1','1'],['3']],
+    colClues: [['3'],['1','1','1'],['5'],['1','1','1'],['3']],
+  },
+];
+
+function getTodayPuzzle() {
+  const d = new Date();
+  const idx = (d.getDate() % PUZZLES.length);
+  return { ...PUZZLES[idx], no: d.getDate() };
+}
+
+function initNonogram() {
+  const puz = getTodayPuzzle();
+  document.getElementById('puz-name').textContent = `오늘의 퍼즐 #${puz.no} — ${puz.name}`;
+  document.getElementById('puz-meta').textContent = `${puz.size} · 초급 · 약 10분`;
+  renderNonogramPreview(puz, false);
+}
+
+function renderNonogramPreview(puz, showAnswer) {
+  const N = 5;
+  let html = '<table class="nono-tbl"><tbody>';
+  html += '<tr>';
+  html += `<td class="clue-cell"></td>`;
+  for (let c = 0; c < N; c++) {
+    html += `<td class="clue-cell">${puz.colClues[c].join('\n')}</td>`;
+  }
+  html += '</tr>';
+  for (let r = 0; r < N; r++) {
+    html += '<tr>';
+    html += `<td class="clue-cell">${puz.rowClues[r].join(',')}</td>`;
+    for (let c = 0; c < N; c++) {
+      const filled = puz.grid[r][c] === 1;
+      const cls = filled && showAnswer ? 'pcell hint-fill' : 'pcell';
+      html += `<td class="${cls}">${filled && showAnswer ? '■' : ''}</td>`;
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  document.getElementById('puz-preview').innerHTML = html;
+}
+
+function printNonogram(type) {
+  const puz = getTodayPuzzle();
+  const isTeacher = type === 'teacher';
+  const N = 5;
+  const cellSize = 42;
+  const clueW = 52;
+
+  let gridHtml = '';
+  gridHtml += `<tr><td style="width:${clueW}px;height:${clueW}px;border:none;"></td>`;
+  for (let c = 0; c < N; c++) {
+    gridHtml += `<td style="width:${cellSize}px;height:${clueW}px;text-align:center;vertical-align:bottom;font-size:13px;font-weight:700;padding-bottom:6px;border:none;">${puz.colClues[c].join('<br>')}</td>`;
+  }
+  gridHtml += '</tr>';
+  for (let r = 0; r < N; r++) {
+    gridHtml += '<tr>';
+    gridHtml += `<td style="width:${clueW}px;height:${cellSize}px;text-align:right;font-size:13px;font-weight:700;padding-right:8px;border:none;">${puz.rowClues[r].join(',')}</td>`;
+    for (let c = 0; c < N; c++) {
+      const filled = puz.grid[r][c] === 1;
+      const bg = filled && isTeacher ? '#C8F0DC' : '#FAFAFA';
+      const content = filled && isTeacher ? '●' : '';
+      const color = isTeacher ? '#2E8B65' : 'transparent';
+      gridHtml += `<td style="width:${cellSize}px;height:${cellSize}px;border:1.5px solid #C0C8D0;text-align:center;background:${bg};font-size:16px;color:${color};">${content}</td>`;
+    }
+    gridHtml += '</tr>';
+  }
+
+  const label = isTeacher ? '교사용 (정답 포함)' : '학생용 (빈 칸)';
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>네모로직 — ${puz.name} ${label}</title>
+<style>
+  @page { margin: 20mm; }
+  body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; color: #1A2332; }
+  .header { text-align: center; margin-bottom: 28px; }
+  .app-name { font-size: 12px; color: #94A3B8; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 6px; }
+  .puzzle-title { font-size: 22px; font-weight: 900; margin-bottom: 4px; }
+  .puzzle-meta { font-size: 13px; color: #94A3B8; }
+  .label-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; margin-top: 8px; ${isTeacher ? 'background:#FEF3EB;color:#E8956D;' : 'background:#EEF9F3;color:#52B788;'} }
+  .puzzle-wrap { display: flex; justify-content: center; margin: 32px 0; }
+  .puzzle-wrap table { border-collapse: collapse; }
+  .instructions { max-width: 480px; margin: 0 auto; }
+  .inst-title { font-size: 14px; font-weight: 800; margin-bottom: 10px; color: #1A2332; }
+  .inst-row { font-size: 12px; color: #4A5568; line-height: 1.8; }
+  ${isTeacher ? '.teacher-warning { background: #FEF3EB; border: 1.5px solid #E8956D; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #C4773A; font-weight: 700; margin-top: 16px; text-align: center; }' : ''}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="app-name">인터넷 드림마을 · DIOGEM 네모로직</div>
+  <div class="puzzle-title">${puz.name}</div>
+  <div class="puzzle-meta">퍼즐 #${puz.no} · ${puz.size} · 초급</div>
+  <div class="label-badge">${label}</div>
+</div>
+<div class="puzzle-wrap">
+  <table>${gridHtml}</table>
+</div>
+<div class="instructions">
+  <div class="inst-title">📖 풀이 방법</div>
+  <div class="inst-row">
+    1. 각 행(가로)과 열(세로)의 숫자 힌트를 확인해요<br>
+    2. 숫자는 그 줄에서 연속으로 칠해야 할 칸의 개수예요<br>
+    3. 여러 숫자가 있으면 그 순서대로, 칸이 적어도 1칸 이상 떨어져 있어요<br>
+    4. 모든 칸을 완성하면 그림이 나타나요 🌸
+  </div>
+  ${isTeacher ? '<div class="teacher-warning">⚠️ 교사용입니다 — 학생에게 미리 나눠주지 마세요</div>' : ''}
+</div>
+<script>window.onload=function(){window.print();}<\/script>
+</body></html>`);
+  win.document.close();
+}
+
+function completeJourney() {
+  showLoad('여정 완료 저장 중...', '오늘의 기록을 저장하고 있어요 🌸');
+  setTimeout(() => {
+    hideLoad();
+    state.done.nono = true;
+    updateSteps();
+    document.getElementById('done-banner').style.display = 'flex';
+    goTo('home');
+  }, 1200);
+}
+
+// ── INIT ──
+updateSteps();
+</script>
+</body>
+</html>
