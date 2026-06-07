@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>네모로직 메이커 — 인터넷 드림마을</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<style>
+:root{
+  --g:#6EBDF5;--gd:#3A9FD8;--gb:#EBF5FF;
+  --p:#A78BFA;--pd:#8B6FE8;--pb:#F5F0FF;
+  --o:#F59E0B;--ob:#FFF8E6;
+  --bl:#8EDDBA;--bld:#2D9A6A;--blb:#F0FDF9;
+  --am:#FFD97A;--amb:#FFFBEC;
+  --r:#E05252;--rb:#FEF0F0;
+  --t:#1A1A2E;--tm:#6B7280;--tl:#9CA3AF;
+  --br:#E5E7EB;--bg:#F2F4F7;--w:#FFFFFF;
+  --sh:0 4px 20px rgba(110,189,245,0.12);
+  --shm:0 8px 28px rgba(110,189,245,0.18);
+  --hdr:linear-gradient(135deg,#6EBDF5 0%,#8EDDBA 100%);
+  --hdr-bg:linear-gradient(135deg,#EBF5FF 0%,#F0FDF9 50%,#F5F3FF 100%);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:100vh;color:var(--t)}
+.wrap{max-width:720px;margin:0 auto;padding-bottom:3rem}
+
+/* ── HEADER ── */
+.page-hdr{background:var(--hdr);padding:1.2rem 1.4rem 1rem;display:flex;align-items:center;gap:0.8rem;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(110,189,245,0.2)}
+.hdr-back{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.22);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;font-weight:700}
+.hdr-title{color:#fff;font-size:1rem;font-weight:800}
+.hdr-sub{color:rgba(255,255,255,0.78);font-size:0.6rem;margin-top:0.08rem}
+.timer-badge{margin-left:auto;background:rgba(255,255,255,0.22);border:1px solid rgba(255,255,255,0.3);border-radius:999px;padding:0.22rem 0.65rem;font-size:0.72rem;font-weight:700;color:#fff;display:none;white-space:nowrap}
+.timer-badge.show{display:block}
+
+/* ── CARDS ── */
+.section{padding:1rem 1rem 0}
+.card{background:var(--w);border:1.5px solid var(--br);border-radius:16px;padding:1rem 1.1rem;box-shadow:var(--sh);margin-bottom:0.85rem}
+.card-title{font-size:0.72rem;font-weight:800;color:var(--t);display:flex;align-items:center;gap:0.4rem;margin-bottom:0.75rem}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--g);color:#fff;font-size:0.55rem;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-num.done{background:var(--bl)}
+
+/* ── DIFFICULTY ── */
+.diff-btns{display:flex;gap:0.5rem}
+.diff-btn{flex:1;padding:0.75rem 0.3rem;border-radius:12px;border:2px solid var(--br);background:var(--bg);cursor:pointer;text-align:center;transition:all 0.18s}
+.diff-btn:hover{border-color:var(--g);background:var(--gb)}
+.diff-btn.sel{border-color:var(--g);background:var(--gb)}
+.diff-btn.sel .diff-name{color:var(--gd)}
+.diff-icon{font-size:1.4rem;display:block;margin-bottom:0.2rem}
+.diff-name{font-size:0.7rem;font-weight:700;color:var(--t);display:block}
+.diff-size{font-size:0.54rem;color:var(--tm);display:block;margin-top:0.06rem}
+
+/* ── UPLOAD ── */
+.upload-zone{border:2px dashed var(--br);border-radius:14px;padding:1.6rem 1rem;text-align:center;cursor:pointer;transition:all 0.18s;background:var(--bg);position:relative;overflow:hidden}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--g);background:var(--gb)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0;width:100%;height:100%}
+.upload-ico{font-size:2.2rem;margin-bottom:0.4rem}
+.upload-txt{font-size:0.74rem;font-weight:700;color:var(--t)}
+.upload-sub{font-size:0.58rem;color:var(--tm);margin-top:0.2rem;line-height:1.5}
+
+.preview-row{display:flex;align-items:center;gap:0.8rem;padding:0.2rem 0 0.5rem}
+.preview-img{width:72px;height:72px;border-radius:10px;object-fit:cover;border:1.5px solid var(--br);flex-shrink:0}
+.preview-info{flex:1;min-width:0}
+.preview-name{font-size:0.68rem;font-weight:700;color:var(--t);word-break:break-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.preview-dim{font-size:0.55rem;color:var(--tm);margin-top:0.1rem}
+.change-btn{font-size:0.6rem;color:var(--g);font-weight:700;cursor:pointer;background:none;border:1.5px solid var(--g);border-radius:8px;padding:0.22rem 0.5rem;white-space:nowrap;flex-shrink:0}
+
+.thresh-row{display:flex;align-items:center;gap:0.7rem;margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--br)}
+.thresh-lbl{font-size:0.6rem;color:var(--tm);flex-shrink:0;white-space:nowrap}
+.thresh-slider{flex:1;accent-color:var(--gd);cursor:pointer}
+.mini-canvas{width:56px;height:56px;flex-shrink:0;border:1.5px solid var(--br);border-radius:6px;image-rendering:pixelated;image-rendering:crisp-edges}
+
+/* ── HOW TO PLAY ── */
+.how-hd{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;margin-bottom:0}
+.how-arrow{font-size:0.75rem;color:var(--tm);transition:transform 0.2s}
+.how-arrow.open{transform:rotate(180deg)}
+.how-body{display:none;margin-top:0.7rem}
+.how-body.show{display:block}
+.how-step{display:flex;align-items:flex-start;gap:0.55rem;padding:0.45rem 0;border-bottom:1px solid var(--br);font-size:0.67rem;color:var(--tm);line-height:1.6}
+.how-step:last-child{border-bottom:none}
+.how-num{width:18px;height:18px;border-radius:50%;background:var(--gb);color:var(--gd);font-size:0.52rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.05rem}
+.eg-grid{display:inline-grid;grid-template-columns:repeat(5,15px);gap:1px;margin-top:0.3rem;border:1px solid var(--br);border-radius:4px;overflow:hidden}
+.eg{width:15px;height:15px;background:var(--bg)}
+.eg.f{background:var(--t)}
+
+/* ── START BTN ── */
+.start-btn{width:100%;padding:0.9rem;border-radius:14px;border:none;cursor:pointer;background:var(--hdr);color:#fff;font-size:0.82rem;font-weight:800;box-shadow:0 4px 14px rgba(110,189,245,0.3);transition:opacity 0.18s,transform 0.12s;margin:0.3rem 0 0}
+.start-btn:hover:not(:disabled){opacity:0.9;transform:translateY(-1px)}
+.start-btn:disabled{background:var(--br);color:var(--tl);box-shadow:none;cursor:not-allowed}
+
+/* ── GAME PAGE ── */
+#game-page{display:none}
+#game-page.show{display:block}
+.game-toprow{display:flex;align-items:center;gap:0.5rem;padding:0.85rem 1rem 0.25rem;flex-wrap:wrap}
+.diff-tag{font-size:0.58rem;font-weight:700;padding:0.18rem 0.52rem;border-radius:999px}
+.diff-tag.easy{background:var(--blb);color:var(--bld)}
+.diff-tag.medium{background:var(--ob);color:#9A5B00}
+.diff-tag.hard{background:var(--rb);color:var(--r)}
+.game-lbl{font-size:0.78rem;font-weight:800;color:var(--t);flex:1}
+.reset-btn{font-size:0.62rem;color:var(--tm);background:none;border:1.5px solid var(--br);border-radius:999px;padding:0.22rem 0.62rem;cursor:pointer;font-family:inherit}
+.reset-btn:hover{border-color:var(--g);color:var(--gd)}
+
+/* ── GRID ── */
+.grid-wrap{padding:0.4rem 1rem 0.6rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nono-tbl{border-collapse:collapse;margin:0 auto}
+.nono-tbl td,.nono-tbl th{border:1px solid var(--br);text-align:center;vertical-align:middle;padding:0;font-family:'Noto Sans KR',sans-serif}
+.c-corner{border:none!important;background:transparent}
+.c-col{background:var(--bg);font-size:0.58rem;font-weight:700;color:var(--tm);border-color:var(--br)!important;padding:1px 2px;line-height:1.3}
+.c-row{background:var(--bg);font-size:0.58rem;font-weight:700;color:var(--tm);border-color:var(--br)!important;padding:1px 4px;white-space:nowrap;text-align:right}
+.gcell{background:#F8FAFB;cursor:pointer;transition:background 0.1s;position:relative;user-select:none;-webkit-user-select:none}
+.gcell:hover{background:var(--gb)}
+.gcell.on{background:var(--t)!important}
+.gcell.x{background:#F8FAFB!important}
+.gcell.x::after{content:'✕';font-size:0.55rem;color:var(--r);font-weight:700;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+
+/* Cell sizes by data-size */
+.nono-tbl[data-s="5"] .gcell,.nono-tbl[data-s="5"] .c-col,.nono-tbl[data-s="5"] .c-row{width:36px;height:36px;min-width:36px}
+.nono-tbl[data-s="5"] .c-col,.nono-tbl[data-s="5"] .c-row{font-size:0.65rem}
+.nono-tbl[data-s="10"] .gcell,.nono-tbl[data-s="10"] .c-col,.nono-tbl[data-s="10"] .c-row{width:26px;height:26px;min-width:26px}
+.nono-tbl[data-s="15"] .gcell,.nono-tbl[data-s="15"] .c-col,.nono-tbl[data-s="15"] .c-row{width:20px;height:20px;min-width:20px}
+.nono-tbl[data-s="15"] .c-col,.nono-tbl[data-s="15"] .c-row{font-size:0.45rem}
+
+/* Bold border every 5 cells */
+.nono-tbl[data-s="10"] .gcell:nth-child(5n),.nono-tbl[data-s="15"] .gcell:nth-child(5n){border-right:2px solid #B0BEC5}
+
+/* ── SUBMIT ── */
+.submit-area{padding:0 1rem 0.5rem}
+.submit-btn{width:100%;padding:0.85rem;border-radius:14px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;font-size:0.8rem;font-weight:800;box-shadow:0 4px 14px rgba(167,139,250,0.28);transition:opacity 0.18s;font-family:inherit}
+.submit-btn:hover{opacity:0.9}
+.result-bar{border-radius:10px;padding:0.52rem 0.75rem;margin-top:0.5rem;font-size:0.68rem;font-weight:700;display:none;line-height:1.5}
+.result-bar.show{display:block}
+.result-bar.err{background:var(--rb);color:var(--r)}
+.result-bar.ok{background:var(--blb);color:var(--bld)}
+.back-btn{width:100%;padding:0.7rem;border-radius:12px;border:1.5px solid var(--br);background:var(--w);font-size:0.7rem;font-weight:700;color:var(--tm);cursor:pointer;margin-top:0.5rem;font-family:inherit;transition:border-color 0.15s,color 0.15s}
+.back-btn:hover{border-color:var(--g);color:var(--gd)}
+
+/* ── SUCCESS OVERLAY ── */
+.success-ov{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;z-index:200;padding:1.2rem}
+.success-ov.show{display:flex}
+.success-card{background:var(--w);border-radius:24px;padding:1.8rem 1.5rem 1.5rem;text-align:center;max-width:340px;width:100%;animation:pop 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes pop{from{opacity:0;transform:scale(0.6)}to{opacity:1;transform:scale(1)}}
+.sc-emoji{font-size:3rem;margin-bottom:0.4rem}
+.sc-title{font-size:1.1rem;font-weight:800;color:var(--t);margin-bottom:0.2rem}
+.sc-sub{font-size:0.72rem;color:var(--tm);margin-bottom:0.85rem}
+.sc-img{margin:0 auto 1rem;border-radius:10px;overflow:hidden;display:inline-block;border:2px solid var(--br)}
+.sc-btns{display:flex;gap:0.5rem}
+.sc-btns button{flex:1;padding:0.65rem;border-radius:12px;border:none;cursor:pointer;font-size:0.72rem;font-weight:700;font-family:inherit}
+.btn-again{background:var(--gb);color:var(--gd)}
+.btn-new{background:var(--hdr);color:#fff}
+
+@media(max-width:480px){
+  .diff-name{font-size:0.64rem}
+  .diff-size{font-size:0.5rem}
+  .nono-tbl[data-s="15"] .gcell,.nono-tbl[data-s="15"] .c-col,.nono-tbl[data-s="15"] .c-row{width:18px;height:18px;min-width:18px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="page-hdr">
+    <a href="app.html" class="hdr-back">‹</a>
+    <div>
+      <div class="hdr-title">🧩 네모로직 메이커</div>
+      <div class="hdr-sub">내 이미지로 나만의 퍼즐 만들기</div>
+    </div>
+    <div class="timer-badge" id="timer">⏱ 0:00</div>
+  </div>
+
+  <!-- ── SETUP PAGE ── -->
+  <div id="setup-page">
+    <div class="section">
+
+      <!-- Step 1: Difficulty -->
+      <div class="card">
+        <div class="card-title">
+          <span class="step-num" id="s1-badge">1</span>
+          난이도 선택
+        </div>
+        <div class="diff-btns">
+          <div class="diff-btn sel" id="db-easy" onclick="setDiff('easy')">
+            <span class="diff-icon">🌱</span>
+            <span class="diff-name">초급</span>
+            <span class="diff-size">5 × 5</span>
+          </div>
+          <div class="diff-btn" id="db-medium" onclick="setDiff('medium')">
+            <span class="diff-icon">🌿</span>
+            <span class="diff-name">중급</span>
+            <span class="diff-size">10 × 10</span>
+          </div>
+          <div class="diff-btn" id="db-hard" onclick="setDiff('hard')">
+            <span class="diff-icon">🌳</span>
+            <span class="diff-name">고급</span>
+            <span class="diff-size">15 × 15</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Image Upload -->
+      <div class="card">
+        <div class="card-title">
+          <span class="step-num" id="s2-badge">2</span>
+          이미지 업로드
+        </div>
+
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" id="file-inp" accept="image/*" onchange="handleFile(this.files[0])">
+          <div class="upload-ico">📷</div>
+          <div class="upload-txt">이미지를 끌어다 놓거나 클릭하세요</div>
+          <div class="upload-sub">PNG · JPG · GIF 지원<br>단순하고 대비 뚜렷한 이미지일수록 예뻐요</div>
+        </div>
+
+        <div id="preview-sec" style="display:none">
+          <div class="preview-row">
+            <img class="preview-img" id="prev-img" src="" alt="">
+            <div class="preview-info">
+              <div class="preview-name" id="prev-name">파일명</div>
+              <div class="preview-dim" id="prev-dim">0 × 0px</div>
+            </div>
+            <button class="change-btn" onclick="clearImg()">다시 선택</button>
+          </div>
+          <div class="thresh-row">
+            <span class="thresh-lbl">밝기 임계값</span>
+            <input type="range" class="thresh-slider" id="thresh" min="30" max="225" value="128" oninput="onThresh()">
+            <canvas id="mini-cv" class="mini-canvas" width="56" height="56"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: How to play -->
+      <div class="card">
+        <div class="card-title how-hd" onclick="toggleHow()">
+          <span class="step-num" style="background:var(--p)">?</span>
+          네모로직 하는 방법
+          <span class="how-arrow" id="how-arr" style="margin-left:auto">▼</span>
+        </div>
+        <div class="how-body" id="how-body">
+          <div class="how-step">
+            <div class="how-num">1</div>
+            <div>숫자 힌트는 그 줄에서 <b>연속으로 채워진 칸의 수</b>예요. <b>3</b>이면 연속 3칸.</div>
+          </div>
+          <div class="how-step">
+            <div class="how-num">2</div>
+            <div>힌트가 여러 개(<b>2 1</b>)면 각 그룹 사이에 <b>빈 칸이 1개 이상</b> 있어야 해요.</div>
+          </div>
+          <div class="how-step">
+            <div class="how-num">3</div>
+            <div>
+              <b>클릭</b> → ■ 채움 &nbsp;·&nbsp; <b>한 번 더</b> → ✕ 제외 표시 &nbsp;·&nbsp; <b>한 번 더</b> → 비움<br>
+              데스크탑: <b>우클릭</b>으로 바로 ✕ 표시 가능
+              <div class="eg-grid" style="margin-top:0.38rem">
+                <div class="eg"></div><div class="eg f"></div><div class="eg f"></div><div class="eg f"></div><div class="eg"></div>
+                <div class="eg f"></div><div class="eg"></div><div class="eg"></div><div class="eg f"></div><div class="eg f"></div>
+                <div class="eg"></div><div class="eg f"></div><div class="eg"></div><div class="eg f"></div><div class="eg"></div>
+              </div>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-num">4</div>
+            <div>다 채우면 <b>완성 확인</b> 버튼을 눌러요. 모두 맞으면 그림이 나타나요! 🎉</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Start -->
+      <button class="start-btn" id="start-btn" onclick="startGame()" disabled>
+        이미지를 먼저 업로드해주세요
+      </button>
+    </div>
+  </div>
+
+  <!-- ── GAME PAGE ── -->
+  <div id="game-page">
+    <div class="game-toprow">
+      <span class="diff-tag easy" id="diff-tag">초급</span>
+      <span class="game-lbl" id="game-lbl">나만의 퍼즐</span>
+      <button class="reset-btn" onclick="resetGrid()">↺ 초기화</button>
+    </div>
+    <div class="grid-wrap">
+      <div id="grid-cont"></div>
+    </div>
+    <div class="submit-area">
+      <button class="submit-btn" onclick="checkAnswer()">✓ 완성 확인</button>
+      <div class="result-bar" id="result-bar"></div>
+      <button class="back-btn" onclick="goSetup()">← 새 퍼즐 만들기</button>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-ov" id="success-ov">
+  <div class="success-card">
+    <div class="sc-emoji">🎉</div>
+    <div class="sc-title">완성했어요!</div>
+    <div class="sc-sub" id="sc-sub">정말 잘 풀었어요!</div>
+    <div class="sc-img"><canvas id="sc-canvas" style="display:block"></canvas></div>
+    <div class="sc-btns">
+      <button class="btn-again" onclick="resetGrid();closeWin()">다시 풀기</button>
+      <button class="btn-new" onclick="goSetup();closeWin()">새 퍼즐</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+const S = {
+  diff: 'easy', N: 5,
+  solution: null, playerGrid: null,
+  imgEl: null, thresh: 128,
+  timerSec: 0, timerInt: null
+};
+
+// ── DIFFICULTY ──
+function setDiff(d) {
+  S.diff = d; S.N = {easy:5,medium:10,hard:15}[d];
+  ['easy','medium','hard'].forEach(k => document.getElementById('db-'+k).classList.toggle('sel', k===d));
+  if (S.imgEl) drawMini();
+}
+
+// ── UPLOAD ──
+const zone = document.getElementById('upload-zone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag'); const f = e.dataTransfer.files[0]; if (f && f.type.startsWith('image/')) loadImg(f); });
+
+function handleFile(f) { if (f) loadImg(f); }
+
+function loadImg(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      S.imgEl = img;
+      document.getElementById('prev-img').src = ev.target.result;
+      document.getElementById('prev-name').textContent = file.name;
+      document.getElementById('prev-dim').textContent = `${img.width} × ${img.height}px · ${(file.size/1024).toFixed(0)}KB`;
+      zone.style.display = 'none';
+      document.getElementById('preview-sec').style.display = 'block';
+      document.getElementById('s2-badge').classList.add('done');
+      const btn = document.getElementById('start-btn');
+      btn.disabled = false;
+      btn.textContent = '🎮 퍼즐 시작하기';
+      drawMini();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearImg() {
+  S.imgEl = null;
+  zone.style.display = 'block';
+  document.getElementById('preview-sec').style.display = 'none';
+  document.getElementById('file-inp').value = '';
+  document.getElementById('s2-badge').classList.remove('done');
+  const btn = document.getElementById('start-btn');
+  btn.disabled = true;
+  btn.textContent = '이미지를 먼저 업로드해주세요';
+}
+
+function onThresh() {
+  S.thresh = parseInt(document.getElementById('thresh').value);
+  drawMini();
+}
+
+function drawMini() {
+  if (!S.imgEl) return;
+  const grid = img2grid(S.imgEl, S.N);
+  const cv = document.getElementById('mini-cv');
+  const ctx = cv.getContext('2d');
+  const cw = cv.width / S.N, ch = cv.height / S.N;
+  ctx.clearRect(0,0,cv.width,cv.height);
+  for (let r = 0; r < S.N; r++)
+    for (let c = 0; c < S.N; c++) {
+      ctx.fillStyle = grid[r][c] ? '#1A1A2E' : '#F2F4F7';
+      ctx.fillRect(Math.round(c*cw), Math.round(r*ch), Math.ceil(cw), Math.ceil(ch));
+    }
+}
+
+// ── HOW TO PLAY ──
+function toggleHow() {
+  document.getElementById('how-body').classList.toggle('show');
+  document.getElementById('how-arr').classList.toggle('open');
+}
+
+// ── IMAGE → GRID ──
+function img2grid(img, N) {
+  const cv = document.createElement('canvas');
+  cv.width = N; cv.height = N;
+  const ctx = cv.getContext('2d');
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(img, 0, 0, N, N);
+  const data = ctx.getImageData(0,0,N,N).data;
+  const grid = [];
+  for (let r = 0; r < N; r++) {
+    const row = [];
+    for (let c = 0; c < N; c++) {
+      const i = (r*N+c)*4;
+      if (data[i+3] < 64) { row.push(0); continue; }
+      const gray = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+      row.push(gray < S.thresh ? 1 : 0);
+    }
+    grid.push(row);
+  }
+  return grid;
+}
+
+// ── CLUES ──
+function rowClues(g) {
+  return g.map(row => {
+    const out=[]; let n=0;
+    for(const v of row){if(v)n++;else if(n){out.push(n);n=0;}}
+    if(n)out.push(n);
+    return out.length?out:[0];
+  });
+}
+function colClues(g) {
+  return Array.from({length:g.length},(_,ci)=>{
+    const out=[]; let n=0;
+    for(let r=0;r<g.length;r++){if(g[r][ci])n++;else if(n){out.push(n);n=0;}}
+    if(n)out.push(n);
+    return out.length?out:[0];
+  });
+}
+
+// ── RENDER GRID ──
+function renderGrid() {
+  const N = S.N;
+  const rc = rowClues(S.solution);
+  const cc = colClues(S.solution);
+  const maxD = Math.max(...cc.map(c=>c.length));
+  let h = `<table class="nono-tbl" data-s="${N}"><thead>`;
+
+  for (let d=0;d<maxD;d++) {
+    h += '<tr>';
+    if (d===0) h += `<th class="c-corner" rowspan="${maxD}"></th>`;
+    for (let c=0;c<N;c++) {
+      const cl=cc[c], idx=cl.length-maxD+d;
+      h += `<th class="c-col">${idx>=0?cl[idx]:''}</th>`;
+    }
+    h += '</tr>';
+  }
+  h += '</thead><tbody>';
+
+  for (let r=0;r<N;r++) {
+    h += '<tr>';
+    h += `<th class="c-row">${rc[r].join('<br>')}</th>`;
+    for (let c=0;c<N;c++)
+      h += `<td class="gcell" data-r="${r}" data-c="${c}" onclick="tap(${r},${c})" oncontextmenu="tapX(${r},${c});return false"></td>`;
+    h += '</tr>';
+  }
+  h += '</tbody></table>';
+  document.getElementById('grid-cont').innerHTML = h;
+}
+
+// ── GAME ──
+function startGame() {
+  if (!S.imgEl) return;
+  S.solution = img2grid(S.imgEl, S.N);
+  S.playerGrid = Array.from({length:S.N},()=>Array(S.N).fill(0));
+
+  const labels={easy:'초급',medium:'중급',hard:'고급'};
+  const tag = document.getElementById('diff-tag');
+  tag.textContent = labels[S.diff];
+  tag.className = 'diff-tag '+S.diff;
+  document.getElementById('game-lbl').textContent = `나만의 퍼즐 · ${S.N}×${S.N}`;
+
+  document.getElementById('setup-page').style.display = 'none';
+  document.getElementById('game-page').classList.add('show');
+  document.getElementById('result-bar').classList.remove('show');
+
+  renderGrid();
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(S.timerInt);
+  S.timerSec = 0;
+  const el = document.getElementById('timer');
+  el.classList.add('show');
+  S.timerInt = setInterval(()=>{
+    S.timerSec++;
+    const m=Math.floor(S.timerSec/60), s=S.timerSec%60;
+    el.textContent = `⏱ ${m}:${String(s).padStart(2,'0')}`;
+  },1000);
+}
+
+function tap(r,c) {
+  S.playerGrid[r][c] = (S.playerGrid[r][c]+1)%3;
+  const cls=['','on','x'];
+  document.querySelector(`[data-r="${r}"][data-c="${c}"]`).className = 'gcell '+cls[S.playerGrid[r][c]];
+}
+
+function tapX(r,c) {
+  S.playerGrid[r][c] = S.playerGrid[r][c]===2 ? 0 : 2;
+  const cls=['','on','x'];
+  document.querySelector(`[data-r="${r}"][data-c="${c}"]`).className = 'gcell '+cls[S.playerGrid[r][c]];
+}
+
+function resetGrid() {
+  const N=S.N;
+  S.playerGrid = Array.from({length:N},()=>Array(N).fill(0));
+  document.querySelectorAll('.gcell').forEach(c=>c.className='gcell');
+  document.getElementById('result-bar').classList.remove('show');
+}
+
+function checkAnswer() {
+  const p=S.playerGrid, sol=S.solution, N=S.N;
+  let err=0;
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++) if((p[r][c]===1)!==(sol[r][c]===1)) err++;
+  const bar=document.getElementById('result-bar');
+  if(err===0){
+    clearInterval(S.timerInt);
+    bar.classList.remove('show');
+    showWin();
+  } else {
+    bar.textContent=`❌ ${err}칸이 틀렸어요. 힌트를 다시 확인해봐요!`;
+    bar.className='result-bar show err';
+  }
+}
+
+function showWin() {
+  const m=Math.floor(S.timerSec/60), s=S.timerSec%60;
+  document.getElementById('sc-sub').textContent=`풀이 시간: ${m}분 ${s}초 🌟`;
+
+  const cv=document.getElementById('sc-canvas');
+  const N=S.N;
+  const px=Math.max(Math.floor(180/N),8);
+  cv.width=N*px; cv.height=N*px;
+  const ctx=cv.getContext('2d');
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+    ctx.fillStyle=S.solution[r][c]?'#1A1A2E':'#F2F4F7';
+    ctx.fillRect(c*px,r*px,px,px);
+  }
+
+  document.getElementById('success-ov').classList.add('show');
+}
+
+function closeWin() { document.getElementById('success-ov').classList.remove('show'); }
+
+function goSetup() {
+  clearInterval(S.timerInt);
+  document.getElementById('timer').classList.remove('show');
+  document.getElementById('game-page').classList.remove('show');
+  document.getElementById('setup-page').style.display='block';
+}
+</script>
+</body>
+</html>
