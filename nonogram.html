@@ -156,11 +156,22 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 .print-btn:hover{border-color:var(--g);color:var(--gd)}
 
 /* ── LOADING OVERLAY ── */
-.loading-ov{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;z-index:300}
+.loading-ov{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;z-index:300;padding:1rem}
 .loading-ov.show{display:flex}
-.loading-card{background:var(--w);border-radius:20px;padding:2rem 2rem 1.8rem;text-align:center;max-width:290px;width:90%;animation:pop 0.3s ease}
+.loading-card{background:var(--w);border-radius:20px;padding:1.8rem 1.6rem 1.5rem;text-align:center;max-width:340px;width:100%;animation:pop 0.3s ease}
 .loading-spin{display:inline-block;animation:spin 1.2s linear infinite;font-size:2rem;margin-bottom:0.5rem}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+/* Preview state */
+.lov-preview-row{display:flex;gap:0.7rem;margin:0.85rem 0;justify-content:center;align-items:flex-start}
+.lov-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:0.28rem;min-width:0}
+.lov-lbl{font-size:0.54rem;font-weight:700;color:var(--tm)}
+.lov-img{width:130px;height:130px;border-radius:10px;object-fit:contain;border:1.5px solid var(--br);background:var(--bg);flex-shrink:0}
+.lov-cv{width:130px;height:130px;border-radius:10px;border:1.5px solid var(--br);image-rendering:pixelated;image-rendering:crisp-edges;flex-shrink:0}
+.lov-btns{display:flex;gap:0.5rem;margin-top:0.2rem}
+.lov-btns button{flex:1;padding:0.65rem 0.3rem;border-radius:12px;border:none;cursor:pointer;font-size:0.7rem;font-weight:700;font-family:inherit;transition:opacity 0.15s}
+.lov-btns button:hover{opacity:0.85}
+.lov-confirm{background:var(--hdr);color:#fff}
+.lov-retry{background:var(--bg);color:var(--t);border:1.5px solid var(--br)!important;border:none}
 .api-inp{width:100%;border:1.5px solid var(--br);border-radius:10px;padding:0.6rem 0.8rem;font-size:0.7rem;color:var(--t);outline:none;font-family:inherit;transition:border-color 0.15s;background:var(--bg)}
 .api-inp:focus{border-color:var(--p);background:var(--w)}
 .api-badge{display:inline-block;font-size:0.52rem;font-weight:700;padding:0.08rem 0.4rem;border-radius:999px;vertical-align:middle;margin-left:0.3rem}
@@ -341,9 +352,32 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 <!-- LOADING OVERLAY -->
 <div class="loading-ov" id="loading-ov">
   <div class="loading-card">
-    <div class="loading-spin">🤖</div>
-    <div style="font-size:0.88rem;font-weight:800;color:var(--t);margin-bottom:0.3rem">AI 변환 중...</div>
-    <div style="font-size:0.65rem;color:var(--tm)" id="loading-msg">이미지를 분석하고 있어요</div>
+    <!-- 로딩 상태 -->
+    <div id="lov-loading">
+      <div class="loading-spin">🤖</div>
+      <div style="font-size:0.88rem;font-weight:800;color:var(--t);margin-bottom:0.3rem">AI 변환 중...</div>
+      <div style="font-size:0.65rem;color:var(--tm)" id="loading-msg">이미지를 분석하고 있어요</div>
+    </div>
+    <!-- 미리보기 상태 -->
+    <div id="lov-preview" style="display:none">
+      <div style="font-size:1.3rem;margin-bottom:0.15rem">✨</div>
+      <div style="font-size:0.88rem;font-weight:800;color:var(--t);margin-bottom:0.08rem">변환 완료!</div>
+      <div style="font-size:0.6rem;color:var(--tm);margin-bottom:0.1rem">AI가 생성한 네모로직 미리보기</div>
+      <div class="lov-preview-row">
+        <div class="lov-col">
+          <span class="lov-lbl">원본 이미지</span>
+          <img class="lov-img" id="lov-orig-img" src="" alt="">
+        </div>
+        <div class="lov-col">
+          <span class="lov-lbl">AI 변환 결과</span>
+          <canvas class="lov-cv" id="lov-result-cv" width="20" height="20"></canvas>
+        </div>
+      </div>
+      <div class="lov-btns">
+        <button class="lov-retry" onclick="retryAI()">↺ 다시 변환</button>
+        <button class="lov-confirm" onclick="confirmAI()">🎮 이대로 시작</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -667,11 +701,14 @@ async function startGame() {
 
   if (useAI) {
     const ov = document.getElementById('loading-ov');
-    const msg = document.getElementById('loading-msg');
+    document.getElementById('lov-loading').style.display = 'block';
+    document.getElementById('lov-preview').style.display = 'none';
+    document.getElementById('loading-msg').textContent = `Claude가 ${S.N}×${S.N} 그리드를 생성하는 중...`;
     ov.classList.add('show');
-    msg.textContent = `Claude가 ${S.N}×${S.N} 그리드를 생성하는 중...`;
     try {
-      S.solution = await img2gridAI(S.N);
+      const grid = await img2gridAI(S.N);
+      S.solution = grid;
+      showAIPreview(grid);  // 미리보기 — confirmAI()에서 게임 시작
     } catch(e) {
       ov.classList.remove('show');
       const isCors = e.message.includes('Failed to fetch') || e.message.includes('NetworkError');
@@ -680,12 +717,54 @@ async function startGame() {
         : `AI 변환 실패:\n${e.message}\n\n엣지 감지 방식으로 대신 진행할까요?`;
       if (!confirm(errMsg)) return;
       S.solution = img2grid(S.imgEl, S.N);
+      launchGame();
     }
-    ov.classList.remove('show');
   } else {
     S.solution = img2grid(S.imgEl, S.N);
+    launchGame();
   }
+}
 
+function showAIPreview(grid) {
+  // 원본 이미지 표시
+  document.getElementById('lov-orig-img').src = document.getElementById('prev-img').src;
+
+  // 그리드를 캔버스에 렌더링
+  const N = S.N;
+  const cv = document.getElementById('lov-result-cv');
+  cv.width = N; cv.height = N;
+  const ctx = cv.getContext('2d');
+  for (let r = 0; r < N; r++)
+    for (let c = 0; c < N; c++) {
+      ctx.fillStyle = grid[r][c] ? '#1A1A2E' : '#F2F4F7';
+      ctx.fillRect(c, r, 1, 1);
+    }
+
+  // 로딩 → 미리보기 전환
+  document.getElementById('lov-loading').style.display = 'none';
+  document.getElementById('lov-preview').style.display = 'block';
+}
+
+async function retryAI() {
+  document.getElementById('lov-loading').style.display = 'block';
+  document.getElementById('lov-preview').style.display = 'none';
+  document.getElementById('loading-msg').textContent = `다시 변환 중... (${S.N}×${S.N})`;
+  try {
+    const grid = await img2gridAI(S.N);
+    S.solution = grid;
+    showAIPreview(grid);
+  } catch(e) {
+    document.getElementById('loading-ov').classList.remove('show');
+    alert(`AI 변환 실패:\n${e.message}`);
+  }
+}
+
+function confirmAI() {
+  document.getElementById('loading-ov').classList.remove('show');
+  launchGame();
+}
+
+function launchGame() {
   S.playerGrid = Array.from({length:S.N},()=>Array(S.N).fill(0));
 
   const labels={medium:'중급',hard:'고급',expert:'고수'};
