@@ -113,12 +113,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 .gcell.x{background:#F8FAFB!important}
 .gcell.x::after{content:'✕';font-size:0.55rem;color:var(--r);font-weight:700;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
 
-/* Cell sizes by data-size */
-.nono-tbl[data-s="5"] .gcell,.nono-tbl[data-s="5"] .c-col,.nono-tbl[data-s="5"] .c-row{width:36px;height:36px;min-width:36px}
-.nono-tbl[data-s="5"] .c-col,.nono-tbl[data-s="5"] .c-row{font-size:0.65rem}
-.nono-tbl[data-s="10"] .gcell,.nono-tbl[data-s="10"] .c-col,.nono-tbl[data-s="10"] .c-row{width:26px;height:26px;min-width:26px}
-.nono-tbl[data-s="15"] .gcell,.nono-tbl[data-s="15"] .c-col,.nono-tbl[data-s="15"] .c-row{width:20px;height:20px;min-width:20px}
-.nono-tbl[data-s="15"] .c-col,.nono-tbl[data-s="15"] .c-row{font-size:0.45rem}
+/* Cell sizes — gcell must be truly square */
+.nono-tbl[data-s="5"] .gcell{width:44px;height:44px;min-width:44px;min-height:44px}
+.nono-tbl[data-s="5"] .c-col{width:44px;min-width:44px;height:44px;font-size:0.65rem}
+.nono-tbl[data-s="5"] .c-row{height:44px;min-height:44px;font-size:0.65rem;padding:0 6px}
+.nono-tbl[data-s="10"] .gcell{width:30px;height:30px;min-width:30px;min-height:30px}
+.nono-tbl[data-s="10"] .c-col{width:30px;min-width:30px;height:30px}
+.nono-tbl[data-s="10"] .c-row{height:30px;min-height:30px;padding:0 5px}
+.nono-tbl[data-s="15"] .gcell{width:22px;height:22px;min-width:22px;min-height:22px}
+.nono-tbl[data-s="15"] .c-col{width:22px;min-width:22px;height:22px;font-size:0.45rem}
+.nono-tbl[data-s="15"] .c-row{height:22px;min-height:22px;font-size:0.45rem;padding:0 3px}
 
 /* Bold border every 5 cells */
 .nono-tbl[data-s="10"] .gcell:nth-child(5n),.nono-tbl[data-s="15"] .gcell:nth-child(5n){border-right:2px solid #B0BEC5}
@@ -151,7 +155,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--hdr-bg);min-height:1
 @media(max-width:480px){
   .diff-name{font-size:0.64rem}
   .diff-size{font-size:0.5rem}
-  .nono-tbl[data-s="15"] .gcell,.nono-tbl[data-s="15"] .c-col,.nono-tbl[data-s="15"] .c-row{width:18px;height:18px;min-width:18px}
+  .nono-tbl[data-s="15"] .gcell{width:18px;height:18px;min-width:18px;min-height:18px}
+  .nono-tbl[data-s="15"] .c-col{width:18px;min-width:18px;height:18px}
+  .nono-tbl[data-s="15"] .c-row{height:18px;min-height:18px}
 }
 </style>
 </head>
@@ -447,7 +453,7 @@ function renderGrid() {
 
   for (let r=0;r<N;r++) {
     h += '<tr>';
-    h += `<th class="c-row">${rc[r].join('<br>')}</th>`;
+    h += `<th class="c-row">${rc[r].join(' ')}</th>`;
     for (let c=0;c<N;c++)
       h += `<td class="gcell" data-r="${r}" data-c="${c}" onclick="tap(${r},${c})" oncontextmenu="tapX(${r},${c});return false"></td>`;
     h += '</tr>';
